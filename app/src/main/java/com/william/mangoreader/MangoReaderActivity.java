@@ -15,17 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-//import com.william.mangoreader.NavigationDrawerFragment.NavigationDrawerCallbacks;
+import com.william.mangoreader.NavigationDrawerFragment.NavigationDrawerCallbacks;
 
 import java.util.Locale;
 
-public class MangoReaderActivity extends Activity implements ActionBar.TabListener {
+public class MangoReaderActivity extends Activity implements ActionBar.TabListener, NavigationDrawerCallbacks {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-//    private CharSequence mTitle;
+    private CharSequence mTitle;
 
-//    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private NavigationDrawerFragment mNavigationDrawerFragment;
 
     ViewPager mViewPager;
 
@@ -69,15 +69,15 @@ public class MangoReaderActivity extends Activity implements ActionBar.TabListen
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
-//
-//        mNavigationDrawerFragment = (NavigationDrawerFragment)
-//                getFragmentManager().findFragmentById(R.id.navigation_drawer);
-//        mTitle = getTitle();
-//
-//        // Set up the drawer.
-//        mNavigationDrawerFragment.setUp(
-//                R.id.navigation_drawer,
-//                (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mTitle = getTitle();
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     @Override
@@ -123,11 +123,11 @@ public class MangoReaderActivity extends Activity implements ActionBar.TabListen
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
 
-//    @Override
-//    public void onNavigationDrawerItemSelected(int position) {
-//        // update the main content by replacing fragments
-//
-//    }
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        // update the main content by replacing fragments
+
+    }
 
 //    public void restoreActionBar() {
 //        ActionBar actionBar = getActionBar();
