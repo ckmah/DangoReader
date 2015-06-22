@@ -6,14 +6,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.william.mangoreader.R;
 
-public class MangoReaderActivity extends ActionBarActivity implements NavDrawerFragment.NavDrawerFragmentListener {
+public class MangoReaderActivity extends AppCompatActivity implements NavDrawerFragment.NavDrawerFragmentListener {
 
     private Toolbar mToolbar;
     private NavDrawerFragment drawerFragment;
@@ -25,10 +27,15 @@ public class MangoReaderActivity extends ActionBarActivity implements NavDrawerF
         setContentView(R.layout.activity_mango_reader);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        // spinner for source selection
+        Spinner spinner = (Spinner) findViewById(R.id.spinner_browse_sources);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
+                R.array.browse_sources, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(R.layout.drop_list);
+        spinner.setAdapter(adapter);
         drawerFragment = (NavDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
@@ -69,12 +76,17 @@ public class MangoReaderActivity extends ActionBarActivity implements NavDrawerF
     private void displayView(int position) {
         Fragment fragment = null;
         String title = getString(R.string.app_name);
+
         switch (position) {
             case 0:
+                findViewById(R.id.spinner_browse_sources).setVisibility(View.GONE);
+
                 fragment = new MyLibraryFragment();
                 title = getString(R.string.title_my_library);
                 break;
             case 1:
+                findViewById(R.id.spinner_browse_sources).setVisibility(View.VISIBLE);
+
                 fragment = new BrowseMangaFragment();
                 title = getString(R.string.title_browse);
             default:

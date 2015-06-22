@@ -6,25 +6,26 @@
     android:orientation="vertical"
     tools:context="com.william.mangoreader.activity.MyLibraryFragment">
 
-    <TextView
-        android:id="@+id/label"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="100dp"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textSize="30sp"
-        android:text="@string/my_library_fragment_1"
-        android:textStyle="bold"/>
 
     <TextView
-        android:layout_below="@id/label"
-        android:layout_centerInParent="true"
+        android:id="@+id/label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"
+        android:gravity="center_horizontal"
+        android:text="@string/my_library_fragment_1"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/label"
+        android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
-        android:text="@string/my_library_fragment_2" />
+        android:text="@string/my_library_fragment_2"
+        android:textSize="12sp" />
 
 </RelativeLayout>

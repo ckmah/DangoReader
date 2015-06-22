@@ -69,20 +69,8 @@ public class BrowseMangaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
-//        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-//
-//        ActionBarActivity activity = (ActionBarActivity) getActivity();
 
-//        activity.setSupportActionBar(toolbar);
-//        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-//        // spinner for source selection
-//        Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner_browse_sources);
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(activity,
-//                R.array.browse_sources, android.R.layout.simple_spinner_item);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinner.setAdapter(adapter);
-
+        setHasOptionsMenu(true);
 
         // Inflate the layout for this fragment
         return rootView;
