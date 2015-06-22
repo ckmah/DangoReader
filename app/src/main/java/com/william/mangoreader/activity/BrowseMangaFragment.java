@@ -21,7 +21,7 @@ import com.william.mangoreader.R;
 // * Use the {@link MyLibraryFragment#newInstance} factory method to
 // * create an instance of this fragment.
 // */
-public class MyLibraryFragment extends Fragment {
+public class BrowseMangaFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -41,8 +41,8 @@ public class MyLibraryFragment extends Fragment {
      * @return A new instance of fragment MyLibraryFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MyLibraryFragment newInstance(String param1, String param2) {
-        MyLibraryFragment fragment = new MyLibraryFragment();
+    public static BrowseMangaFragment newInstance(String param1, String param2) {
+        BrowseMangaFragment fragment = new BrowseMangaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -50,7 +50,7 @@ public class MyLibraryFragment extends Fragment {
         return fragment;
     }
 
-    public MyLibraryFragment() {
+    public BrowseMangaFragment() {
         // Required empty public constructor
     }
 
@@ -68,9 +68,21 @@ public class MyLibraryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
+//        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+//
+//        ActionBarActivity activity = (ActionBarActivity) getActivity();
 
-        setHasOptionsMenu(true);
+//        activity.setSupportActionBar(toolbar);
+//        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+//        // spinner for source selection
+//        Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner_browse_sources);
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(activity,
+//                R.array.browse_sources, android.R.layout.simple_spinner_item);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner.setAdapter(adapter);
+
 
         // Inflate the layout for this fragment
         return rootView;
@@ -84,10 +96,9 @@ public class MyLibraryFragment extends Fragment {
 //    }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuinflator) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.menu_my_library, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+        menuinflator.inflate(R.menu.menu_browse_manga, menu);
     }
 
     @Override
