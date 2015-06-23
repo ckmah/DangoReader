@@ -3,6 +3,7 @@ package com.william.mangoreader.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +13,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.william.mangoreader.R;
+
+import java.util.ArrayList;
+
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
+import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.view.CardGridView;
 
 ///**
 // * A simple {@link Fragment} subclass.
@@ -57,11 +65,12 @@ public class MyLibraryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        setHasOptionsMenu(true);
+
 
     }
 
@@ -70,8 +79,35 @@ public class MyLibraryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
 
-        setHasOptionsMenu(true);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
 
+        // TODO: asynchronous loading
+
+        ArrayList<Card> cards = new ArrayList<Card>();
+
+        //Create a Card
+        Card card = new Card(activity);
+
+        //Create a CardHeader
+        CardHeader header = new CardHeader(activity);
+
+        //Add Header to card
+        card.addCardHeader(header);
+
+        cards.add(card);
+        cards.add(card);
+        cards.add(card);
+        cards.add(card);
+        cards.add(card);
+
+        CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(activity, cards);
+
+        CardGridView gridView = (CardGridView) rootView.findViewById(R.id.library_cards);
+//        if (gridView != null) {
+            gridView.setAdapter(mCardArrayAdapter);
+//        }
+
+        setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         return rootView;
     }

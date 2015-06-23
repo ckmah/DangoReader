@@ -36,6 +36,7 @@ public class MangoReaderActivity extends AppCompatActivity implements NavDrawerF
                 R.array.browse_sources, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(R.layout.drop_list);
         spinner.setAdapter(adapter);
+
         drawerFragment = (NavDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
