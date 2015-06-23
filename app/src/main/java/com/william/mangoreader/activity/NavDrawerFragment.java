@@ -23,7 +23,6 @@ import java.util.List;
 
 
 public class NavDrawerFragment extends Fragment {
-    private static String TAG = NavDrawerFragment.class.getSimpleName();
 
     private RecyclerView recyclerView;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -56,8 +55,6 @@ public class NavDrawerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // drawer labels
         titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
     }
 

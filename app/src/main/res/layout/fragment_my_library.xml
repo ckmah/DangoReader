@@ -21,7 +21,7 @@
         />
     <!-- SHOW WHEN LIBRARY EMPTY -->
     <TextView
-        android:id="@+id/label"
+        android:id="@+id/no_manga_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -32,9 +32,10 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/add_manga_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/label"
+        android:layout_below="@id/no_manga_label"
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"

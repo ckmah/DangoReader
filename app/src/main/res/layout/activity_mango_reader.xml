@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".activity.MangoReaderActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <LinearLayout
             android:id="@+id/container_toolbar"
             android:layout_width="match_parent"
@@ -26,8 +31,11 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </FrameLayout>
+
+    </LinearLayout>
+
 
     <fragment
         android:id="@+id/fragment_navigation_drawer"
