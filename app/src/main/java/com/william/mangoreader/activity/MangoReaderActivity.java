@@ -19,7 +19,6 @@ public class MangoReaderActivity extends AppCompatActivity implements NavDrawerF
 
     private Toolbar mToolbar;
     private NavDrawerFragment drawerFragment;
-    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +40,6 @@ public class MangoReaderActivity extends AppCompatActivity implements NavDrawerF
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
-
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
-
         displayView(0);
     }
 
@@ -54,20 +48,6 @@ public class MangoReaderActivity extends AppCompatActivity implements NavDrawerF
         super.onConfigurationChanged(newConfig);
 
     }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_my_library, menu);
-//        return true;
-//    }
-
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
@@ -81,13 +61,11 @@ public class MangoReaderActivity extends AppCompatActivity implements NavDrawerF
         switch (position) {
             case 0:
                 findViewById(R.id.spinner_browse_sources).setVisibility(View.GONE);
-
                 fragment = new MyLibraryFragment();
                 title = getString(R.string.title_my_library);
                 break;
             case 1:
                 findViewById(R.id.spinner_browse_sources).setVisibility(View.VISIBLE);
-
                 fragment = new BrowseMangaFragment();
                 title = getString(R.string.title_browse);
             default:
@@ -98,7 +76,6 @@ public class MangoReaderActivity extends AppCompatActivity implements NavDrawerF
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_body, fragment);
             fragmentTransaction.commit();
-
             getSupportActionBar().setTitle(title);
 
         }
