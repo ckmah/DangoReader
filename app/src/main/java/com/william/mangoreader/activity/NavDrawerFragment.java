@@ -22,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NavDrawerFragment extends Fragment{
-    private static String TAG = NavDrawerFragment.class.getSimpleName();
+public class NavDrawerFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -44,7 +43,6 @@ public class NavDrawerFragment extends Fragment{
     public static List<NavDrawerItem> getData() {
         List<NavDrawerItem> data = new ArrayList<>();
 
-
         // preparing navigation drawer items
         for (int i = 0; i < titles.length; i++) {
             NavDrawerItem navItem = new NavDrawerItem();
@@ -57,8 +55,6 @@ public class NavDrawerFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // drawer labels
         titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
     }
 
@@ -122,10 +118,10 @@ public class NavDrawerFragment extends Fragment{
 
     }
 
-    public static interface ClickListener {
-        public void onClick(View view, int position);
+    public interface ClickListener {
+        void onClick(View view, int position);
 
-        public void onLongClick(View view, int position);
+        void onLongClick(View view, int position);
     }
 
     static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
@@ -167,6 +163,6 @@ public class NavDrawerFragment extends Fragment{
     }
 
     public interface NavDrawerFragmentListener {
-        public void onDrawerItemSelected(View view, int position);
+        void onDrawerItemSelected(View view, int position);
     }
 }
