@@ -1,8 +1,10 @@
 package com.william.mangoreader.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,8 +14,21 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.william.mangoreader.R;
+import com.william.mangoreader.listener.InfiniteScrollListener;
+
+import java.util.ArrayList;
+
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
+import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.view.CardGridView;
 
 public class MyLibraryFragment extends Fragment {
+
+    private ArrayList<Card> cards;
+    private CardGridView gridView;
+
+    AppCompatActivity activity;
 
     public MyLibraryFragment() {
         // Required empty public constructor
@@ -22,30 +37,43 @@ public class MyLibraryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        activity = (AppCompatActivity) getActivity();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
-
-//        AppCompatActivity activity = (AppCompatActivity) getActivity();
         // TODO: asynchronous loading
-//        ArrayList<Card> cards = new ArrayList<Card>();
-        //Create a Card
-//        Card card = new Card(activity);
-        //Create a CardHeader
-        //Add Header to card
-//        card.addCardHeader(header);
-//        cards.add(card);
-//        CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(activity, cards);
-//        CardGridView gridView = (CardGridView) rootView.findViewById(R.id.library_cards);
-//        if (gridView != null) {
-//            gridView.setAdapter(mCardArrayAdapter);
-//        }
+        cards = new ArrayList<Card>();
+
+        load(activity, cards);
+
+        final CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(activity, cards);
+        final CardGridView gridView = (CardGridView) rootView.findViewById(R.id.library_cards);
+        gridView.setAdapter(mCardArrayAdapter);
+
+        gridView.setOnScrollListener(new InfiniteScrollListener(5) {
+            @Override
+            public void loadMore(int page, int totalItemsCount) {
+
+                load(activity, cards);
+                // TODO: load from JSON
+                mCardArrayAdapter.notifyDataSetChanged();
+                System.out.println("loading more...");
+            }
+        });
+
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         return rootView;
+    }
+
+    private void load(Context context, ArrayList<Card> cards) {
+        Card card = new Card(context);
+        card.addCardHeader(new CardHeader(context));
+        cards.add(new Card(context));
     }
 
     @Override
