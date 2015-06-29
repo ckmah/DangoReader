@@ -18,9 +18,11 @@ import com.william.mangoreader.listener.InfiniteScrollListener;
 
 import java.util.ArrayList;
 
+import it.gmariotti.cardslib.library.cards.actions.BaseSupplementalAction;
+import it.gmariotti.cardslib.library.cards.actions.IconSupplementalAction;
+import it.gmariotti.cardslib.library.cards.material.MaterialLargeImageCard;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.view.CardGridView;
 
 public class MyLibraryFragment extends Fragment {
@@ -45,23 +47,24 @@ public class MyLibraryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
+        final CardGridView gridView = (CardGridView) rootView.findViewById(R.id.library_cards);
+
         // TODO: asynchronous loading
         cards = new ArrayList<Card>();
 
-        load(activity, cards);
+
+        load(activity, gridView, cards);
 
         final CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(activity, cards);
-        final CardGridView gridView = (CardGridView) rootView.findViewById(R.id.library_cards);
         gridView.setAdapter(mCardArrayAdapter);
 
         gridView.setOnScrollListener(new InfiniteScrollListener(5) {
             @Override
             public void loadMore(int page, int totalItemsCount) {
 
-                load(activity, cards);
+                load(activity, gridView, cards);
                 // TODO: load from JSON
                 mCardArrayAdapter.notifyDataSetChanged();
-                System.out.println("loading more...");
             }
         });
 
@@ -70,10 +73,37 @@ public class MyLibraryFragment extends Fragment {
         return rootView;
     }
 
-    private void load(Context context, ArrayList<Card> cards) {
-        Card card = new Card(context);
-        card.addCardHeader(new CardHeader(context));
-        cards.add(new Card(context));
+    private void load(final Context context, ViewGroup vgroup, ArrayList<Card> cards) {
+//        Card card = new Card(context, R.layout.card_layout_custom);
+
+        // Set supplemental actions as icon
+        ArrayList<BaseSupplementalAction> actions = new ArrayList<BaseSupplementalAction>();
+
+        IconSupplementalAction t1 = new IconSupplementalAction(context, R.id.add_to_lib);
+        t1.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
+            @Override
+            public void onClick(Card card, View view) {
+                Toast.makeText(getActivity(), "Added to Library.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        actions.add(t1);
+
+        // setup card
+        MaterialLargeImageCard card = MaterialLargeImageCard.with(context)
+                .setTitle("Fullmetal Alchemist")
+                .useDrawableId(R.drawable.fma_1)
+                .setupSupplementalActions(R.layout.card_actions, actions)
+                .build();
+
+        // TODO: open detail on card click
+        card.setOnClickListener(new Card.OnCardClickListener() {
+            @Override
+            public void onClick(Card card, View view) {
+                Toast.makeText(context, " Click on Card.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        cards.add(card);
     }
 
     @Override

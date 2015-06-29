@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,35 +11,36 @@
         android:id="@+id/library_cards"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="0dp"
+        android:clickable="false"
         android:columnWidth="190dp"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="3dp"
-        android:horizontalSpacing="2dp"
-        android:stretchMode="columnWidth"
         android:gravity="center"
-        card:list_card_layout_resourceID="@layout/native_list_card_thumbnail_layout"
-        />
-    <!-- SHOW WHEN LIBRARY EMPTY -->
-    <TextView
-        android:id="@+id/no_manga_label"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="100dp"
-        android:gravity="center_horizontal"
-        android:text="@string/my_library_fragment_1"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        card:list_card_layout_resourceID="@layout/material_card">
 
-    <TextView
-        android:id="@+id/add_manga_label"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/no_manga_label"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal"
-        android:text="@string/my_library_fragment_2"
-        android:textSize="12sp" />
+    </it.gmariotti.cardslib.library.view.CardGridView>
+    <!-- SHOW WHEN LIBRARY EMPTY -->
+    <!--<TextView-->
+    <!--android:id="@+id/no_manga_label"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentTop="true"-->
+
+    <!--android:gravity="center_horizontal"-->
+    <!--android:text="@string/my_library_fragment_1"-->
+    <!--android:textSize="30sp"-->
+    <!--android:textStyle="bold" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/add_manga_label"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@id/no_manga_label"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:gravity="center_horizontal"-->
+    <!--android:text="@string/my_library_fragment_2"-->
+    <!--android:textSize="12sp" />-->
 
 </RelativeLayout>

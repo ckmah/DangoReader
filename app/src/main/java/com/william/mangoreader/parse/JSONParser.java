@@ -8,7 +8,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 
 /**
  * Created by clarence on 6/24/15.
@@ -85,34 +83,11 @@ public class JSONParser extends AsyncTask<String, Integer, Void> {
     }
 
     public void parseJson(JSONObject json) {
-        try {
-            //TODO: generate list of "manga objects" to be created on scroll
-            // parsing json object
-            if (json.getString("status").equalsIgnoreCase("ok")) {
-                JSONArray posts = json.getJSONArray("posts");
-
-                ArrayList feedList = new ArrayList();
-
-                for (int i = 0; i < posts.length(); i++) {
-                    JSONObject post = posts.getJSONObject(i);
-                    FeedItem item = new FeedItem();
-                    item.setTitle(post.getString("title"));
-                    item.setDate(post.getString("date"));
-                    item.setId(post.getString("id"));
-                    item.setUrl(post.getString("url"));
-                    item.setContent(post.getString("content"));
-                    JSONArray attachments = post.getJSONArray("attachments");
-                    if (null != attachments && attachments.length() > 0) {
-                        JSONObject attachment = attachments.getJSONObject(0);
-                        if (attachment != null)
-                            item.setAttachmentUrl(attachment.getString("url"));
-                    }
-
-                    feedList.add(item);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            //TODO: generate list of "manga objects" to be created on scroll
+//            // parsing json object
+//        }
+//        catch (JSONException e) {
+//            }
     }
 }
