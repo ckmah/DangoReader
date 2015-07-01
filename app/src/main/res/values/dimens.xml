@@ -18,7 +18,7 @@
     <dimen name="card_default_native_margin_right">4dp</dimen>
     <dimen name="card_default_native_margin_top">4dp</dimen>
 
-    <dimen name="card_base_empty_height">16dp</dimen>
+    <dimen name="card_base_empty_height">0dp</dimen>
     <dimen name="card_main_content_native_default_paddingBottom">4dp</dimen>
     <dimen name="card_main_content_native_default_paddingLeft">4dp</dimen>
     <dimen name="card_main_content_native_default_paddingRight">4dp</dimen>

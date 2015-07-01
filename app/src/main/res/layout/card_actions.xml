@@ -3,14 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentTop="true"
+    android:clickable="true"
     android:background="@android:color/transparent">
 
     <!-- element for a IconSupplementalAction -->
     <ImageButton
-        android:id="@+id/add_to_lib"
+        android:id="@+id/bookmark_but"
+        android:background="@android:color/transparent"
         style="@style/card.native.actions.button_custom"
         android:layout_alignParentRight="true"
-        android:background="?android:selectableItemBackground"
-        android:src="@drawable/ic_bookmark_outline_white_24dp" />
+        android:src="@drawable/bookmark_toggle" />
+
+    <!--<ToggleButton-->
+    <!--android:layout_width="@dimen/actions_action_width"-->
+    <!--android:layout_height="@dimen/actions_action_height"-->
+    <!--android:textOn=""-->
+    <!--android:textOff=""-->
+    <!--android:id="@+id/bookmark"-->
+    <!--android:focusable="false"-->
+    <!--android:focusableInTouchMode="false"-->
+    <!--android:backgroun="@drawable/bookmark_toggle"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_centerHorizontal="true" />-->
 
 </RelativeLayout>

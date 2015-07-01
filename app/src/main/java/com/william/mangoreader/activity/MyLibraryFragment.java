@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.william.mangoreader.R;
@@ -53,7 +54,7 @@ public class MyLibraryFragment extends Fragment {
         cards = new ArrayList<Card>();
 
 
-        load(activity, gridView, cards);
+        createEntry(activity, gridView, cards);
 
         final CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(activity, cards);
         gridView.setAdapter(mCardArrayAdapter);
@@ -62,7 +63,7 @@ public class MyLibraryFragment extends Fragment {
             @Override
             public void loadMore(int page, int totalItemsCount) {
 
-                load(activity, gridView, cards);
+                createEntry(activity, gridView, cards);
                 // TODO: load from JSON
                 mCardArrayAdapter.notifyDataSetChanged();
             }
@@ -73,17 +74,32 @@ public class MyLibraryFragment extends Fragment {
         return rootView;
     }
 
-    private void load(final Context context, ViewGroup vgroup, ArrayList<Card> cards) {
-//        Card card = new Card(context, R.layout.card_layout_custom);
+    private void createEntry(final Context context, ViewGroup vgroup, ArrayList<Card> cards) {
 
         // Set supplemental actions as icon
         ArrayList<BaseSupplementalAction> actions = new ArrayList<BaseSupplementalAction>();
 
-        IconSupplementalAction t1 = new IconSupplementalAction(context, R.id.add_to_lib);
+        IconSupplementalAction t1 = new IconSupplementalAction(context, R.id.bookmark_but);
+
+        // TODO: set initial settings according user library data
+
         t1.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
             @Override
             public void onClick(Card card, View view) {
-                Toast.makeText(getActivity(), "Added to Library.", Toast.LENGTH_SHORT).show();
+                System.out.println("Bookmark action clicked...");
+                ImageButton bmButton = (ImageButton) view.findViewById(R.id.bookmark_but);
+                bmButton.setSelected(!bmButton.isSelected());
+                if (bmButton.isSelected()) {
+
+                    //TODO: add to user library
+
+                    System.out.println("Bookmarked!");
+                } else {
+
+                    //TODO: remove from user library
+
+                    System.out.println("Un-bookmarked!");
+                }
             }
         });
         actions.add(t1);
@@ -91,11 +107,13 @@ public class MyLibraryFragment extends Fragment {
         // setup card
         MaterialLargeImageCard card = MaterialLargeImageCard.with(context)
                 .setTitle("Fullmetal Alchemist")
-                .useDrawableId(R.drawable.fma_1)
+                .setSubTitle("Author")
+                .useDrawableId(R.drawable.manga3)
                 .setupSupplementalActions(R.layout.card_actions, actions)
                 .build();
 
         // TODO: open detail on card click
+
         card.setOnClickListener(new Card.OnCardClickListener() {
             @Override
             public void onClick(Card card, View view) {
