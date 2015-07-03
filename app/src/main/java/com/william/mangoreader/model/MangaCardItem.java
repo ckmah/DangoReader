@@ -1,26 +1,31 @@
 package com.william.mangoreader.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
 /**
  * Manga card element model, for use in browseMangaFragment and maybe MyLibraryFragment
  */
+@JsonIgnoreProperties({ "a", "s" })
 public class MangaCardItem {
-    private String id;
+    @JsonProperty("i")
+    public String id;
 
-    private String title;
+    @JsonProperty("t")
+    public String title;
 
-    private String imageUrl;
+    @JsonProperty("im")
+    public String imageUrl;
 
-    private ArrayList<String> categories;
+    @JsonProperty("c")
+    public ArrayList<String> categories;
 
-    private long lastChapterDate;
+    @JsonProperty("ld")
+    public long lastChapterDate;
 
-    private int hits;
-
-    public MangaCardItem(String id){
-        this.id = id;
-        categories = new ArrayList<>();
-    }
+    @JsonProperty("h")
+    public int hits;
 
 }

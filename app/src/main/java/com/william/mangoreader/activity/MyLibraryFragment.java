@@ -16,7 +16,10 @@ import android.widget.Toast;
 
 import com.william.mangoreader.R;
 import com.william.mangoreader.listener.InfiniteScrollListener;
+import com.william.mangoreader.model.MangaCardItem;
+import com.william.mangoreader.parse.ParseMangaCardItem;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import it.gmariotti.cardslib.library.cards.actions.BaseSupplementalAction;
