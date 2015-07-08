@@ -14,16 +14,4 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/bookmark_toggle" />
 
-    <!--<ToggleButton-->
-    <!--android:layout_width="@dimen/actions_action_width"-->
-    <!--android:layout_height="@dimen/actions_action_height"-->
-    <!--android:textOn=""-->
-    <!--android:textOff=""-->
-    <!--android:id="@+id/bookmark"-->
-    <!--android:focusable="false"-->
-    <!--android:focusableInTouchMode="false"-->
-    <!--android:backgroun="@drawable/bookmark_toggle"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_centerHorizontal="true" />-->
-
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.william.mangoreader.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,15 +17,13 @@ import com.william.mangoreader.R;
 
 public class MangoReaderActivity extends AppCompatActivity implements NavDrawerFragment.NavDrawerFragmentListener {
 
-    private Toolbar mToolbar;
-    private NavDrawerFragment drawerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mango_reader);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -35,7 +34,7 @@ public class MangoReaderActivity extends AppCompatActivity implements NavDrawerF
         adapter.setDropDownViewResource(R.layout.drop_list);
         spinner.setAdapter(adapter);
 
-        drawerFragment = (NavDrawerFragment)
+        NavDrawerFragment drawerFragment = (NavDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
@@ -45,7 +44,6 @@ public class MangoReaderActivity extends AppCompatActivity implements NavDrawerF
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
     }
 
     @Override
@@ -53,30 +51,41 @@ public class MangoReaderActivity extends AppCompatActivity implements NavDrawerF
         displayView(position);
     }
 
+    /**
+     * Handles what fragment to display based on navdrawer selection.
+     *
+     * @param position Position of clicked view in navdrawer.
+     */
     private void displayView(int position) {
         Fragment fragment = null;
         String title = getString(R.string.app_name);
 
+        // create corresponding fragment
         switch (position) {
-            case 0:
+            case 0: // library
                 findViewById(R.id.spinner_browse_sources).setVisibility(View.GONE);
                 fragment = new MyLibraryFragment();
                 title = getString(R.string.title_my_library);
                 break;
-            case 1:
+            case 1: // browse
                 findViewById(R.id.spinner_browse_sources).setVisibility(View.VISIBLE);
                 fragment = new BrowseMangaFragment();
                 title = getString(R.string.title_browse);
+                break;
+            case 2: // settings
+                Intent settingsIntent = new Intent(MangoReaderActivity.this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                return;
             default:
                 break;
         }
+        // add fragment to MangoReaderActivity #container_body
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_body, fragment);
             fragmentTransaction.commit();
             getSupportActionBar().setTitle(title);
-
         }
     }
 }

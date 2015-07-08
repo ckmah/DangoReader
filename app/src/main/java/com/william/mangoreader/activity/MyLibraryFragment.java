@@ -108,7 +108,7 @@ public class MyLibraryFragment extends Fragment {
         MaterialLargeImageCard card = MaterialLargeImageCard.with(context)
                 .setTitle("Fullmetal Alchemist")
                 .setSubTitle("Author")
-                .useDrawableId(R.drawable.manga3)
+                .useDrawableId(R.drawable.manga2)
                 .setupSupplementalActions(R.layout.card_actions, actions)
                 .build();
 
