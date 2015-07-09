@@ -30,9 +30,7 @@ public class MyLibraryFragment extends Fragment {
 
     private ArrayList<Card> cards;
     private CardGridView gridView;
-
-    AppCompatActivity activity;
-
+    
     public MyLibraryFragment() {
         // Required empty public constructor
     }
@@ -49,21 +47,21 @@ public class MyLibraryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
         final CardGridView gridView = (CardGridView) rootView.findViewById(R.id.library_cards);
-
+        
         // TODO: asynchronous loading
         cards = new ArrayList<Card>();
 
 
-        createEntry(activity, gridView, cards);
+        createEntry(getActivity(), gridView, cards);
 
-        final CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(activity, cards);
+        final CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(getActivity(), cards);
         gridView.setAdapter(mCardArrayAdapter);
 
         gridView.setOnScrollListener(new InfiniteScrollListener(5) {
             @Override
             public void loadMore(int page, int totalItemsCount) {
 
-                createEntry(activity, gridView, cards);
+                createEntry(getActivity(), gridView, cards);
                 // TODO: load from JSON
                 mCardArrayAdapter.notifyDataSetChanged();
             }

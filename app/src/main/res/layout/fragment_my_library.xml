@@ -20,27 +20,5 @@
         card:list_card_layout_resourceID="@layout/material_card">
 
     </it.gmariotti.cardslib.library.view.CardGridView>
-    <!-- SHOW WHEN LIBRARY EMPTY -->
-    <!--<TextView-->
-    <!--android:id="@+id/no_manga_label"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentTop="true"-->
-
-    <!--android:gravity="center_horizontal"-->
-    <!--android:text="@string/my_library_fragment_1"-->
-    <!--android:textSize="30sp"-->
-    <!--android:textStyle="bold" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/add_manga_label"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@id/no_manga_label"-->
-    <!--android:layout_centerInParent="true"-->
-    <!--android:layout_marginTop="10dp"-->
-    <!--android:gravity="center_horizontal"-->
-    <!--android:text="@string/my_library_fragment_2"-->
-    <!--android:textSize="12sp" />-->
-
+    
 </RelativeLayout>

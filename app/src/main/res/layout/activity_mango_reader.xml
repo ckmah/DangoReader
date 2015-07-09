@@ -36,7 +36,6 @@
 
     </LinearLayout>
 
-
     <fragment
         android:id="@+id/fragment_navigation_drawer"
         android:name="com.william.mangoreader.activity.NavDrawerFragment"
