@@ -2,9 +2,9 @@ package com.william.mangoreader.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,9 +31,6 @@ public class BrowseMangaFragment extends Fragment {
     private ArrayList<Card> cards;
     private CardGridView gridView;
 
-    AppCompatActivity activity;
-
-
     public BrowseMangaFragment() {
         // Required empty public constructor
     }
@@ -52,15 +49,15 @@ public class BrowseMangaFragment extends Fragment {
 
         // TODO: asynchronous loading
         cards = new ArrayList<Card>();
-        createEntry(activity, cards);
+        createEntry(getActivity().getApplicationContext(), cards);
 
-        final CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(activity, cards);
+        final CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(getActivity(), cards);
         gridView.setAdapter(mCardArrayAdapter);
 
         gridView.setOnScrollListener(new InfiniteScrollListener(5) {
             @Override
             public void loadMore(int page, int totalItemsCount) {
-                createEntry(activity, cards);
+                createEntry(getActivity().getApplicationContext(), cards);
                 // TODO: load from JSON
                 mCardArrayAdapter.notifyDataSetChanged();
             }
@@ -105,7 +102,10 @@ public class BrowseMangaFragment extends Fragment {
         card.setOnClickListener(new Card.OnCardClickListener() {
             @Override
             public void onClick(Card card, View view) {
-                // TODO: open detail on card click
+                // TODO: integrate with manga item model
+                Intent settingsIntent = new Intent(getActivity(), MangaItemActivity.class);
+                settingsIntent.putExtra("mangaTitle", getResources().getString(R.string.manga_title));
+                getActivity().startActivity(settingsIntent);
                 Toast.makeText(context, " Click on Card.", Toast.LENGTH_SHORT).show();
             }
         });

@@ -46,4 +46,9 @@
     <string name="pref_awake_summary">Keep display awake while reading</string>
     <string name="pref_pagenum">Page numbers</string>
     <string name="pref_pagenum_summary">Show page numbers while reading</string>
+    <string name="title_activity_manga_item">MangaItemActivity</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- manga item activity intent keyValues -->
+    <string name="manga_title">Manga Title</string>
 </resources>

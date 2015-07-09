@@ -22,6 +22,7 @@ public class SettingsActivity extends PreferenceActivity {
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.settings_toolbar);
         mToolbar.setTitle(R.string.title_settings);
+
         mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
         // TODO: crashes on rotate - Fragment com.william.mangoreader.activity.SettingsActivity$SettingsFragment did not create a view.
         getFragmentManager().beginTransaction().replace(R.id.preference_fragment, new SettingsFragment()).commit();
