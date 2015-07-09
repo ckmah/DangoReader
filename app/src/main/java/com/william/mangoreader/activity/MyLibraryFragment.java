@@ -2,6 +2,8 @@ package com.william.mangoreader.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,8 @@ import com.william.mangoreader.model.MangaCardItem;
 import com.william.mangoreader.parse.ParseMangaCardItem;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import it.gmariotti.cardslib.library.cards.actions.BaseSupplementalAction;
@@ -56,17 +60,23 @@ public class MyLibraryFragment extends Fragment {
         // TODO: asynchronous loading
         cards = new ArrayList<Card>();
 
-
-        createEntry(activity, gridView, cards);
-
         final CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(activity, cards);
         gridView.setAdapter(mCardArrayAdapter);
 
         gridView.setOnScrollListener(new InfiniteScrollListener(5) {
             @Override
             public void loadMore(int page, int totalItemsCount) {
+                int quantity = 25;
+                try {
+                    ArrayList<MangaCardItem> mangaCards = ParseMangaCardItem.parseMangaEden(page, quantity);
+                    for (MangaCardItem m : mangaCards){
+                        createEntry(activity, m, cards);
+                    }
 
-                createEntry(activity, gridView, cards);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 // TODO: load from JSON
                 mCardArrayAdapter.notifyDataSetChanged();
             }
@@ -77,7 +87,7 @@ public class MyLibraryFragment extends Fragment {
         return rootView;
     }
 
-    private void createEntry(final Context context, ViewGroup vgroup, ArrayList<Card> cards) {
+    private void createEntry(final Context context, MangaCardItem manga, ArrayList<Card> cards) {
 
         // Set supplemental actions as icon
         ArrayList<BaseSupplementalAction> actions = new ArrayList<BaseSupplementalAction>();
@@ -109,8 +119,8 @@ public class MyLibraryFragment extends Fragment {
 
         // setup card
         MaterialLargeImageCard card = MaterialLargeImageCard.with(context)
-                .setTitle("Fullmetal Alchemist")
-                .setSubTitle("Author")
+                .setTitle(manga.title)
+                .setSubTitle(String.valueOf(manga.lastChapterDate))
                 .useDrawableId(R.drawable.manga3)
                 .setupSupplementalActions(R.layout.card_actions, actions)
                 .build();
