@@ -33,7 +33,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <it.gmariotti.cardslib.library.view.component.CardThumbnailView
             android:id="@+id/card_thumbnail_layout"
             style="@style/card.native.card_thumbnail_outer_layout"
@@ -44,18 +43,21 @@
         <!-- Main Content View -->
         <FrameLayout
             android:id="@+id/card_main_content_layout"
-            style="@style/card.native.material_large_image_content_outer_layout_custom"
+            style="@style/card.native.material_large_image_content_outer_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <ViewStub
+                android:id="@+id/card_supplemental_actions_vs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:inflatedId="@+id/card_supplemental_actions" />
+
+        </FrameLayout>
 
 
     </it.gmariotti.cardslib.library.view.ForegroundLinearLayout>
 
-    <ViewStub
-        android:id="@+id/card_supplemental_actions_vs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:inflatedId="@+id/card_supplemental_actions" />
 
 </RelativeLayout><!-- From: file:/home/gabriele/Lavoro/Android/AndroidStudioProjects/wrks/cardslib/library-cards/src/main/res/layout/native_material_largeimage_text_card.xml -->

@@ -14,6 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.william.mangoreader.R;
+import com.william.mangoreader.fragment.BrowseMangaFragment;
+import com.william.mangoreader.fragment.MyLibraryFragment;
+import com.william.mangoreader.fragment.NavDrawerFragment;
 
 public class MangoReaderActivity extends AppCompatActivity implements NavDrawerFragment.NavDrawerFragmentListener {
 

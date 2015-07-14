@@ -3,6 +3,7 @@
     <color name="colorPrimary">#FFC400</color>
     <color name="colorPrimaryDark">#FFAB00</color>
     <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#CCFFFFFF</color>
 
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#FFFFFF</color>
@@ -10,4 +11,5 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="colorAccent">#BDBDBD</color>
+    <color name="transparent">@android:color/transparent</color>
 </resources>

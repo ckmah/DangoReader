@@ -11,43 +11,54 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:popupMenuStyle">@style/PopupMenuStyle</item>
+    </style>
+
+    <style name="PopupMenuStyle" parent="android:Widget.Holo.Light.PopupMenu">
+        <!--<item name="android:popupBackground">@android:color/white</item>-->
     </style>
 
     <style name="card.native.actions.button_custom">
-        <item name="android:layout_height">@dimen/actions_icon_height</item>
-        <item name="android:layout_width">@dimen/actions_icon_width</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:layout_margin">0dp</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
-    <style name="card.native.material_large_image_content_outer_layout_custom" parent="card.native.content_outer_layout_custom">
-        <item name="android:paddingLeft">
-            @dimen/card_main_content_native_material_large_image_paddingLeft
-        </item>
-        <item name="android:paddingRight">
-            @dimen/card_main_content_native_material_large_image_paddingRight
-        </item>
-        <item name="android:paddingTop">
-            @dimen/card_main_content_native_material_large_image_paddingTop
-        </item>
-        <item name="android:paddingBottom">
-            @dimen/card_main_content_native_material_large_image_paddingBottom
-        </item>
+    <style name="TabLayout" parent="Widget.Design.TabLayout">
+        <item name="android:background">@color/transparent</item>
+        <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabIndicatorColor">@color/colorPrimaryDark</item>
+
+        <item name="tabTextAppearance">@style/TabTextAppearance</item>
+        <item name="tabSelectedTextColor">@color/textColorPrimary</item>
     </style>
 
-    <style name="card.native.content_outer_layout_custom">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:minHeight">@dimen/card_base_empty_height</item>
-        <item name="android:paddingLeft">@dimen/card_main_content_native_default_paddingLeft</item>
-        <item name="android:paddingRight">@dimen/card_main_content_native_default_paddingRight
-        </item>
-        <item name="android:paddingTop">@dimen/card_main_content_native_default_paddingTop</item>
-        <item name="android:paddingBottom">@dimen/card_main_content_native_default_paddingBottom
-        </item>
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+        <item name="textAllCaps">true</item>
     </style>
 
-    <style name="card_external_custom">
-        <item name="android:layout_marginTop">@dimen/card_default_native_margin_top</item>
-        <item name="android:layout_marginBottom">@dimen/card_default_native_margin_bottom</item>
-        <item name="android:layout_marginLeft">@dimen/card_default_native_margin_left</item>
-        <item name="android:layout_marginRight">@dimen/card_default_native_margin_right</item>
+    <style name="card.native.base_simple_title_custom">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/card_main_content_native_simple_title_text_size</item>
+        <item name="android:layout_gravity">left|center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/card_main_native_simple_title_margin_left
+        </item>
+        <item name="android:layout_marginTop">@dimen/card_main_native_simple_title_margin_top</item>
+    </style>
+
+    <style name="card.native.base_subtitle_custom">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">@dimen/card_main_content_native_subtitle_text_size</item>
+        <item name="android:layout_gravity">left|center_vertical</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:layout_marginLeft">@dimen/card_main_native_simple_title_margin_left
+        </item>
+        <item name="android:layout_marginTop">@dimen/card_main_native_simple_title_margin_top</item>
     </style>
 </resources>

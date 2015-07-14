@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.william.mangoreader.activity.MyLibraryFragment">
+    android:orientation="vertical">
 
-    <it.gmariotti.cardslib.library.view.CardGridView
-        android:id="@+id/library_cards"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="0dp"
-        android:clickable="false"
-        android:columnWidth="190dp"
-        android:gravity="center"
-        android:numColumns="2"
-        android:stretchMode="columnWidth"
-        card:list_card_layout_resourceID="@layout/material_card">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
 
-    </it.gmariotti.cardslib.library.view.CardGridView>
-    
-</RelativeLayout>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/sliding_tabs"
+            style="@style/TabLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/library_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+
+        />
+
+</LinearLayout>

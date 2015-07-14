@@ -21,6 +21,12 @@
         <item>@string/nav_item_settings</item>
     </string-array>
 
+    <!-- library section labels -->
+    <string name="library_page1">Reading</string>
+    <string name="library_page2">Backlog</string>
+    <string name="library_page3">On Hold</string>
+    <string name="library_page4">Finished</string>
+
     <!-- browse fragment source names -->
     <string-array name="browse_sources">
         <item>@string/browse_source1</item>
@@ -51,4 +57,7 @@
 
     <!-- manga item activity intent keyValues -->
     <string name="manga_title">Manga Title</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

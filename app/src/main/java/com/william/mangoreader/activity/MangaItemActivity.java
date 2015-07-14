@@ -16,7 +16,7 @@ public class MangaItemActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_manga_item_description);
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.manga_item_toolbar);
-        mToolbar.setTitle(getIntent().getStringExtra(getResources().getString(R.string.manga_title)));
+        mToolbar.setTitle(getIntent().getStringExtra("mangaTitle"));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.william.mangoreader.fragment.BrowseMangaFragment">
+    android:layout_width="match_parent">
 
     <it.gmariotti.cardslib.library.view.CardGridView
-        android:id="@+id/browse_cards"
+        android:id="@+id/card_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"
@@ -18,8 +15,7 @@
         android:paddingRight="8dp"
         android:stretchMode="columnWidth"
         android:verticalSpacing="4dp"
-        card:list_card_layout_resourceID="@layout/material_card">
+        card:list_card_layout_resourceID="@layout/material_card" />
 
-    </it.gmariotti.cardslib.library.view.CardGridView>
 
-</RelativeLayout>
+</LinearLayout>

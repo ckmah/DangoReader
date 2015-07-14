@@ -8,9 +8,11 @@
     <dimen name="actions_action_height">24dp</dimen>
     <dimen name="actions_action_width">24dp</dimen>
 
+    <dimen name="card_main_content_native_simple_title_text_size">20sp</dimen>
+    <dimen name="card_main_content_native_subtitle_text_size">16sp</dimen>
     <dimen name="card_main_content_native_material_large_image_paddingLeft">8dp</dimen>
     <dimen name="card_main_content_native_material_large_image_paddingRight">8dp</dimen>
-    <dimen name="card_main_content_native_material_large_image_paddingTop">8dp</dimen>
+    <dimen name="card_main_content_native_material_large_image_paddingTop">4dp</dimen>
     <dimen name="card_main_content_native_material_large_image_paddingBottom">8dp</dimen>
 
     <dimen name="card_default_native_margin_bottom">4dp</dimen>
@@ -22,5 +24,5 @@
     <dimen name="card_main_content_native_default_paddingBottom">4dp</dimen>
     <dimen name="card_main_content_native_default_paddingLeft">4dp</dimen>
     <dimen name="card_main_content_native_default_paddingRight">4dp</dimen>
-    <dimen name="card_main_content_native_default_paddingTop">8dp</dimen>
+    <dimen name="card_main_content_native_default_paddingTop">4dp</dimen>
 </resources>

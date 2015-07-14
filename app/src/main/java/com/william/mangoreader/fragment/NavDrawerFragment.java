@@ -1,4 +1,4 @@
-package com.william.mangoreader.activity;
+package com.william.mangoreader.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
