@@ -22,14 +22,14 @@
                 android:background="@color/white"
                 android:src="@drawable/manga2" />
 
-            <include
-                android:id="@+id/manga_item_toolbar"
-                layout="@layout/toolbar_manga_item" />
-
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="@drawable/gradient" />
+
+            <include
+                android:id="@+id/manga_item_toolbar"
+                layout="@layout/toolbar_manga_item" />
         </RelativeLayout>
     </LinearLayout>
 
