@@ -25,4 +25,5 @@
     <dimen name="card_main_content_native_default_paddingLeft">4dp</dimen>
     <dimen name="card_main_content_native_default_paddingRight">4dp</dimen>
     <dimen name="card_main_content_native_default_paddingTop">4dp</dimen>
+
 </resources>

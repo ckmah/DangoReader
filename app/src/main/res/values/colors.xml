@@ -11,5 +11,6 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="colorAccent">#BDBDBD</color>
+    <color name="gradient_dark">#80000000</color>
     <color name="transparent">@android:color/transparent</color>
 </resources>

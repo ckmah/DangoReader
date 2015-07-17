@@ -1,23 +1,71 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:theme="@style/MangaItemActivityTheme"
     tools:context="com.william.mangoreader.activity.MangaItemActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include
-            android:id="@+id/manga_item_toolbar"
-            layout="@layout/toolbar_preferences" />
-    </android.support.design.widget.AppBarLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+
+            <ImageView
+                style="@style/MangaItemArt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/manga2" />
+
+            <include
+                android:id="@+id/manga_item_toolbar"
+                layout="@layout/toolbar_manga_item" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@drawable/gradient" />
+        </RelativeLayout>
+    </LinearLayout>
+
 
     <FrameLayout
         android:id="@+id/manga_item_container_body"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/manga_item_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- DYNAMICALLY INSERT DATA HERE-->
+            <TextView
+                android:id="@+id/item_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Shingeki no Kyojin" />
+
+            <TextView
+                android:id="@+id/item_subtitle"
+                style="@style/card.native.base_subtitle_custom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Hajime Isayama" />
+
+            <TextView
+                android:id="@+id/manga_item_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+        </LinearLayout>
     </FrameLayout>
 
-</RelativeLayout>
+</LinearLayout>

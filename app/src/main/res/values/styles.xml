@@ -15,7 +15,17 @@
     </style>
 
     <style name="PopupMenuStyle" parent="android:Widget.Holo.Light.PopupMenu">
-        <!--<item name="android:popupBackground">@android:color/white</item>-->
+        <item name="android:popupBackground">@android:color/white</item>
+    </style>
+
+    <style name="MangaItemToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="MangaItemActivityTheme">
+        <item name="android:statusBarColor">@color/transparent</item>
+        <!--<item name="android:windowTranslucentNavigation">false</item>-->
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="card.native.actions.button_custom">
@@ -27,7 +37,6 @@
     </style>
 
     <style name="TabLayout" parent="Widget.Design.TabLayout">
-        <item name="android:background">@color/transparent</item>
         <item name="tabIndicatorHeight">4dp</item>
         <item name="tabIndicatorColor">@color/colorPrimaryDark</item>
 
@@ -60,5 +69,12 @@
         <item name="android:layout_marginLeft">@dimen/card_main_native_simple_title_margin_left
         </item>
         <item name="android:layout_marginTop">@dimen/card_main_native_simple_title_margin_top</item>
+    </style>
+
+    <!-- MangaItem styling -->
+    <style name="MangaItemArt">
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:layout_height">250dp</item>
     </style>
 </resources>

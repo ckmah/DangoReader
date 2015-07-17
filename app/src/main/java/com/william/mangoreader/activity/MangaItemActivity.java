@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.william.mangoreader.R;
 
@@ -13,12 +14,24 @@ public class MangaItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_manga_item_description);
+        setContentView(R.layout.activity_manga_item);
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.manga_item_toolbar);
-        mToolbar.setTitle(getIntent().getStringExtra("mangaTitle"));
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        //        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                NavUtils.navigateUpFromSameTask(MangaItemActivity.this);
+//            }
+//        });
+
+
+//        getFragmentManager().beginTransaction().add(R.id.manga_item_container_body, new ()).commit();
+
+        getWindow().setStatusBarColor(getResources().getColor(R.color.transparent));
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
 
