@@ -17,6 +17,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
 }
 
 dependencies {
@@ -34,4 +39,6 @@ dependencies {
     compile 'com.github.gabrielemariotti.cards:cardslib-recyclerview:2.1.0'
     //Optional for staggered grid view
     compile 'com.github.gabrielemariotti.cards:cardslib-extra-staggeredgrid:2.1.0'
+
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc3'
 }
