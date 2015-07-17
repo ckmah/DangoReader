@@ -30,6 +30,10 @@ dependencies {
     compile "com.android.support:recyclerview-v7:21.0.+"
     compile 'com.android.support:design:22.2.0'
 
+    compile 'com.google.code.gson:gson:2.2.4'
+
+    compile 'com.mcxiaoke.volley:library:1.0.17'
+
     //https://github.com/gabrielmariotti/cardslib
     //Core
     compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'

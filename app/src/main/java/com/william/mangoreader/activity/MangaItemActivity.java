@@ -14,11 +14,14 @@ public class MangaItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.transparent));
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         setContentView(R.layout.activity_manga_item);
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.manga_item_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         //        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -30,8 +33,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
 //        getFragmentManager().beginTransaction().add(R.id.manga_item_container_body, new ()).commit();
 
-        getWindow().setStatusBarColor(getResources().getColor(R.color.transparent));
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
     }
 
 

@@ -9,15 +9,9 @@
 
     <it.gmariotti.cardslib.library.view.CardGridView
         android:id="@+id/browse_cards"
+        style="@style/card_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="false"
-        android:horizontalSpacing="4dp"
-        android:numColumns="auto_fit"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="4dp"
         card:list_card_layout_resourceID="@layout/material_card">
 
     </it.gmariotti.cardslib.library.view.CardGridView>

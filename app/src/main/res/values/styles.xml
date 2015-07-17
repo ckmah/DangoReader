@@ -5,6 +5,12 @@
 
     </style>
 
+    <style name="ToolbarTitle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="MangoReaderTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -18,7 +24,12 @@
         <item name="android:popupBackground">@android:color/white</item>
     </style>
 
+    <style name="source_spinner" parent="ToolbarTitle">
+
+    </style>
+
     <style name="MangaItemToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:fitsSystemWindows">true</item>
         <item name="android:background">@color/transparent</item>
     </style>
 
@@ -26,6 +37,17 @@
         <item name="android:statusBarColor">@color/transparent</item>
         <!--<item name="android:windowTranslucentNavigation">false</item>-->
         <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="card_grid">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:clickable">false</item>
+        <item name="android:numColumns">auto_fit</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:stretchMode">columnWidth</item>
     </style>
 
     <style name="card.native.actions.button_custom">
@@ -51,16 +73,22 @@
     </style>
 
     <style name="card.native.base_simple_title_custom">
+        <item name="android:ellipsize">end</item>
         <item name="android:textStyle">normal</item>
+        <item name="android:singleLine">true</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/card_main_content_native_simple_title_text_size</item>
         <item name="android:layout_gravity">left|center_vertical</item>
         <item name="android:layout_marginLeft">@dimen/card_main_native_simple_title_margin_left
         </item>
         <item name="android:layout_marginTop">@dimen/card_main_native_simple_title_margin_top</item>
+        <item name="android:layout_marginRight">@dimen/card_main_native_simple_title_margin_right
+        </item>
     </style>
 
     <style name="card.native.base_subtitle_custom">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@android:color/darker_gray</item>
         <item name="android:textSize">@dimen/card_main_content_native_subtitle_text_size</item>
@@ -69,6 +97,8 @@
         <item name="android:layout_marginLeft">@dimen/card_main_native_simple_title_margin_left
         </item>
         <item name="android:layout_marginTop">@dimen/card_main_native_simple_title_margin_top</item>
+        <item name="android:layout_marginRight">@dimen/card_main_native_subtitle_margin_right</item>
+
     </style>
 
     <!-- MangaItem styling -->

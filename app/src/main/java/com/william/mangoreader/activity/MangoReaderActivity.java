@@ -33,7 +33,7 @@ public class MangoReaderActivity extends AppCompatActivity implements NavDrawerF
         // spinner for source selection
         Spinner spinner = (Spinner) findViewById(R.id.spinner_browse_sources);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
-                R.array.browse_sources, android.R.layout.simple_spinner_item);
+                R.array.browse_sources, R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(R.layout.drop_list);
         spinner.setAdapter(adapter);
 

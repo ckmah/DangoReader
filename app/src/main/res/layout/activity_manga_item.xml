@@ -30,6 +30,7 @@
             <include
                 android:id="@+id/manga_item_toolbar"
                 layout="@layout/toolbar_manga_item" />
+
         </RelativeLayout>
     </LinearLayout>
 

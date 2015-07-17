@@ -1,13 +1,11 @@
 package com.william.mangoreader.parse;
 
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.william.mangoreader.model.MangaCardItem;
-import com.fasterxml.jackson.core.JsonFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,6 +33,7 @@ public class ParseMangaCardItem {
             MangaCardItem item = mapper.treeToValue(m, MangaCardItem.class);
             mangaCardModels.add(item);
         }
+
         return mangaCardModels;
     }
 //    public static void main(String[] args){
