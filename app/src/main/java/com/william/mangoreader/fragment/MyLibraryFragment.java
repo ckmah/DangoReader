@@ -34,18 +34,12 @@ public class MyLibraryFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
 
         LibraryPagerAdapter pagerAdapter = new LibraryPagerAdapter(getActivity().getApplicationContext(), getActivity().getSupportFragmentManager());
-//        ViewPager pager = (ViewPager) rootView.findViewById(R.id.library_pager);
-//        pager.setAdapter(pagerAdapter);
-
-//        SlidingTabLayout tabs = (SlidingTabLayout) rootView.findViewById(R.id.library_tabs);
 
         ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.library_pager);
         viewPager.setAdapter(pagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.sliding_tabs);
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-//        tabs.setViewPager(pager);
 
         setHasOptionsMenu(true);
 //         Inflate the layout for this fragment

@@ -2,36 +2,28 @@ package com.william.mangoreader.fragment;
 
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import com.william.mangoreader.R;
-import com.william.mangoreader.activity.MangaItemActivity;
-import com.william.mangoreader.listener.InfiniteScrollListener;
+import com.william.mangoreader.activity.MangoReaderActivity;
+import com.william.mangoreader.adapter.CardLayoutAdapter;
+import com.william.mangoreader.db.EntriesDataSource;
+import com.william.mangoreader.model.MangaCardItem;
 
 import java.util.ArrayList;
 
-import it.gmariotti.cardslib.library.cards.actions.BaseSupplementalAction;
-import it.gmariotti.cardslib.library.cards.actions.IconSupplementalAction;
-import it.gmariotti.cardslib.library.cards.material.MaterialLargeImageCard;
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.view.CardGridView;
-
 public class LibraryPageFragment extends Fragment {
 
-    private ArrayList<Card> cards;
-    private CardGridView gridView;
+    private final int INIT_QUANTITY = 25;
+    private final int QUERY_QUANTITY = 10;
+
+    ArrayList<MangaCardItem> mData = new ArrayList<MangaCardItem>();
 
     public static LibraryPageFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -50,126 +42,38 @@ public class LibraryPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.card_grid, container, false);
-        final CardGridView gridView = (CardGridView) rootView.findViewById(R.id.card_grid_view);
 
-        // TODO: asynchronous loading
-        cards = new ArrayList<Card>();
+        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
-        createEntry(getActivity().getApplicationContext(), gridView, cards);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        final CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(getActivity().getApplicationContext(), cards);
-        gridView.setAdapter(mCardArrayAdapter);
+        MangoReaderActivity main_activity = (MangoReaderActivity) getActivity();
+        EntriesDataSource mangadb = main_activity.getUserDB();
 
-        gridView.setOnScrollListener(new InfiniteScrollListener(5) {
-            @Override
-            public void loadMore(int page, int totalItemsCount) {
-                createEntry(getActivity(), gridView, cards);
-                // TODO: load from JSON
-                mCardArrayAdapter.notifyDataSetChanged();
-            }
-        });
+        CardLayoutAdapter cgAdapter = new CardLayoutAdapter(mangadb, getActivity());
+        mRecyclerView.setAdapter(cgAdapter);
 
-//        setHasOptionsMenu(true);
+        for (MangaCardItem m : mangadb.getAllEntries())
+            cgAdapter.addItem(m);
+
+//        // TODO: asynchronous loading
+
         // Inflate the layout for this fragment
         return rootView;
     }
 
-    private void createEntry(final Context context, ViewGroup container, ArrayList<Card> cards) {
+    // Called when add button is clicked.
+    public void addItem(CardLayoutAdapter adapter) {
 
-        // Set supplemental actions as icon
-        ArrayList<BaseSupplementalAction> actions = new ArrayList<BaseSupplementalAction>();
+        // Add data locally to the list.
+        MangaCardItem mangaItem = new MangaCardItem();
+//        mangaItem.title = "MangaTitle";
+//        mData.add(mangaItem);
 
-        IconSupplementalAction t1 = new IconSupplementalAction(context, R.id.bookmark_but);
-
-        // TODO: set initial settings according user library data
-
-        t1.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
-            @Override
-            public void onClick(Card card, View view) {
-                System.out.println("Bookmark action clicked...");
-                ImageButton bmButton = (ImageButton) view.findViewById(R.id.bookmark_but);
-                bmButton.setSelected(!bmButton.isSelected());
-
-                // create popupmenu for add to library
-                PopupMenu popupMenu = new PopupMenu(context, view);
-                popupMenu.getMenuInflater()
-                        .inflate(R.menu.menu_card, popupMenu.getMenu());
-
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-
-                        return true;
-                    }
-                });
-
-                popupMenu.show();
-                if (bmButton.isSelected()) {
-
-                    //TODO: add to user library
-
-                    System.out.println("Bookmarked!");
-                } else {
-
-                    //TODO: remove from user library
-
-                    System.out.println("Un-bookmarked!");
-                }
-            }
-        });
-        actions.add(t1);
-
-        // setup card
-        MaterialLargeImageCard card = MaterialLargeImageCard.with(context)
-                .setTitle("Manga Title Here")
-                .setSubTitle("Author Name")
-                .useDrawableId(R.drawable.manga2)
-                .setupSupplementalActions(R.layout.card_actions, actions)
-                .build();
-
-        card.setInnerLayout(R.layout.inner_base_main_custom);
-
-        CardHeader header = new CardHeader(context);
-        header.setTitle("Header");
-        card.addCardHeader(header);
-
-        card.setOnClickListener(new Card.OnCardClickListener() {
-            @Override
-            public void onClick(Card card, View view) {
-                // TODO: integrate with manga item model
-                Intent settingsIntent = new Intent(getActivity(), MangaItemActivity.class);
-                settingsIntent.putExtra("mangaTitle", getResources().getString(R.string.manga_title));
-                getActivity().startActivity(settingsIntent);
-                Toast.makeText(context, " Click on Card.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        cards.add(card);
+        // Update adapter.
+        adapter.addItem(mangaItem);
     }
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        inflater.inflate(R.menu.menu_my_library, menu);
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//        if (id == R.id.action_search) {
-//            Toast.makeText(getActivity().getApplicationContext(), "Search action is selected!", Toast.LENGTH_SHORT).show();
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
     @Override
     public void onAttach(Activity activity) {

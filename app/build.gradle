@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 21
     buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "com.william.mangoreader"
         minSdkVersion 21
-        targetSdkVersion 22
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -26,23 +26,16 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:appcompat-v7:22.2.0"
-    compile "com.android.support:recyclerview-v7:21.0.+"
-    compile 'com.android.support:design:22.2.0'
+    compile "com.android.support:appcompat-v7:21.2.0"
+    compile "com.android.support:support-v4:22.2.+"
+    compile "com.android.support:recyclerview-v7:22.2.+"
+    compile 'com.android.support:cardview-v7:21.0.+'
+
+    compile 'com.android.support:design:22.2.+'
 
     compile 'com.google.code.gson:gson:2.2.4'
 
     compile 'com.mcxiaoke.volley:library:1.0.17'
-
-    //https://github.com/gabrielmariotti/cardslib
-    //Core
-    compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
-    //Optional for built-in cards
-    compile 'com.github.gabrielemariotti.cards:cardslib-cards:2.1.0'
-    //Optional for RecyclerView
-    compile 'com.github.gabrielemariotti.cards:cardslib-recyclerview:2.1.0'
-    //Optional for staggered grid view
-    compile 'com.github.gabrielemariotti.cards:cardslib-extra-staggeredgrid:2.1.0'
 
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc3'
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.william.mangoreader.activity.MangoReaderActivity">
     <item
-        android:id="@+id/menu_one"
+        android:id="@+id/menu_add_lib"
         android:orderInCategory="100"
         android:title="Add to Library"
         app:showAsAction="never" />

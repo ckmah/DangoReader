@@ -3,6 +3,9 @@ package com.william.mangoreader.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,20 +14,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.william.mangoreader.R;
-import com.william.mangoreader.listener.InfiniteScrollListener;
-import com.william.mangoreader.parse.JSONParserTask;
+import com.william.mangoreader.activity.MangoReaderActivity;
+import com.william.mangoreader.adapter.CardLayoutAdapter;
+import com.william.mangoreader.model.MangaCardItem;
+import com.william.mangoreader.parse.ParseMangaCardItem;
+import com.william.mangoreader.volley.MySingleton;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardGridView;
-
 public class BrowseMangaFragment extends Fragment {
 
-    private ArrayList<Card> cards;
-    private CardGridView gridView;
+    private ArrayList<CardView> cards;
+
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private CardLayoutAdapter cgAdapter;
+
 
     public BrowseMangaFragment() {
         // Required empty public constructor
@@ -40,34 +52,50 @@ public class BrowseMangaFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
 
-        final CardGridView gridView = (CardGridView) rootView.findViewById(R.id.browse_cards);
+        initRecycler(rootView);
 
-        // TODO: asynchronous loading
+        // Volley request queue
+        RequestQueue queue = MySingleton.getInstance(getActivity().getApplicationContext()).
+                getRequestQueue();
 
+        String url = "https://www.mangaeden.com/api/list/0/?p=0&l=25";
 
-        cards = new ArrayList<Card>();
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (url, new Response.Listener<JSONObject>() {
 
-        final CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(getActivity(), cards);
-        gridView.setAdapter(mCardArrayAdapter);
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        ArrayList<MangaCardItem> results = ParseMangaCardItem.volleyParseMangaEden(response.toString());
 
-        // INITIAL REQUEST
-        final JSONParserTask parser = new JSONParserTask(rootView, getActivity(), cards, mCardArrayAdapter);
-        parser.execute(0, 10);
+                        for (MangaCardItem m : results) {
+                            cgAdapter.addItem(m);
+                        }
+                        System.out.println("Response: " + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("Response error: " + error.toString());
+                    }
+                });
 
-        gridView.setOnScrollListener(new InfiniteScrollListener(5) {
-            @Override
-            public void loadMore(int page, int totalItemsCount) {
-                // SUBSEQUENT REQUESTS
-                int quantity = 25;
+        queue.add(jsObjRequest);
 
-                parser.execute(page, 25);
-//                cards = parser.allC;
-                mCardArrayAdapter.notifyDataSetChanged();
-            }
-        });
 
         setHasOptionsMenu(true);
         return rootView;
+    }
+
+    private void initRecycler(View rootView) {
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_recycler_view);
+
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
+        MangoReaderActivity activity = (MangoReaderActivity) getActivity();
+        cgAdapter = new CardLayoutAdapter(activity.getUserDB(), activity);
+        mRecyclerView.setAdapter(cgAdapter);
+
     }
 
     @Override

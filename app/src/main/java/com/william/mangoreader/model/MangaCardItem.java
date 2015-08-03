@@ -10,22 +10,35 @@ import java.util.ArrayList;
  */
 @JsonIgnoreProperties({ "a", "s" })
 public class MangaCardItem {
+    private long db_id;
+
     @JsonProperty("i")
     public String id;
 
     @JsonProperty("t")
     public String title;
 
+    @JsonProperty("s")
+    public String status;
+
     @JsonProperty("im")
     public String imageUrl;
 
     @JsonProperty("c")
-    public ArrayList<String> categories;
+    public ArrayList<String> genres;
 
     @JsonProperty("ld")
     public long lastChapterDate;
 
     @JsonProperty("h")
     public int hits;
+
+    public long getDB_ID() {
+        return db_id;
+    }
+
+    public void setDB_ID(long db_id) {
+        this.db_id = db_id;
+    }
 
 }

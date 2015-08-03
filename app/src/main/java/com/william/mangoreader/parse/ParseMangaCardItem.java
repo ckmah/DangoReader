@@ -28,10 +28,31 @@ public class ParseMangaCardItem {
         ArrayList<MangaCardItem> mangaCardModels = new ArrayList<>();
 
         ArrayNode mangas = (ArrayNode) root.get("manga");
-        for (int i = 0; i < mangas.size(); i++){
+        for (int i = 0; i < mangas.size(); i++) {
             JsonNode m = mangas.get(i);
             MangaCardItem item = mapper.treeToValue(m, MangaCardItem.class);
             mangaCardModels.add(item);
+        }
+
+        return mangaCardModels;
+    }
+
+    static public ArrayList<MangaCardItem> volleyParseMangaEden(String jsonString) {
+
+        ArrayList<MangaCardItem> mangaCardModels = new ArrayList<>();
+
+        try {
+            JsonNode root = mapper.readTree(jsonString);
+            ArrayNode mangas = (ArrayNode) root.get("manga");
+
+            for (int i = 0; i < mangas.size(); i++) {
+                JsonNode m = mangas.get(i);
+                MangaCardItem item = mapper.treeToValue(m, MangaCardItem.class);
+                mangaCardModels.add(item);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return mangaCardModels;
