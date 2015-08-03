@@ -51,7 +51,7 @@ public class LibraryPageFragment extends Fragment {
         MangoReaderActivity main_activity = (MangoReaderActivity) getActivity();
         EntriesDataSource mangadb = main_activity.getUserDB();
 
-        CardLayoutAdapter cgAdapter = new CardLayoutAdapter(mangadb, getActivity());
+        CardLayoutAdapter cgAdapter = new CardLayoutAdapter(mangadb, getActivity(), false);
         mRecyclerView.setAdapter(cgAdapter);
 
         for (MangaCardItem m : mangadb.getAllEntries())

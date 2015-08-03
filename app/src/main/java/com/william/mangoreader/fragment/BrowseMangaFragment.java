@@ -93,7 +93,7 @@ public class BrowseMangaFragment extends Fragment {
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
         MangoReaderActivity activity = (MangoReaderActivity) getActivity();
-        cgAdapter = new CardLayoutAdapter(activity.getUserDB(), activity);
+        cgAdapter = new CardLayoutAdapter(activity.getUserDB(), activity, true);
         mRecyclerView.setAdapter(cgAdapter);
 
     }

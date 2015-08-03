@@ -49,9 +49,14 @@ public class EntriesDataSource {
 
     public void deleteEntry(MangaCardItem item) {
         long id = item.getDB_ID();
-        System.out.println("Comment deleted with id: " + id);
-        database.delete(MySQLiteHelper.TABLE_ENTRIES, MySQLiteHelper.COLUMN_ID
-                + " = " + id, null);
+
+        try {
+            database.delete(MySQLiteHelper.TABLE_ENTRIES, MySQLiteHelper.COLUMN_ID
+                    + " = " + id, null);
+        } catch (Exception e) {
+            System.err.println("Error deleting " + item.title + ".");
+            System.err.println(e.toString());
+        }
     }
 
     public List<MangaCardItem> getAllEntries() {
