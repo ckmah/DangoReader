@@ -45,6 +45,21 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
         notifyDataSetChanged();
     }
 
+    public void addToList(int pos) {
+        Toast.makeText(activity, "\"" + mData.get(pos).title + "\" added to your library.", Toast.LENGTH_SHORT).show();
+        db.createEntry(mData.get(pos));
+    }
+
+    public void removeFromList(int pos) {
+        Toast.makeText(activity, "\"" + mData.get(pos).title + "\" removed from your library.", Toast.LENGTH_SHORT).show();
+        db.deleteEntry(mData.get((pos)));
+
+        // needed to update UI without reading in entire database
+        mData.remove(pos);
+        notifyItemRemoved(pos);
+        notifyItemRangeChanged(pos, mData.size());
+    }
+
     @Override
     public RecyclerViewHolder onCreateViewHolder(final ViewGroup viewGroup, int position) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
@@ -69,9 +84,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.menu_add_lib:
-                                    System.out.println("position: " + pos);
-                                    db.createEntry(mData.get(pos));
-                                    Toast.makeText(activity, "\"" + mData.get(pos).title + "\" added to your library.", Toast.LENGTH_SHORT).show();
+                                    addToList(pos);
                                     return true;
                                 default:
                                     return false;
@@ -85,9 +98,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.menu_remove_lib:
-                                    System.out.println("position: " + pos);
-                                    db.deleteEntry(mData.get(pos));
-                                    Toast.makeText(activity, "\"" + mData.get(pos).title + "\" removed from your library.", Toast.LENGTH_SHORT).show();
+                                    removeFromList(pos);
                                     return true;
                                 default:
                                     return false;
@@ -98,7 +109,6 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
                 popupMenu.show();
             }
         });
-
         return holder;
     }
 
@@ -110,6 +120,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
     public void addItem(MangaCardItem m) {
         mData.add(m);
         notifyItemInserted(mData.size());
+
     }
 
 
