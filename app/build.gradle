@@ -35,6 +35,8 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.2.4'
 
+    compile 'de.greenrobot:greendao:2.0.0'
+
     compile 'com.mcxiaoke.volley:library:1.0.17'
 
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc3'

@@ -4,11 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.william.mangoreader.R;
 
 /**
- * Created by Clarence on 7/20/2015.
+ * Provide a reference to the views for each manga
+ * Complex data items may need more than one view per item, and
+ * you provide access to all the views for a data item in a view holder
  */
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 

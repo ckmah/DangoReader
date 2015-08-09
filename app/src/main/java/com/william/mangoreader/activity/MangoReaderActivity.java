@@ -2,6 +2,8 @@ package com.william.mangoreader.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -15,18 +17,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-
 import com.william.mangoreader.R;
-import com.william.mangoreader.db.EntriesDataSource;
+import com.william.mangoreader.daogen.DaoMaster;
+import com.william.mangoreader.daogen.DaoSession;
 import com.william.mangoreader.fragment.BrowseMangaFragment;
 import com.william.mangoreader.fragment.MyLibraryFragment;
 
+/**
+ * Main activity screen. Displays various fragments.
+ */
 public class MangoReaderActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
 
-    private EntriesDataSource mangaEntries;
+    private SQLiteDatabase db;
+    private DaoMaster daoMaster;
+    private DaoSession daoSession;
+
+    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +46,9 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         initNavigation();
         initSpinner();
 
-        mangaEntries = new EntriesDataSource(this);
-        mangaEntries.open();
+//        initDaoDB();
+//        mangaEntries = new EntriesDataSource(this);
+//        mangaEntries.open();
 
         displayView(R.id.navigation_item_1);
     }
@@ -56,7 +66,6 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
-
     }
 
     private void initSpinner() {
@@ -66,6 +75,13 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
                 R.array.browse_sources, R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(R.layout.drop_list);
         spinner.setAdapter(adapter);
+    }
+
+    private void initDaoDB() {
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
+        db = helper.getWritableDatabase();
+        daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
     }
 
     @Override
@@ -119,10 +135,6 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
             fragmentTransaction.commit();
             getSupportActionBar().setTitle(title);
         }
-    }
-
-    public EntriesDataSource getUserDB() {
-        return mangaEntries;
     }
 
 }

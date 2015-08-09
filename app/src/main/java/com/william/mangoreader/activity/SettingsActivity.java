@@ -6,13 +6,11 @@ import android.preference.PreferenceFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-
 import com.william.mangoreader.R;
 
 /**
  * Created by clarence on 7/7/15.
  * <p/>
- * TODO: determine whether this needs to be an AppCompatActivity
  */
 public class SettingsActivity extends PreferenceActivity {
 

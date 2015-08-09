@@ -6,9 +6,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.william.mangoreader.R;
 
+/**
+ * Activity that displays a single manga, and shows manga info and chapters
+ */
 public class MangaItemActivity extends AppCompatActivity {
 
     @Override

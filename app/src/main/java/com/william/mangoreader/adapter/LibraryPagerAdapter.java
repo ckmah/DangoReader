@@ -4,12 +4,11 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
 import com.william.mangoreader.R;
 import com.william.mangoreader.fragment.LibraryPageFragment;
 
 /**
- * Created by Clarence on 7/14/2015.
+ * My Library view pager tabs adapter
  */
 public class LibraryPagerAdapter extends FragmentStatePagerAdapter {
     private Context context;

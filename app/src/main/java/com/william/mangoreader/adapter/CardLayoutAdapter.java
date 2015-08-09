@@ -1,6 +1,8 @@
 package com.william.mangoreader.adapter;
 
 import android.app.Activity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -9,26 +11,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.william.mangoreader.R;
-import com.william.mangoreader.db.EntriesDataSource;
+import com.william.mangoreader.daogen.DaoMaster;
+import com.william.mangoreader.daogen.DaoSession;
 import com.william.mangoreader.model.MangaCardItem;
 
 import java.util.ArrayList;
 
 /**
- * Created by Clarence on 7/20/2015.
+ * Layout adapter for adding cards
  */
 public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
-    private ArrayList<MangaCardItem> mData;
-    private EntriesDataSource db;
+    private ArrayList<MangaCardItem> mangaCardItems;
     private Activity activity;
-    private boolean browseFlag;
+    private boolean browseFlag; //right now, this specifies whether we're in a browsemangafragment or mylibraryfragment
 
-    public CardLayoutAdapter(EntriesDataSource db, Activity activity, boolean browseFlag) {
-        mData = new ArrayList<MangaCardItem>();
-        this.db = db;
+    private SQLiteDatabase dbase;
+    private DaoMaster daoMaster;
+    private DaoSession daoSession;
+
+    private Cursor cursor;
+
+    public CardLayoutAdapter(Activity activity, boolean browseFlag) {
+        mangaCardItems = new ArrayList<>();
         this.activity = activity;
         this.browseFlag = browseFlag;
         // Pass context or other static stuff that will be needed.
@@ -36,28 +42,27 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder viewHolder, int position) {
-        viewHolder.title.setText(mData.get(position).title);
+        viewHolder.title.setText(mangaCardItems.get(position).title);
         viewHolder.subtitle.setText("Placeholder");
     }
 
+    @Deprecated
     public void updateList(ArrayList<MangaCardItem> data) {
-        mData = data;
+        mangaCardItems = data;
         notifyDataSetChanged();
     }
 
-    public void addToList(int pos) {
-        Toast.makeText(activity, "\"" + mData.get(pos).title + "\" added to your library.", Toast.LENGTH_SHORT).show();
-        db.createEntry(mData.get(pos));
+    private void addToList(int pos) {
+        Toast.makeText(activity, "\"" + mangaCardItems.get(pos).title + "\" added to your library.", Toast.LENGTH_SHORT).show();
     }
 
-    public void removeFromList(int pos) {
-        Toast.makeText(activity, "\"" + mData.get(pos).title + "\" removed from your library.", Toast.LENGTH_SHORT).show();
-        db.deleteEntry(mData.get((pos)));
+    private void removeFromList(int pos) {
+        Toast.makeText(activity, "\"" + mangaCardItems.get(pos).title + "\" removed from your library.", Toast.LENGTH_SHORT).show();
 
         // needed to update UI without reading in entire database
-        mData.remove(pos);
+        mangaCardItems.remove(pos);
         notifyItemRemoved(pos);
-        notifyItemRangeChanged(pos, mData.size());
+        notifyItemRangeChanged(pos, mangaCardItems.size());
     }
 
     @Override
@@ -114,12 +119,12 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mangaCardItems.size();
     }
 
     public void addItem(MangaCardItem m) {
-        mData.add(m);
-        notifyItemInserted(mData.size());
+        mangaCardItems.add(m);
+        notifyItemInserted(mangaCardItems.size());
 
     }
 

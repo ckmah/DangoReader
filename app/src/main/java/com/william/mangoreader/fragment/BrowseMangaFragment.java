@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,8 +22,7 @@ import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
 import com.william.mangoreader.model.MangaCardItem;
 import com.william.mangoreader.parse.ParseMangaCardItem;
-import com.william.mangoreader.volley.MySingleton;
-
+import com.william.mangoreader.volley.VolleySingleton;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -55,7 +53,7 @@ public class BrowseMangaFragment extends Fragment {
         initRecycler(rootView);
 
         // Volley request queue
-        RequestQueue queue = MySingleton.getInstance(getActivity().getApplicationContext()).
+        RequestQueue queue = VolleySingleton.getInstance(getActivity().getApplicationContext()).
                 getRequestQueue();
 
         String url = "https://www.mangaeden.com/api/list/0/?p=0&l=25";
@@ -93,7 +91,7 @@ public class BrowseMangaFragment extends Fragment {
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
         MangoReaderActivity activity = (MangoReaderActivity) getActivity();
-        cgAdapter = new CardLayoutAdapter(activity.getUserDB(), activity, true);
+        cgAdapter = new CardLayoutAdapter(activity, true);
         mRecyclerView.setAdapter(cgAdapter);
 
     }
