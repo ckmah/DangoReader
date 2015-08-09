@@ -1,6 +1,7 @@
 package com.william.mangoreader.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.CardView;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.william.mangoreader.R;
+import com.william.mangoreader.activity.MangaItemActivity;
+import com.william.mangoreader.activity.SettingsActivity;
 import com.william.mangoreader.daogen.DaoMaster;
 import com.william.mangoreader.daogen.DaoSession;
 import com.william.mangoreader.model.MangaCardItem;
@@ -72,6 +75,14 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
         final RecyclerViewHolder holder = new RecyclerViewHolder(itemView);
 
         final CardView cardView = (CardView) itemView.findViewById(R.id.card_view);
+
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, MangaItemActivity.class);
+                activity.startActivity(intent);
+            }
+        });
 
         cardView.findViewById(R.id.card_menu_more).setOnClickListener(new View.OnClickListener() {
             @Override
