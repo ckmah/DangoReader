@@ -9,12 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
-import com.william.mangoreader.db.EntriesDataSource;
-import com.william.mangoreader.model.MangaCardItem;
+import com.william.mangoreader.model.MangaEdenMangaListItem;
 
 import java.util.ArrayList;
 
@@ -23,7 +21,7 @@ public class LibraryPageFragment extends Fragment {
     private final int INIT_QUANTITY = 25;
     private final int QUERY_QUANTITY = 10;
 
-    ArrayList<MangaCardItem> mData = new ArrayList<MangaCardItem>();
+    ArrayList<MangaEdenMangaListItem> mData = new ArrayList<MangaEdenMangaListItem>();
 
     public static LibraryPageFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -49,13 +47,9 @@ public class LibraryPageFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         MangoReaderActivity main_activity = (MangoReaderActivity) getActivity();
-        EntriesDataSource mangadb = main_activity.getUserDB();
 
-        CardLayoutAdapter cgAdapter = new CardLayoutAdapter(mangadb, getActivity(), false);
+        CardLayoutAdapter cgAdapter = new CardLayoutAdapter(getActivity(), false);
         mRecyclerView.setAdapter(cgAdapter);
-
-        for (MangaCardItem m : mangadb.getAllEntries())
-            cgAdapter.addItem(m);
 
 //        // TODO: asynchronous loading
 
@@ -63,17 +57,6 @@ public class LibraryPageFragment extends Fragment {
         return rootView;
     }
 
-    // Called when add button is clicked.
-    public void addItem(CardLayoutAdapter adapter) {
-
-        // Add data locally to the list.
-        MangaCardItem mangaItem = new MangaCardItem();
-//        mangaItem.title = "MangaTitle";
-//        mData.add(mangaItem);
-
-        // Update adapter.
-        adapter.addItem(mangaItem);
-    }
 
     @Override
     public void onAttach(Activity activity) {

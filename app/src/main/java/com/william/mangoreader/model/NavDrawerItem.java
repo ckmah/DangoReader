@@ -5,15 +5,17 @@ public class NavDrawerItem {
     private boolean showNotify;
     private String title;
 
-    public NavDrawerItem(){
+    public NavDrawerItem() {
 
     }
-    public NavDrawerItem(boolean showNotify, String title){
+
+    public NavDrawerItem(boolean showNotify, String title) {
         this.showNotify = showNotify;
         this.title = title;
 
     }
-    public boolean isShowNotify(){
+
+    public boolean isShowNotify() {
         return showNotify;
     }
 

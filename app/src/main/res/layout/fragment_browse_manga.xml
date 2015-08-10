@@ -6,12 +6,18 @@
     android:orientation="vertical"
     tools:context="com.william.mangoreader.fragment.BrowseMangaFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/browse_recycler_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/browse_swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:padding="4dp"
-        android:scrollbars="vertical" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/browse_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:padding="4dp"
+            android:scrollbars="vertical" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

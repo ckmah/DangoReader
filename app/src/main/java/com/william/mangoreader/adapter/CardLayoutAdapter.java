@@ -1,6 +1,9 @@
 package com.william.mangoreader.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -11,24 +14,31 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.william.mangoreader.R;
-import com.william.mangoreader.db.EntriesDataSource;
-import com.william.mangoreader.model.MangaCardItem;
+import com.william.mangoreader.activity.MangaItemActivity;
+import com.william.mangoreader.daogen.DaoMaster;
+import com.william.mangoreader.daogen.DaoSession;
+import com.william.mangoreader.model.MangaEdenMangaListItem;
+import com.william.mangoreader.parse.MangaEden;
 
 import java.util.ArrayList;
 
 /**
- * Created by Clarence on 7/20/2015.
+ * Layout adapter for adding cards
  */
 public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
-    private ArrayList<MangaCardItem> mData;
-    private EntriesDataSource db;
+    private ArrayList<MangaEdenMangaListItem> mangaEdenMangaListItems;
     private Activity activity;
-    private boolean browseFlag;
+    private boolean browseFlag; //right now, this specifies whether we're in a browsemangafragment or mylibraryfragment
 
-    public CardLayoutAdapter(EntriesDataSource db, Activity activity, boolean browseFlag) {
-        mData = new ArrayList<MangaCardItem>();
-        this.db = db;
+    private SQLiteDatabase dbase;
+    private DaoMaster daoMaster;
+    private DaoSession daoSession;
+
+    private Cursor cursor;
+
+    public CardLayoutAdapter(Activity activity, boolean browseFlag) {
+        mangaEdenMangaListItems = new ArrayList<>();
         this.activity = activity;
         this.browseFlag = browseFlag;
         // Pass context or other static stuff that will be needed.
@@ -36,28 +46,29 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder viewHolder, int position) {
-        viewHolder.title.setText(mData.get(position).title);
-        viewHolder.subtitle.setText("Placeholder");
+        viewHolder.setTitle(mangaEdenMangaListItems.get(position).getTitle());
+        viewHolder.setSubtitle("Placeholder");
+        MangaEden.setImage(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.getThumbnail());
+//        viewHolder.setThumbnail(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext());
+        viewHolder.setMangaEdenId(mangaEdenMangaListItems.get(position).getId());
     }
 
-    public void updateList(ArrayList<MangaCardItem> data) {
-        mData = data;
+    public void clearList() {
+        mangaEdenMangaListItems.clear();
         notifyDataSetChanged();
     }
 
-    public void addToList(int pos) {
-        Toast.makeText(activity, "\"" + mData.get(pos).title + "\" added to your library.", Toast.LENGTH_SHORT).show();
-        db.createEntry(mData.get(pos));
+    private void addToList(int pos) {
+        Toast.makeText(activity, "\"" + mangaEdenMangaListItems.get(pos).getTitle() + "\" added to your library.", Toast.LENGTH_SHORT).show();
     }
 
-    public void removeFromList(int pos) {
-        Toast.makeText(activity, "\"" + mData.get(pos).title + "\" removed from your library.", Toast.LENGTH_SHORT).show();
-        db.deleteEntry(mData.get((pos)));
+    private void removeFromList(int pos) {
+        Toast.makeText(activity, "\"" + mangaEdenMangaListItems.get(pos).getTitle() + "\" removed from your library.", Toast.LENGTH_SHORT).show();
 
         // needed to update UI without reading in entire database
-        mData.remove(pos);
+        mangaEdenMangaListItems.remove(pos);
         notifyItemRemoved(pos);
-        notifyItemRangeChanged(pos, mData.size());
+        notifyItemRangeChanged(pos, mangaEdenMangaListItems.size());
     }
 
     @Override
@@ -67,6 +78,17 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
         final RecyclerViewHolder holder = new RecyclerViewHolder(itemView);
 
         final CardView cardView = (CardView) itemView.findViewById(R.id.card_view);
+
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, MangaItemActivity.class);
+                intent.putExtra("mangaId", holder.getMangaEdenId());
+                activity.startActivity(intent);
+            }
+        });
+
+        int cardPosition = holder.getAdapterPosition();
 
         cardView.findViewById(R.id.card_menu_more).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,14 +134,15 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
         return holder;
     }
 
+
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mangaEdenMangaListItems.size();
     }
 
-    public void addItem(MangaCardItem m) {
-        mData.add(m);
-        notifyItemInserted(mData.size());
+    public void addItem(MangaEdenMangaListItem m) {
+        mangaEdenMangaListItems.add(m);
+        notifyItemInserted(mangaEdenMangaListItems.size());
 
     }
 

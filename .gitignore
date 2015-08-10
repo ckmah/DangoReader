@@ -8,3 +8,7 @@
 /build
 /captures
 app/app.iml
+
+.idea/codeStyleSettings.xml
+greendao/greendao.iml
+MangoReader.iml

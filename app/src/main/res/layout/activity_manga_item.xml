@@ -17,10 +17,10 @@
 
             <ImageView
                 style="@style/MangaItemArt"
+                android:id="@+id/manga_item_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:src="@drawable/manga2" />
+                android:background="@color/white" />
 
             <View
                 android:layout_width="fill_parent"
@@ -48,18 +48,18 @@
 
             <!-- DYNAMICALLY INSERT DATA HERE-->
             <TextView
-                android:id="@+id/item_title"
+                android:id="@+id/manga_item_title"
                 style="@style/CardTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Shingeki no Kyojin" />
+                 />
 
             <TextView
-                android:id="@+id/item_subtitle"
+                android:id="@+id/manga_item_subtitle"
                 style="@style/CardSubtitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Hajime Isayama" />
+                 />
 
             <TextView
                 android:id="@+id/manga_item_description"
