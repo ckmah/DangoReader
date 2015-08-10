@@ -12,9 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangaItemActivity;
-import com.william.mangoreader.activity.SettingsActivity;
 import com.william.mangoreader.daogen.DaoMaster;
 import com.william.mangoreader.daogen.DaoSession;
 import com.william.mangoreader.model.MangaCardItem;
@@ -45,22 +45,22 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder viewHolder, int position) {
-        viewHolder.title.setText(mangaCardItems.get(position).title);
-        viewHolder.subtitle.setText("Placeholder");
+        viewHolder.setTitle(mangaCardItems.get(position).getTitle());
+        viewHolder.setSubtitle("Placeholder");
+        viewHolder.setThumbnail(mangaCardItems.get(position).getImageUrl(), activity.getApplicationContext());
     }
 
-    @Deprecated
-    public void updateList(ArrayList<MangaCardItem> data) {
-        mangaCardItems = data;
+    public void clearList() {
+        mangaCardItems.clear();
         notifyDataSetChanged();
     }
 
     private void addToList(int pos) {
-        Toast.makeText(activity, "\"" + mangaCardItems.get(pos).title + "\" added to your library.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "\"" + mangaCardItems.get(pos).getTitle() + "\" added to your library.", Toast.LENGTH_SHORT).show();
     }
 
     private void removeFromList(int pos) {
-        Toast.makeText(activity, "\"" + mangaCardItems.get(pos).title + "\" removed from your library.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "\"" + mangaCardItems.get(pos).getTitle() + "\" removed from your library.", Toast.LENGTH_SHORT).show();
 
         // needed to update UI without reading in entire database
         mangaCardItems.remove(pos);
@@ -83,6 +83,8 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
                 activity.startActivity(intent);
             }
         });
+
+        int cardPosition = holder.getAdapterPosition();
 
         cardView.findViewById(R.id.card_menu_more).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +129,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
         });
         return holder;
     }
+
 
     @Override
     public int getItemCount() {

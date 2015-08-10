@@ -11,23 +11,80 @@ import java.util.ArrayList;
 @JsonIgnoreProperties({"a", "s"})
 public class MangaCardItem {
     @JsonProperty("i")
-    public String id;
+    private String id;
 
     @JsonProperty("t")
-    public String title;
+    private String title;
 
     @JsonProperty("s")
-    public String status;
+    private String status;
 
     @JsonProperty("im")
-    public String imageUrl;
+    private String imageUrl;
 
     @JsonProperty("c")
-    public ArrayList<String> genres;
+    private ArrayList<String> genres;
 
     @JsonProperty("ld")
-    public long lastChapterDate;
+    private long lastChapterDate;
 
     @JsonProperty("h")
-    public int hits;
+    private int hits;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public ArrayList<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(ArrayList<String> genres) {
+        this.genres = genres;
+    }
+
+    public long getLastChapterDate() {
+        return lastChapterDate;
+    }
+
+    public void setLastChapterDate(long lastChapterDate) {
+        this.lastChapterDate = lastChapterDate;
+    }
+
+    public int getHits() {
+        return hits;
+    }
+
+    public void setHits(int hits) {
+        this.hits = hits;
+    }
+
 }
