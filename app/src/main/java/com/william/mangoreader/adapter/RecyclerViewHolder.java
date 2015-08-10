@@ -24,12 +24,14 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     private TextView title;
     private TextView subtitle;
     private ImageView thumbnail;
+    private String mangaEdenId; //TODO what do in future?
 
     public RecyclerViewHolder(View itemView) {
         super(itemView);
         title = (TextView) itemView.findViewById(R.id.card_title);
         subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
         thumbnail = (ImageView) itemView.findViewById(R.id.card_thumbnail);
+
     }
 
     public void setTitle(String title) {
@@ -40,26 +42,17 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         this.subtitle.setText(subtitle);
     }
 
-    public void setThumbnail(String url, Context ctx) {
-        if (url == null){
-            thumbnail.setImageResource(R.drawable.manga3);
-        }
-        else {
-            url = MangaEden.MANGAEDEN_IMAGE_CDN + url;
-            ImageRequest request = new ImageRequest(url,
-                    new Response.Listener<Bitmap>() {
-                        @Override
-                        public void onResponse(Bitmap bitmap) {
-                            thumbnail.setImageBitmap(bitmap);
-                        }
-                    }, 0, 0, null,
-                    new Response.ErrorListener() {
-                        public void onErrorResponse(VolleyError error) {
-                            //TODO handle
-                        }
-                    });
-            VolleySingleton.getInstance(ctx).addToRequestQueue(request);
-        }
+    public ImageView getThumbnail(){
+        return thumbnail;
     }
+
+    public void setMangaEdenId(String mangaEdenId) {
+        this.mangaEdenId = mangaEdenId;
+    }
+
+    public String getMangaEdenId() {
+        return mangaEdenId;
+    }
+
 
 }

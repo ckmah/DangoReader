@@ -17,7 +17,8 @@ import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangaItemActivity;
 import com.william.mangoreader.daogen.DaoMaster;
 import com.william.mangoreader.daogen.DaoSession;
-import com.william.mangoreader.model.MangaCardItem;
+import com.william.mangoreader.model.MangaEdenMangaListItem;
+import com.william.mangoreader.parse.MangaEden;
 
 import java.util.ArrayList;
 
@@ -26,7 +27,7 @@ import java.util.ArrayList;
  */
 public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
-    private ArrayList<MangaCardItem> mangaCardItems;
+    private ArrayList<MangaEdenMangaListItem> mangaEdenMangaListItems;
     private Activity activity;
     private boolean browseFlag; //right now, this specifies whether we're in a browsemangafragment or mylibraryfragment
 
@@ -37,7 +38,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
     private Cursor cursor;
 
     public CardLayoutAdapter(Activity activity, boolean browseFlag) {
-        mangaCardItems = new ArrayList<>();
+        mangaEdenMangaListItems = new ArrayList<>();
         this.activity = activity;
         this.browseFlag = browseFlag;
         // Pass context or other static stuff that will be needed.
@@ -45,27 +46,29 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder viewHolder, int position) {
-        viewHolder.setTitle(mangaCardItems.get(position).getTitle());
+        viewHolder.setTitle(mangaEdenMangaListItems.get(position).getTitle());
         viewHolder.setSubtitle("Placeholder");
-        viewHolder.setThumbnail(mangaCardItems.get(position).getImageUrl(), activity.getApplicationContext());
+        MangaEden.setImage(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.getThumbnail());
+//        viewHolder.setThumbnail(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext());
+        viewHolder.setMangaEdenId(mangaEdenMangaListItems.get(position).getId());
     }
 
     public void clearList() {
-        mangaCardItems.clear();
+        mangaEdenMangaListItems.clear();
         notifyDataSetChanged();
     }
 
     private void addToList(int pos) {
-        Toast.makeText(activity, "\"" + mangaCardItems.get(pos).getTitle() + "\" added to your library.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "\"" + mangaEdenMangaListItems.get(pos).getTitle() + "\" added to your library.", Toast.LENGTH_SHORT).show();
     }
 
     private void removeFromList(int pos) {
-        Toast.makeText(activity, "\"" + mangaCardItems.get(pos).getTitle() + "\" removed from your library.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "\"" + mangaEdenMangaListItems.get(pos).getTitle() + "\" removed from your library.", Toast.LENGTH_SHORT).show();
 
         // needed to update UI without reading in entire database
-        mangaCardItems.remove(pos);
+        mangaEdenMangaListItems.remove(pos);
         notifyItemRemoved(pos);
-        notifyItemRangeChanged(pos, mangaCardItems.size());
+        notifyItemRangeChanged(pos, mangaEdenMangaListItems.size());
     }
 
     @Override
@@ -80,6 +83,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, MangaItemActivity.class);
+                intent.putExtra("mangaId", holder.getMangaEdenId());
                 activity.startActivity(intent);
             }
         });
@@ -133,12 +137,12 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mangaCardItems.size();
+        return mangaEdenMangaListItems.size();
     }
 
-    public void addItem(MangaCardItem m) {
-        mangaCardItems.add(m);
-        notifyItemInserted(mangaCardItems.size());
+    public void addItem(MangaEdenMangaListItem m) {
+        mangaEdenMangaListItems.add(m);
+        notifyItemInserted(mangaEdenMangaListItems.size());
 
     }
 

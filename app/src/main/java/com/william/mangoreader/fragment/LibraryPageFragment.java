@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
-import com.william.mangoreader.model.MangaCardItem;
+import com.william.mangoreader.model.MangaEdenMangaListItem;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public class LibraryPageFragment extends Fragment {
     private final int INIT_QUANTITY = 25;
     private final int QUERY_QUANTITY = 10;
 
-    ArrayList<MangaCardItem> mData = new ArrayList<MangaCardItem>();
+    ArrayList<MangaEdenMangaListItem> mData = new ArrayList<MangaEdenMangaListItem>();
 
     public static LibraryPageFragment newInstance(int page) {
         Bundle args = new Bundle();

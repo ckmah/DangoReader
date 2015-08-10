@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Manga card element model, for use in browseMangaFragment and maybe MyLibraryFragment
  */
 @JsonIgnoreProperties({"a", "s"})
-public class MangaCardItem {
+public class MangaEdenMangaListItem {
     @JsonProperty("i")
     private String id;
 

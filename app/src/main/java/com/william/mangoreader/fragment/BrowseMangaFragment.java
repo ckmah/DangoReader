@@ -22,7 +22,7 @@ import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
 import com.william.mangoreader.listener.BrowseMangaScrollListener;
-import com.william.mangoreader.model.MangaCardItem;
+import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
 
@@ -62,7 +62,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         queue = VolleySingleton.getInstance(getActivity().getApplicationContext()).
                 getRequestQueue();
 
-        fetchMangaFromMangaEden();
+        fetchMangaListFromMangaEden();
         setHasOptionsMenu(true);
         return rootView;
     }
@@ -80,7 +80,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
          recyclerListener = new BrowseMangaScrollListener() {
             @Override
             public void loadMore() {
-                fetchMangaFromMangaEden();
+                fetchMangaListFromMangaEden();
             }
         };
 
@@ -95,8 +95,8 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     }
 
-    private void fetchMangaFromMangaEden() {
-        String url = MangaEden.MANGAEDEN_PREFIX + page + MangaEden.MANGAEDEN_SUFFIX;
+    private void fetchMangaListFromMangaEden() {
+        String url = MangaEden.MANGAEDEN_MANGALIST_PREFIX + page + MangaEden.MANGAEDEN_MANGALIST_SUFFIX;
 
         queue.add(new JsonObjectRequest
                         (url, new Response.Listener<JSONObject>() {
@@ -104,9 +104,9 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                             @Override
                             public void onResponse(JSONObject response) {
 
-                                ArrayList<MangaCardItem> results = MangaEden.parseMangaEdenResponse(response.toString());
+                                ArrayList<MangaEdenMangaListItem> results = MangaEden.parseMangaEdenMangaListResponse(response.toString());
 
-                                for (MangaCardItem m : results) {
+                                for (MangaEdenMangaListItem m : results) {
                                     cgAdapter.addItem(m);
                                 }
                                 page++;
@@ -120,8 +120,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                             }
                         })
         );
-
-
     }
 
     @Override
