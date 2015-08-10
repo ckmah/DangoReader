@@ -13,7 +13,7 @@ public class MangaEden {
     public static final String MANGAEDEN_PREFIX = "https://www.mangaeden.com/api/list/0/?p=";
     public static final String MANGAEDEN_SUFFIX = "&l=25";
 
-    public static final String MANGAEDEN_IMAGE_CDN = "https://cdn.mangaeden.com/mangasimg/98x/"; //TODO figure out
+    public static final String MANGAEDEN_IMAGE_CDN = "https://cdn.mangaeden.com/mangasimg/";
 
     public static final ObjectMapper mapper = new ObjectMapper(); // create once, reuse
 

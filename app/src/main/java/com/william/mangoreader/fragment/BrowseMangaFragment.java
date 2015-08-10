@@ -128,9 +128,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     public void onRefresh() {
         page = 0;
         cgAdapter.clearList();
-
-//        fetchMangaFromMangaEden();
-        // finished refreshing
         swipeRefreshLayout.setRefreshing(false);
     }
 
