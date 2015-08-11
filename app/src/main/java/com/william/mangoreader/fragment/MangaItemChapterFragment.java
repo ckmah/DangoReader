@@ -11,16 +11,16 @@ import com.william.mangoreader.R;
 import com.william.mangoreader.model.MangaEdenMangaChapterItem;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 
-public class ChaptersFragment extends Fragment {
+public class MangaItemChapterFragment extends Fragment {
     private static final String CHAPTER_FRAGMENT_KEY = "chapter_fragment_key";
     private MangaEdenMangaDetailItem mangaDetailItem;
 
-    public ChaptersFragment() {
+    public MangaItemChapterFragment() {
         // required empty constructor
     }
 
-    public static ChaptersFragment newInstance(MangaEdenMangaDetailItem mangaDetailItem) {
-        ChaptersFragment fragment = new ChaptersFragment();
+    public static MangaItemChapterFragment newInstance(MangaEdenMangaDetailItem mangaDetailItem) {
+        MangaItemChapterFragment fragment = new MangaItemChapterFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(CHAPTER_FRAGMENT_KEY, mangaDetailItem);
         fragment.setArguments(bundle);
@@ -37,7 +37,7 @@ public class ChaptersFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mangaDetailItem = (MangaEdenMangaDetailItem) getArguments().getSerializable(CHAPTER_FRAGMENT_KEY);
-        final View rootView = inflater.inflate(R.layout.fragment_chapters, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_chapters, container, false);
 
         for (MangaEdenMangaChapterItem chapterItem : mangaDetailItem.getChapters()) {
             View chapterRow = inflater.inflate(R.layout.chapter_row, null);
@@ -49,9 +49,9 @@ public class ChaptersFragment extends Fragment {
             chapterTitle.setText(chapterItem.getTitle());
 
             ViewGroup insertPoint = (ViewGroup) rootView;
+
             insertPoint.addView(chapterRow);
         }
-
 
         return rootView;
     }

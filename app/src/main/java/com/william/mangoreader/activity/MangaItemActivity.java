@@ -9,14 +9,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.william.mangoreader.R;
-import com.william.mangoreader.fragment.ChaptersFragment;
+import com.william.mangoreader.fragment.MangaItemChapterFragment;
+import com.william.mangoreader.fragment.MangaItemDetailFragment;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
@@ -32,16 +32,15 @@ public class MangaItemActivity extends AppCompatActivity {
     private RequestQueue queue;
     private MangaEdenMangaDetailItem manga;
 
-    private Fragment chaptersFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(getResources().getColor(R.color.transparent));
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//        getWindow().setStatusBarColor(getResources().getColor(R.color.transparent));
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         setContentView(R.layout.activity_manga_item);
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.manga_item_toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_item);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -103,19 +102,14 @@ public class MangaItemActivity extends AppCompatActivity {
         ImageView imageView = (ImageView) findViewById(R.id.manga_item_image_view);
         MangaEden.setImage(manga.getImageUrl(), this, imageView);
 
-        TextView titleView = (TextView) findViewById(R.id.manga_item_title);
-        titleView.setText(manga.getTitle());
-
-        TextView subtitleView = (TextView) findViewById(R.id.manga_item_subtitle);
-        subtitleView.setText(manga.getAuthor());
-
-        TextView descriptionView = (TextView) findViewById(R.id.manga_item_description);
-        descriptionView.setText(manga.getDescription());
-
-        chaptersFragment = ChaptersFragment.newInstance(manga);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.manga_item_chapters, chaptersFragment);
-        fragmentTransaction.commit();
 
+        Fragment detailsFragment = MangaItemDetailFragment.newInstance(manga);
+        Fragment chaptersFragment = MangaItemChapterFragment.newInstance(manga);
+
+        fragmentTransaction.add(R.id.manga_item_header, detailsFragment);
+        fragmentTransaction.add(R.id.manga_item_header, chaptersFragment);
+
+        fragmentTransaction.commit();
     }
 }
