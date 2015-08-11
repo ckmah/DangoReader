@@ -37,9 +37,9 @@
 
     <LinearLayout
         android:id="@+id/manga_item_header"
+        style="@style/MangaItemHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/MangaItemHeader"
         android:orientation="vertical">
 
         <!-- DYNAMICALLY INSERT DATA HERE-->
@@ -63,5 +63,10 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/manga_item_chapters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -1,6 +1,8 @@
 package com.william.mangoreader.model;
 
-public class MangaEdenMangaChapterItem {
+import java.io.Serializable;
+
+public class MangaEdenMangaChapterItem implements Serializable {
 
     private int number;
     private long date;

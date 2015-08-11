@@ -125,20 +125,20 @@
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/manga_item_title_text_size</item>
         <item name="android:paddingBottom">@dimen/manga_item_title_padding_bottom</item>
-
     </style>
 
     <style name="MangaItemSubtitle">
         <item name="android:textColor">@android:color/darker_gray</item>
         <item name="android:textSize">@dimen/manga_item_subtitle_text_size</item>
         <item name="android:paddingBottom">@dimen/manga_item_subtitle_padding_bottom</item>
-
     </style>
 
     <style name="MangaItemDescription">
         <item name="android:textSize">@dimen/manga_item_description_text_size</item>
         <item name="android:lineSpacingExtra">@dimen/manga_item_description_line_spacing_extra</item>
     </style>
+
+    <style name="MangaItemChapters"></style>
 
 
 </resources>

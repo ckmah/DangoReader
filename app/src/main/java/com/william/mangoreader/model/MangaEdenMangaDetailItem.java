@@ -3,12 +3,13 @@ package com.william.mangoreader.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @JsonIgnoreProperties({"aka", "aka-alias", "alias", "artist", "artist_kw", "author_kw", "autoManga", "baka", "chapters",
         "created", "hits", "imageUrl", "language", "last_chapter_date", "released", "startsWith", "status", "title_kw",
         "type", "updatedKeywords", "url"})
-public class MangaEdenMangaDetailItem {
+public class MangaEdenMangaDetailItem implements Serializable {
     @JsonProperty("author")
     private String author;
 

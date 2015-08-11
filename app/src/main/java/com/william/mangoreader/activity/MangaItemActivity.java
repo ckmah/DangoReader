@@ -1,6 +1,8 @@
 package com.william.mangoreader.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.william.mangoreader.R;
+import com.william.mangoreader.fragment.ChaptersFragment;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
@@ -28,6 +31,8 @@ public class MangaItemActivity extends AppCompatActivity {
     private String mangaId;
     private RequestQueue queue;
     private MangaEdenMangaDetailItem manga;
+
+    private Fragment chaptersFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,5 +111,11 @@ public class MangaItemActivity extends AppCompatActivity {
 
         TextView descriptionView = (TextView) findViewById(R.id.manga_item_description);
         descriptionView.setText(manga.getDescription());
+
+        chaptersFragment = ChaptersFragment.newInstance(manga);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.manga_item_chapters, chaptersFragment);
+        fragmentTransaction.commit();
+
     }
 }
