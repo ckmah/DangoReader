@@ -79,13 +79,18 @@
         <item name="textAllCaps">true</item>
     </style>
 
+    <style name="CardMenuMore">
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:paddingTop">@dimen/card_menu_more_padding_top</item>
+    </style>
+
     <style name="CardTitle">
         <item name="android:ellipsize">end</item>
         <item name="android:textStyle">normal</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/card_title_text_size</item>
-        <!--<item name="android:layout_gravity">left|center_vertical</item>-->
         <item name="android:layout_marginLeft">@dimen/card_title_margin_left</item>
         <item name="android:layout_marginTop">@dimen/card_title_margin_top</item>
         <item name="android:layout_marginRight">@dimen/card_title_margin_right</item>
@@ -111,5 +116,29 @@
         <item name="android:scaleType">centerCrop</item>
         <item name="android:layout_height">250dp</item>
     </style>
+
+    <style name="MangaItemHeader">
+        <item name="android:padding">@dimen/manga_item_header_padding</item>
+    </style>
+
+    <style name="MangaItemTitle">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/manga_item_title_text_size</item>
+        <item name="android:paddingBottom">@dimen/manga_item_title_padding_bottom</item>
+
+    </style>
+
+    <style name="MangaItemSubtitle">
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">@dimen/manga_item_subtitle_text_size</item>
+        <item name="android:paddingBottom">@dimen/manga_item_subtitle_padding_bottom</item>
+
+    </style>
+
+    <style name="MangaItemDescription">
+        <item name="android:textSize">@dimen/manga_item_description_text_size</item>
+        <item name="android:lineSpacingExtra">@dimen/manga_item_description_line_spacing_extra</item>
+    </style>
+
 
 </resources>

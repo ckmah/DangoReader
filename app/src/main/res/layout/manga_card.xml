@@ -51,10 +51,9 @@
 
             <ImageButton
                 android:id="@+id/card_menu_more"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:background="?attr/selectableItemBackground"
+                style="@style/CardMenuMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/ic_more_vert_grey" />
         </RelativeLayout>
 

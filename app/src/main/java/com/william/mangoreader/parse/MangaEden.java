@@ -2,6 +2,7 @@ package com.william.mangoreader.parse;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.Html;
 import android.widget.ImageView;
 
 import com.android.volley.Response;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.william.mangoreader.R;
+import com.william.mangoreader.model.MangaEdenMangaChapterItem;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.volley.VolleySingleton;
@@ -26,6 +28,12 @@ public class MangaEden {
     public static final String MANGAEDEN_IMAGE_CDN = "https://cdn.mangaeden.com/mangasimg/";
 
     public static final String MANGAEDEN_MANGADETAIL_PREFIX = "https://www.mangaeden.com/api/manga/";
+
+    private static final int MANGA_DETAIL_NUMBER_INDEX = 0;
+    private static final int MANGA_DETAIL_DATE_INDEX = 1;
+    private static final int MANGA_DETAIL_TITLE_INDEX = 2;
+    private static final int MANGA_DETAIL_ID_INDEX = 3;
+
 
     public static final ObjectMapper mapper = new ObjectMapper(); // create once, reuse
 
@@ -59,10 +67,25 @@ public class MangaEden {
             String description = root.get("description").asText();
             String imageUrl = root.get("image").asText();
 
-            item.author = author;
-            item.description = description;
-            item.imageUrl = imageUrl;
-            item.title = title;
+            // map chapter listing
+            ArrayList<MangaEdenMangaChapterItem> chapterList = new ArrayList<>();
+            JsonNode chapterListNode = root.withArray("chapters");
+            for (JsonNode node : chapterListNode) {
+                MangaEdenMangaChapterItem chapterItem = new MangaEdenMangaChapterItem();
+                if (node.isArray()) {
+                    chapterItem.setNumber(node.get(MANGA_DETAIL_NUMBER_INDEX).asInt());
+                    chapterItem.setDate(node.get(MANGA_DETAIL_DATE_INDEX).asLong());
+                    chapterItem.setTitle(node.get(MANGA_DETAIL_TITLE_INDEX).asText());
+                    chapterItem.setId(node.get(MANGA_DETAIL_ID_INDEX).asText());
+                }
+                chapterList.add(chapterItem);
+            }
+
+            item.setAuthor(author);
+            item.setDescription(Html.fromHtml(description).toString());
+            item.setImageUrl(imageUrl);
+            item.setTitle(title);
+            item.setChapters(chapterList);
 
         } catch (IOException e) {
             e.printStackTrace();

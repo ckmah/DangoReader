@@ -95,18 +95,16 @@ public class MangaItemActivity extends AppCompatActivity {
     }
 
     private void loadContent() {
+        ImageView imageView = (ImageView) findViewById(R.id.manga_item_image_view);
+        MangaEden.setImage(manga.getImageUrl(), this, imageView);
+
         TextView titleView = (TextView) findViewById(R.id.manga_item_title);
-        titleView.setText(manga.title);
+        titleView.setText(manga.getTitle());
 
         TextView subtitleView = (TextView) findViewById(R.id.manga_item_subtitle);
-        subtitleView.setText(manga.author);
+        subtitleView.setText(manga.getAuthor());
 
         TextView descriptionView = (TextView) findViewById(R.id.manga_item_description);
-        descriptionView.setText(manga.description);
-
-        ImageView imageView = (ImageView) findViewById(R.id.manga_item_image_view);
-        MangaEden.setImage(manga.imageUrl, this, imageView);
-
-
+        descriptionView.setText(manga.getDescription());
     }
 }

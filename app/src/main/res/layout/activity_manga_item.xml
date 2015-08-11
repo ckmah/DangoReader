@@ -16,8 +16,8 @@
             android:layout_height="250dp">
 
             <ImageView
-                style="@style/MangaItemArt"
                 android:id="@+id/manga_item_image_view"
+                style="@style/MangaItemArt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white" />
@@ -35,38 +35,33 @@
     </LinearLayout>
 
 
-    <FrameLayout
-        android:id="@+id/manga_item_container_body"
+    <LinearLayout
+        android:id="@+id/manga_item_header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        style="@style/MangaItemHeader"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/manga_item_header"
+        <!-- DYNAMICALLY INSERT DATA HERE-->
+        <TextView
+            android:id="@+id/manga_item_title"
+            style="@style/MangaItemTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent" />
 
-            <!-- DYNAMICALLY INSERT DATA HERE-->
-            <TextView
-                android:id="@+id/manga_item_title"
-                style="@style/CardTitle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                 />
+        <TextView
+            android:id="@+id/manga_item_subtitle"
+            style="@style/MangaItemSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-            <TextView
-                android:id="@+id/manga_item_subtitle"
-                style="@style/CardSubtitle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                 />
 
-            <TextView
-                android:id="@+id/manga_item_description"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/manga_item_description"
+            style="@style/MangaItemDescription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        </LinearLayout>
-    </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>
