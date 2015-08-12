@@ -48,7 +48,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHold
     public void onBindViewHolder(RecyclerViewCardHolder viewHolder, int position) {
         viewHolder.setTitle(mangaEdenMangaListItems.get(position).getTitle());
         viewHolder.setSubtitle("Placeholder");
-        MangaEden.setImage(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.getThumbnail());
+        MangaEden.setThumbnail(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.getThumbnail());
 //        viewHolder.setThumbnail(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext());
         viewHolder.setMangaEdenId(mangaEdenMangaListItems.get(position).getId());
     }

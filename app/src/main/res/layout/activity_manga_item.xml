@@ -28,7 +28,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
+            android:id="@+id/manga_item_toolbar_layout"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView

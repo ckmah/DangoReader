@@ -2,7 +2,12 @@ package com.william.mangoreader.parse;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.graphics.Palette;
 import android.text.Html;
+import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.android.volley.Response;
@@ -34,6 +39,7 @@ public class MangaEden {
     private static final int MANGA_DETAIL_TITLE_INDEX = 2;
     private static final int MANGA_DETAIL_ID_INDEX = 3;
 
+    private static int mainColor;
 
     public static final ObjectMapper mapper = new ObjectMapper(); // create once, reuse
 
@@ -94,7 +100,7 @@ public class MangaEden {
         return item;
     }
 
-    static public void setImage(String url, Context ctx, final ImageView imageView) {
+    static public void setThumbnail(String url, Context ctx, final ImageView imageView) {
         if (url == null) {
             imageView.setImageResource(R.drawable.manga3);
         } else {
@@ -103,6 +109,7 @@ public class MangaEden {
                     new Response.Listener<Bitmap>() {
                         @Override
                         public void onResponse(Bitmap bitmap) {
+
                             imageView.setImageBitmap(bitmap);
                         }
                     }, 0, 0, null,
@@ -114,4 +121,50 @@ public class MangaEden {
             VolleySingleton.getInstance(ctx).addToRequestQueue(request);
         }
     }
+
+    static public void setMangaArt(String url, Context ctx, final ImageView imageView, final Window window, final CollapsingToolbarLayout collapsingToolbarLayout) {
+        if (url == null) {
+            imageView.setImageResource(R.drawable.manga3);
+        } else {
+            url = MangaEden.MANGAEDEN_IMAGE_CDN + url;
+            ImageRequest request = new ImageRequest(url,
+                    new Response.Listener<Bitmap>() {
+                        @Override
+                        public void onResponse(Bitmap bitmap) {
+
+                            Palette palette = Palette.from(bitmap).generate();
+
+                            // use most occuring color as main color
+                            int most = 0;
+                            int mainColor = 0;
+
+                            for (Palette.Swatch swatch : palette.getSwatches()) {
+                                int population = swatch.getPopulation();
+                                Log.d("POPULATION", "" + population);
+                                if (population > most) {
+                                    most = population;
+                                    mainColor = swatch.getRgb();
+                                }
+                            }
+
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            Log.d("STATUS_BAR_COLOR", "" + mainColor);
+                            window.setStatusBarColor(mainColor);
+
+                            collapsingToolbarLayout.setContentScrimColor(mainColor);
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    }, 0, 0, null,
+                    new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                            //TODO handle
+                        }
+                    });
+            VolleySingleton.getInstance(ctx).addToRequestQueue(request);
+        }
+    }
+//    static public int getMainColor() {
+//        return mainColor;
+//    }
 }
