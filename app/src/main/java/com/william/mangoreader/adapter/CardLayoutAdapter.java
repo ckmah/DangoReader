@@ -25,7 +25,7 @@ import java.util.ArrayList;
 /**
  * Layout adapter for adding cards
  */
-public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHolder> {
+public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHolder>  {
 
     private ArrayList<MangaEdenMangaListItem> mangaEdenMangaListItems;
     private Activity activity;
@@ -49,7 +49,6 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHold
         viewHolder.setTitle(mangaEdenMangaListItems.get(position).getTitle());
         viewHolder.setSubtitle("Placeholder");
         MangaEden.setThumbnail(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.getThumbnail());
-//        viewHolder.setThumbnail(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext());
         viewHolder.setMangaEdenId(mangaEdenMangaListItems.get(position).getId());
     }
 

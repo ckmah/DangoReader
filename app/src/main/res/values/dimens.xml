@@ -30,4 +30,6 @@
 
     <dimen name="manga_item_description_text_size">13sp</dimen>
     <dimen name="manga_item_description_line_spacing_extra">5sp</dimen>
+
+    <dimen name="chapter_row_padding">12dp</dimen>
 </resources>
