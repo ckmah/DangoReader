@@ -139,27 +139,26 @@
         </item>
     </style>
 
-    <style name="MangaItemChapters"></style>
+    <style name="fragment_chapters">
+        <item name="android:divider">?android:dividerHorizontal</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:showDividers">middle|end</item>
+        <item name="android:paddingBottom">20dp</item>
+    </style>
 
     <style name="chapter_row">
         <item name="android:padding">@dimen/chapter_row_padding</item>
         <item name="android:background">@color/white</item>
     </style>
 
-    <style name="chapter_number">
+    <style name="ChapterNumber">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="chapter_title">
+    <style name="ChapterTitle">
         <item name="android:textColor">@android:color/darker_gray</item>
         <item name="android:textSize">13sp</item>
     </style>
 
-    <style name="fragment_chapters">
-        <item name="android:divider">?android:dividerHorizontal</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:showDividers">beginning|middle|end</item>
-        <item name="android:paddingBottom">20dp</item>
-    </style>
 </resources>

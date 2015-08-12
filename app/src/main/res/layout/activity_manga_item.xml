@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/coordinator_layout"
     app:theme="@style/MangaItemActivityTheme"
     tools:context="com.william.mangoreader.activity.MangaItemActivity">
 
@@ -22,13 +23,14 @@
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="250dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/manga_item_toolbar_layout"
+            android:id="@+id/manga_item_collapsing_toolbar"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView

@@ -2,12 +2,8 @@ package com.william.mangoreader.parse;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.graphics.Palette;
+import android.graphics.drawable.BitmapDrawable;
 import android.text.Html;
-import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.android.volley.Response;
@@ -17,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.william.mangoreader.R;
+import com.william.mangoreader.activity.MangaItemActivity;
 import com.william.mangoreader.model.MangaEdenMangaChapterItem;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
@@ -122,38 +119,21 @@ public class MangaEden {
         }
     }
 
-    static public void setMangaArt(String url, Context ctx, final ImageView imageView, final Window window, final CollapsingToolbarLayout collapsingToolbarLayout) {
+    static public Bitmap setMangaArt(String url, Context ctx, final ImageView imageView, final MangaItemActivity activity) {
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) activity.getResources().getDrawable(R.drawable.manga3);
+        final Bitmap[] mangaArt = {bitmapDrawable.getBitmap()};
         if (url == null) {
-            imageView.setImageResource(R.drawable.manga3);
+            return mangaArt[0];
         } else {
             url = MangaEden.MANGAEDEN_IMAGE_CDN + url;
             ImageRequest request = new ImageRequest(url,
                     new Response.Listener<Bitmap>() {
                         @Override
                         public void onResponse(Bitmap bitmap) {
-
-                            Palette palette = Palette.from(bitmap).generate();
-
-                            // use most occuring color as main color
-                            int most = 0;
-                            int mainColor = 0;
-
-                            for (Palette.Swatch swatch : palette.getSwatches()) {
-                                int population = swatch.getPopulation();
-                                Log.d("POPULATION", "" + population);
-                                if (population > most) {
-                                    most = population;
-                                    mainColor = swatch.getRgb();
-                                }
-                            }
-
-                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                            Log.d("STATUS_BAR_COLOR", "" + mainColor);
-                            window.setStatusBarColor(mainColor);
-
-                            collapsingToolbarLayout.setContentScrimColor(mainColor);
+                            mangaArt[0] = bitmap;
                             imageView.setImageBitmap(bitmap);
+                            activity.extractColorPalette(bitmap);
+                            activity.loadFragments();
                         }
                     }, 0, 0, null,
                     new Response.ErrorListener() {
@@ -163,8 +143,7 @@ public class MangaEden {
                     });
             VolleySingleton.getInstance(ctx).addToRequestQueue(request);
         }
+        return mangaArt[0];
     }
-//    static public int getMainColor() {
-//        return mainColor;
-//    }
+
 }
