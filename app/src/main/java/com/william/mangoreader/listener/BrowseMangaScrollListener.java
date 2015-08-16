@@ -25,7 +25,7 @@ public abstract class BrowseMangaScrollListener extends RecyclerView.OnScrollLis
 
         if (loading) {
             if (totalItemCount > previousTotal) {
-                loading = false;
+//                loading = false;
                 previousTotal = totalItemCount;
             }
         }

@@ -77,7 +77,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         cgAdapter = new CardLayoutAdapter(activity, true);
         mRecyclerView.setAdapter(cgAdapter);
 
-         recyclerListener = new BrowseMangaScrollListener() {
+        recyclerListener = new BrowseMangaScrollListener() {
             @Override
             public void loadMore() {
                 fetchMangaListFromMangaEden();
