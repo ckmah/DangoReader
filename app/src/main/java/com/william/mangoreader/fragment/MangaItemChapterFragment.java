@@ -1,5 +1,6 @@
 package com.william.mangoreader.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.william.mangoreader.R;
+import com.william.mangoreader.activity.MangaViewerActivity;
 import com.william.mangoreader.model.MangaEdenMangaChapterItem;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 
@@ -41,6 +43,14 @@ public class MangaItemChapterFragment extends Fragment {
 
         for (MangaEdenMangaChapterItem chapterItem : mangaDetailItem.getChapters()) {
             View chapterRow = inflater.inflate(R.layout.chapter_row, null);
+
+            chapterRow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(container.getContext(), MangaViewerActivity.class);
+                    container.getContext().startActivity(intent);
+                }
+            });
 
             TextView chapterNumber = (TextView) chapterRow.findViewById(R.id.chapter_number);
             TextView chapterTitle = (TextView) chapterRow.findViewById(R.id.chapter_title);

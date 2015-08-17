@@ -19,6 +19,20 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.MangaItemActivity"
+            android:label="@string/title_activity_manga_item" />
+        <activity
+            android:name=".activity.MangaViewerActivity"
+            android:label="@string/title_activity_manga_viewer"
+            android:parentActivityName=".activity.MangoReaderActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MangaItemActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_settings"
             android:parentActivityName=".activity.MangoReaderActivity">
@@ -30,9 +44,7 @@
             </intent-filter>
 
         </activity>
-        <activity
-            android:name=".activity.MangaItemActivity"
-            android:label="@string/title_activity_manga_item"></activity>
+
     </application>
 
 </manifest>

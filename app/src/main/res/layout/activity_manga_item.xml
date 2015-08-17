@@ -1,9 +1,9 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/coordinator_layout"
     android:theme="@style/MangaItemActivityTheme"
     tools:context="com.william.mangoreader.activity.MangaItemActivity">
 
@@ -28,9 +28,9 @@
         android:layout_height="250dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/manga_item_collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/manga_item_collapsing_toolbar"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
@@ -45,9 +45,9 @@
                 android:id="@+id/toolbar_manga_item"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/MangaItemToolbar" />
+                android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:theme="@style/MangaItemToolbar"
+                app:layout_collapseMode="pin" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
