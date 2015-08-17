@@ -6,18 +6,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.text.Html;
 import android.widget.ImageView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangaItemActivity;
 import com.william.mangoreader.model.MangaEdenMangaChapterItem;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
-import com.william.mangoreader.volley.VolleySingleton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,9 +74,11 @@ public class MangaEden {
             for (JsonNode node : chapterListNode) {
                 MangaEdenMangaChapterItem chapterItem = new MangaEdenMangaChapterItem();
                 if (node.isArray()) {
+
                     chapterItem.setNumber(node.get(MANGA_DETAIL_NUMBER_INDEX).asInt());
                     chapterItem.setDate(node.get(MANGA_DETAIL_DATE_INDEX).asLong());
-                    chapterItem.setTitle(node.get(MANGA_DETAIL_TITLE_INDEX).asText());
+                    String chapterTitle = node.get(MANGA_DETAIL_TITLE_INDEX).asText();
+                    chapterItem.setTitle(chapterTitle == "null" ? "" : chapterTitle);
                     chapterItem.setId(node.get(MANGA_DETAIL_ID_INDEX).asText());
                 }
                 chapterList.add(chapterItem);
@@ -97,53 +97,58 @@ public class MangaEden {
         return item;
     }
 
-    static public void setThumbnail(String url, Context ctx, final ImageView imageView) {
-        if (url == null) {
-            imageView.setImageResource(R.drawable.manga3);
-        } else {
-            url = MangaEden.MANGAEDEN_IMAGE_CDN + url;
-            ImageRequest request = new ImageRequest(url,
-                    new Response.Listener<Bitmap>() {
-                        @Override
-                        public void onResponse(Bitmap bitmap) {
+    static public void setThumbnail(String url, Context context, final ImageView imageView) {
+        url = MangaEden.MANGAEDEN_IMAGE_CDN + url;
+        Picasso.with(context)
+                .load(url)
+                .placeholder(R.drawable.manga3)
+                .fit().centerCrop()
+                .transform(PaletteTransformation.instance())
+                .into(imageView);
 
-                            imageView.setImageBitmap(bitmap);
-                        }
-                    }, 0, 0, null,
-                    new Response.ErrorListener() {
-                        public void onErrorResponse(VolleyError error) {
-                            //TODO handle
-                        }
-                    });
-            VolleySingleton.getInstance(ctx).addToRequestQueue(request);
-        }
     }
 
-    static public Bitmap setMangaArt(String url, Context ctx, final ImageView imageView, final MangaItemActivity activity) {
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) activity.getResources().getDrawable(R.drawable.manga3);
-        final Bitmap[] mangaArt = {bitmapDrawable.getBitmap()};
-        if (url == null) {
-            return mangaArt[0];
-        } else {
-            url = MangaEden.MANGAEDEN_IMAGE_CDN + url;
-            ImageRequest request = new ImageRequest(url,
-                    new Response.Listener<Bitmap>() {
-                        @Override
-                        public void onResponse(Bitmap bitmap) {
-                            mangaArt[0] = bitmap;
-                            imageView.setImageBitmap(bitmap);
-                            activity.extractColorPalette(bitmap);
-                            activity.loadFragments();
-                        }
-                    }, 0, 0, null,
-                    new Response.ErrorListener() {
-                        public void onErrorResponse(VolleyError error) {
-                            //TODO handle
-                        }
-                    });
-            VolleySingleton.getInstance(ctx).addToRequestQueue(request);
-        }
-        return mangaArt[0];
-    }
+    static public void setMangaArt(String url, Context context, final ImageView imageView, final MangaItemActivity activity) {
+        url = MangaEden.MANGAEDEN_IMAGE_CDN + url;
 
+        Picasso.with(context)
+                .load(url)
+                .fit().centerCrop()
+                .transform(PaletteTransformation.instance())
+                .into(imageView, new Callback.EmptyCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap(); // Ew!
+                        imageView.setImageBitmap(bitmap);
+                        activity.extractColorPalette(bitmap);
+                        activity.loadFragments();
+                    }
+                });
+
+
+//        BitmapDrawable bitmapDrawable = (BitmapDrawable) activity.getResources().getDrawable(R.drawable.manga3);
+//        final Bitmap[] mangaArt = {bitmapDrawable.getBitmap()};
+//        if (url == null) {
+//            return mangaArt[0];
+//        } else {
+//            url = MangaEden.MANGAEDEN_IMAGE_CDN + url;
+//            ImageRequest request = new ImageRequest(url,
+//                    new Response.Listener<Bitmap>() {
+//                        @Override
+//                        public void onResponse(Bitmap bitmap) {
+//                            mangaArt[0] = bitmap;
+//                            imageView.setImageBitmap(bitmap);
+//                            activity.extractColorPalette(bitmap);
+//                            activity.loadFragments();
+//                        }
+//                    }, 0, 0, null,
+//                    new Response.ErrorListener() {
+//                        public void onErrorResponse(VolleyError error) {
+//                            //TODO handle
+//                        }
+//                    });
+//            VolleySingleton.getInstance(ctx).addToRequestQueue(request);
+//        }
+//        return mangaArt[0];
+    }
 }

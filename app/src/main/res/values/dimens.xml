@@ -22,6 +22,7 @@
     <!-- Manga Item Styles -->
     <dimen name="manga_item_header_padding">16dp</dimen>
 
+    <dimen name="fragment_chapters_padding_bottom">80dp</dimen>
     <dimen name="manga_item_title_text_size">24sp</dimen>
     <dimen name="manga_item_title_padding_bottom">8sp</dimen>
 
@@ -32,4 +33,8 @@
     <dimen name="manga_item_description_line_spacing_extra">5sp</dimen>
 
     <dimen name="chapter_row_padding">12dp</dimen>
+    <dimen name="chapter_number_textsize">18sp</dimen>
+    <dimen name="chapter_number_padding_right">10sp</dimen>
+    <dimen name="chapter_title_textsize">13sp</dimen>
+
 </resources>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/coordinator_layout"
-    app:theme="@style/MangaItemActivityTheme"
+    android:theme="@style/MangaItemActivityTheme"
     tools:context="com.william.mangoreader.activity.MangaItemActivity">
 
     <android.support.v4.widget.NestedScrollView
