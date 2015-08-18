@@ -41,13 +41,14 @@ public class MangaItemChapterFragment extends Fragment {
         mangaDetailItem = (MangaEdenMangaDetailItem) getArguments().getSerializable(CHAPTER_FRAGMENT_KEY);
         View rootView = inflater.inflate(R.layout.fragment_chapters, container, false);
 
-        for (MangaEdenMangaChapterItem chapterItem : mangaDetailItem.getChapters()) {
+        for (final MangaEdenMangaChapterItem chapterItem : mangaDetailItem.getChapters()) {
             View chapterRow = inflater.inflate(R.layout.chapter_row, null);
 
             chapterRow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(container.getContext(), MangaViewerActivity.class);
+                    intent.putExtra("chapterId", chapterItem.getId());
                     container.getContext().startActivity(intent);
                 }
             });

@@ -4,12 +4,16 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.Window;
+
+import com.william.mangoreader.listener.MangaViewPagerListener;
+import com.william.mangoreader.model.MangaEdenImageItem;
+
+import java.util.ArrayList;
 
 public class MangaViewPager extends ViewPager {
 
@@ -17,6 +21,8 @@ public class MangaViewPager extends ViewPager {
     private Window window;
 
     private GestureDetector gestureDetector;
+
+    private ArrayList<MangaEdenImageItem> mangaPages;
 
     private boolean systemUIVisible;
 
@@ -42,7 +48,7 @@ public class MangaViewPager extends ViewPager {
         this.context = context;
         window = ((AppCompatActivity) context).getWindow();
         systemUIVisible = true;
-        gestureDetector = new GestureDetector(context, new MangaViewPagerListener());
+        gestureDetector = new GestureDetector(context, new MangaViewPagerListener(context, window));
 
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -50,6 +56,8 @@ public class MangaViewPager extends ViewPager {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                 | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                 | View.SYSTEM_UI_FLAG_IMMERSIVE);
+
+        mangaPages = new ArrayList<>();
     }
 
     @Override
@@ -123,74 +131,5 @@ public class MangaViewPager extends ViewPager {
 //        }
 
         return true;
-    }
-
-    private class MangaViewPagerListener implements GestureDetector.OnGestureListener {
-
-        private void showSystemUI() {
-            window.getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
-
-        private void hideSystemUI() {
-            window.getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE);
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent event) {
-            float xPos = event.getX();
-            float screenWidth = context.getResources().getDisplayMetrics().widthPixels;
-
-            Log.d("POSITION", "" + xPos);
-
-
-            if (xPos < LEFT_SIDE * screenWidth) {
-                // TODO go back one page/chapter
-            } else if (xPos > RIGHT_SIDE * screenWidth) {
-                // TODO go forward one page/chapter
-            } else {
-                if (systemUIVisible) {
-                    hideSystemUI();
-                    systemUIVisible = false;
-                } else {
-                    showSystemUI();
-                    systemUIVisible = true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            return false;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            return false;
-        }
     }
 }

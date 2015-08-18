@@ -58,7 +58,7 @@ public class MangaItemActivity extends AppCompatActivity {
             }
         });
 
-        queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        queue = VolleySingleton.getInstance(this).getRequestQueue();
 
         mangaId = (String) getIntent().getExtras().get("mangaId");
         fetchMangaDetailFromMangaEden();

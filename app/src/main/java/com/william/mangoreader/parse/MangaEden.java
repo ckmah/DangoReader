@@ -3,7 +3,10 @@ package com.william.mangoreader.parse;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
+import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,8 +14,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangaItemActivity;
+import com.william.mangoreader.model.MangaEdenImageItem;
 import com.william.mangoreader.model.MangaEdenMangaChapterItem;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
@@ -28,6 +33,7 @@ public class MangaEden {
     public static final String MANGAEDEN_IMAGE_CDN = "https://cdn.mangaeden.com/mangasimg/";
 
     public static final String MANGAEDEN_MANGADETAIL_PREFIX = "https://www.mangaeden.com/api/manga/";
+    public static final String MANGAEDEN_CHAPTERDETAIL_PREFIX = "https://www.mangaeden.com/api/chapter/";
 
     private static final int MANGA_DETAIL_NUMBER_INDEX = 0;
     private static final int MANGA_DETAIL_DATE_INDEX = 1;
@@ -97,8 +103,29 @@ public class MangaEden {
         return item;
     }
 
+    static public ArrayList<MangaEdenImageItem> parseMangaEdenMangaImageResponse(String jsonString) {
+        ArrayList<MangaEdenImageItem> mangaImageModels = new ArrayList<>();
+        try {
+            JsonNode root = mapper.readTree(jsonString);
+            ArrayNode images = (ArrayNode) root.get("images");
+
+            for (JsonNode node : images) {
+                MangaEdenImageItem item = new MangaEdenImageItem();
+                item.setPageNumber(node.get(0).asInt());
+                item.setUrl(node.get(1).asText());
+
+                mangaImageModels.add(item);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return mangaImageModels;
+    }
+
     static public void setThumbnail(String url, Context context, final ImageView imageView) {
-        url = MangaEden.MANGAEDEN_IMAGE_CDN + url;
+        url = MANGAEDEN_IMAGE_CDN + url;
         Picasso.with(context)
                 .load(url)
                 .placeholder(R.drawable.manga3)
@@ -109,7 +136,7 @@ public class MangaEden {
     }
 
     static public void setMangaArt(String url, Context context, final ImageView imageView, final MangaItemActivity activity) {
-        url = MangaEden.MANGAEDEN_IMAGE_CDN + url;
+        url = MANGAEDEN_IMAGE_CDN + url;
 
         Picasso.with(context)
                 .load(url)
@@ -118,37 +145,42 @@ public class MangaEden {
                 .into(imageView, new Callback.EmptyCallback() {
                     @Override
                     public void onSuccess() {
-                        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap(); // Ew!
+                        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                         imageView.setImageBitmap(bitmap);
                         activity.extractColorPalette(bitmap);
                         activity.loadFragments();
                     }
                 });
+    }
 
+    static public void setMangaImage(String url, Context context, ImageView imageView, final ViewGroup parent) {
+        url = MANGAEDEN_IMAGE_CDN + url;
+//        Log.d("MANGOREADER","parent visibility: " + ((View) imageView.getParent()).getVisibility());
 
-//        BitmapDrawable bitmapDrawable = (BitmapDrawable) activity.getResources().getDrawable(R.drawable.manga3);
-//        final Bitmap[] mangaArt = {bitmapDrawable.getBitmap()};
-//        if (url == null) {
-//            return mangaArt[0];
-//        } else {
-//            url = MangaEden.MANGAEDEN_IMAGE_CDN + url;
-//            ImageRequest request = new ImageRequest(url,
-//                    new Response.Listener<Bitmap>() {
-//                        @Override
-//                        public void onResponse(Bitmap bitmap) {
-//                            mangaArt[0] = bitmap;
-//                            imageView.setImageBitmap(bitmap);
-//                            activity.extractColorPalette(bitmap);
-//                            activity.loadFragments();
-//                        }
-//                    }, 0, 0, null,
-//                    new Response.ErrorListener() {
-//                        public void onErrorResponse(VolleyError error) {
-//                            //TODO handle
-//                        }
-//                    });
-//            VolleySingleton.getInstance(ctx).addToRequestQueue(request);
-//        }
-//        return mangaArt[0];
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                imageView.setImageBitmap(bitmap);
+                Log.d("MANGOREADER", "bitmap loaded");
+//                parent.addView(imageView);
+//                Drawable image = imageView.getDrawable();
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+                Log.d("MANGOREADER", "could not load bitmap");
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                Log.d("MANGOREADER", "prepare load");
+            }
+        };
+
+        Picasso.with(context)
+                .load(url)
+                .fit().centerCrop()
+                .into(imageView);
+
     }
 }
