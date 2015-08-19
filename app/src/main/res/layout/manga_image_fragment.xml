@@ -6,7 +6,7 @@
     android:background="@android:color/holo_blue_bright"
     android:orientation="vertical">
 
-    <ImageView
+    <it.sephiroth.android.library.imagezoom.ImageViewTouch
         android:id="@+id/image_view_touch"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

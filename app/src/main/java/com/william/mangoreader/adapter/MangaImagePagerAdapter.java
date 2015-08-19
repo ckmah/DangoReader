@@ -3,7 +3,6 @@ package com.william.mangoreader.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.View;
 
 import com.william.mangoreader.fragment.MangaImageFragment;
 
@@ -28,10 +27,6 @@ public class MangaImagePagerAdapter extends FragmentStatePagerAdapter {
         return MangaImageFragment.newInstance(position);
     }
 
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return false;
-    }
 
 
 }
