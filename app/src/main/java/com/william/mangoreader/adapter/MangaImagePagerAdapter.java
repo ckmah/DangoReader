@@ -9,11 +9,9 @@ import com.william.mangoreader.fragment.MangaImageFragment;
 public class MangaImagePagerAdapter extends FragmentStatePagerAdapter {
 
     private int size;
-    private FragmentManager fm;
 
     public MangaImagePagerAdapter(FragmentManager fm, int size) {
         super(fm);
-        this.fm = fm;
         this.size = size;
     }
 
@@ -26,7 +24,4 @@ public class MangaImagePagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         return MangaImageFragment.newInstance(position);
     }
-
-
-
 }

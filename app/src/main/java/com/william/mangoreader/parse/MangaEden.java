@@ -3,10 +3,7 @@ package com.william.mangoreader.parse;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.text.Html;
-import android.util.Log;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangaItemActivity;
 import com.william.mangoreader.model.MangaEdenImageItem;
@@ -34,6 +30,9 @@ public class MangaEden {
 
     public static final String MANGAEDEN_MANGADETAIL_PREFIX = "https://www.mangaeden.com/api/manga/";
     public static final String MANGAEDEN_CHAPTERDETAIL_PREFIX = "https://www.mangaeden.com/api/chapter/";
+
+    public static final int IMAGE_PAGE_NUMBER_INDEX = 0;
+    public static final int IMAGE_URL_INDEX = 1;
 
     private static final int MANGA_DETAIL_NUMBER_INDEX = 0;
     private static final int MANGA_DETAIL_DATE_INDEX = 1;
@@ -84,7 +83,7 @@ public class MangaEden {
                     chapterItem.setNumber(node.get(MANGA_DETAIL_NUMBER_INDEX).asInt());
                     chapterItem.setDate(node.get(MANGA_DETAIL_DATE_INDEX).asLong());
                     String chapterTitle = node.get(MANGA_DETAIL_TITLE_INDEX).asText();
-                    chapterItem.setTitle(chapterTitle == "null" ? "" : chapterTitle);
+                    chapterItem.setTitle(chapterTitle.equals("null") ? "" : chapterTitle);
                     chapterItem.setId(node.get(MANGA_DETAIL_ID_INDEX).asText());
                 }
                 chapterList.add(chapterItem);
@@ -111,8 +110,8 @@ public class MangaEden {
 
             for (JsonNode node : images) {
                 MangaEdenImageItem item = new MangaEdenImageItem();
-                item.setPageNumber(node.get(0).asInt());
-                item.setUrl(node.get(1).asText());
+                item.setPageNumber(node.get(IMAGE_PAGE_NUMBER_INDEX).asInt());
+                item.setUrl(node.get(IMAGE_URL_INDEX).asText());
 
                 mangaImageModels.add(item);
             }
@@ -128,7 +127,7 @@ public class MangaEden {
         url = MANGAEDEN_IMAGE_CDN + url;
         Picasso.with(context)
                 .load(url)
-                .placeholder(R.drawable.manga3)
+                .placeholder(R.drawable.ic_image_white)
                 .fit().centerCrop()
                 .transform(PaletteTransformation.instance())
                 .into(imageView);
@@ -141,6 +140,7 @@ public class MangaEden {
         Picasso.with(context)
                 .load(url)
                 .fit().centerCrop()
+                .placeholder(R.drawable.ic_image_white)
                 .transform(PaletteTransformation.instance())
                 .into(imageView, new Callback.EmptyCallback() {
                     @Override
@@ -153,33 +153,13 @@ public class MangaEden {
                 });
     }
 
-    static public void setMangaImage(String url, Context context, ImageView imageView, final ViewGroup parent) {
+    static public void setMangaImage(String url, Context context, final ImageView imageView) {
         url = MANGAEDEN_IMAGE_CDN + url;
-//        Log.d("MANGOREADER","parent visibility: " + ((View) imageView.getParent()).getVisibility());
-
-        Target target = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-//                imageView.setImageBitmap(bitmap);
-                Log.d("MANGOREADER", "bitmap loaded");
-//                parent.addView(imageView);
-//                Drawable image = imageView.getDrawable();
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-                Log.d("MANGOREADER", "could not load bitmap");
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                Log.d("MANGOREADER", "prepare load");
-            }
-        };
 
         Picasso.with(context)
                 .load(url)
-                .fit().centerCrop()
+                .noFade()
+                .placeholder(R.drawable.ic_image_white)
                 .into(imageView);
 
     }

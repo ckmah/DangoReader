@@ -1,25 +1,28 @@
 package com.william.mangoreader.listener;
 
 import android.content.Context;
-import android.util.Log;
+import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
-public class MangaViewPagerListener implements GestureDetector.OnGestureListener {
+public class MVPGestureListener extends GestureDetector.SimpleOnGestureListener {
 
     private Context context;
     private Window window;
+    private ViewPager viewPager;
+
     private boolean systemUIVisible;
 
     private static final float LEFT_SIDE = 0.33f;
     private static final float RIGHT_SIDE = 0.66f;
 
-    public MangaViewPagerListener(Context context, Window window) {
+    public MVPGestureListener(Context context, Window window, ViewPager viewPager) {
         systemUIVisible = false;
         this.context = context;
         this.window = window;
+        this.viewPager = viewPager;
     }
 
     private void showSystemUI() {
@@ -40,26 +43,17 @@ public class MangaViewPagerListener implements GestureDetector.OnGestureListener
     }
 
     @Override
-    public boolean onDown(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent event) {
+    public boolean onSingleTapConfirmed(MotionEvent event) {
         float xPos = event.getX();
         float screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
-        Log.d("POSITION", "" + xPos);
-
-
         if (xPos < LEFT_SIDE * screenWidth) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+
             // TODO go back one page/chapter
         } else if (xPos > RIGHT_SIDE * screenWidth) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+
             // TODO go forward one page/chapter
         } else {
             if (systemUIVisible) {
@@ -74,17 +68,23 @@ public class MangaViewPagerListener implements GestureDetector.OnGestureListener
     }
 
     @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                           float velocityY) {
+        viewPager.onTouchEvent(e1);
+        viewPager.onTouchEvent(e2);
+        return true;
+    }
+
+    @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        return false;
+        viewPager.onTouchEvent(e1);
+        viewPager.onTouchEvent(e2);
+        return true;
     }
 
-    @Override
-    public void onLongPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        return false;
-    }
 }

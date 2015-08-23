@@ -143,7 +143,7 @@
         <item name="android:divider">?android:dividerHorizontal</item>
         <item name="android:orientation">vertical</item>
         <item name="android:showDividers">middle|end</item>
-        <item name="android:paddingBottom">@dimen/fragment_chapters_padding_bottom</item>
+        <item name="android:paddingBottom">@dimen/chapters_padding_bottom</item>
     </style>
 
     <style name="chapter_row">

@@ -2,7 +2,6 @@ package com.william.mangoreader.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,7 +21,8 @@ import java.util.ArrayList;
 public class MangaViewerActivity extends AppCompatActivity {
 
     private ArrayList<MangaEdenImageItem> images;
-    private MangaViewPager mangaViewPager;
+        private MangaViewPager mangaViewPager;
+//    private ViewPager viewPager;
     private MangaImagePagerAdapter imageAdapter;
 
     private String chapterId;
@@ -37,6 +37,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         images = new ArrayList<>();
         chapterId = (String) getIntent().getExtras().get("chapterId");
         queue = VolleySingleton.getInstance(this).getRequestQueue();
+//        viewPager = (ViewPager) findViewById(R.id.manga_view_pager);
         mangaViewPager = (MangaViewPager) findViewById(R.id.manga_view_pager);
 
         fetchMangaImagesFromMangaEden();
@@ -52,8 +53,8 @@ public class MangaViewerActivity extends AppCompatActivity {
                             public void onResponse(JSONObject response) {
                                 images = MangaEden.parseMangaEdenMangaImageResponse(response.toString());
                                 imageAdapter = new MangaImagePagerAdapter(getSupportFragmentManager(), images.size());
+//                                viewPager.setAdapter(imageAdapter);
                                 mangaViewPager.setAdapter(imageAdapter);
-                                Log.d("MANGOREADER", "childCount: " + mangaViewPager.getChildCount());
                                 loadContent();
                             }
                         }, new Response.ErrorListener() {
@@ -66,7 +67,8 @@ public class MangaViewerActivity extends AppCompatActivity {
     }
 
     private void loadContent() {
-        mangaViewPager.setCurrentItem(0);
+//        viewPager.setCurrentItem(images.size() - 1);
+        mangaViewPager.setCurrentItem(images.size() - 1);
         // TODO: update other stuff
     }
 

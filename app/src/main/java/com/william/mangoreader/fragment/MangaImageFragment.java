@@ -42,7 +42,7 @@ public class MangaImageFragment extends Fragment {
         MangaViewerActivity activity = (MangaViewerActivity) getActivity();
         String imageUrl = activity.getImages().get(itemIndex).getUrl();
 
-        MangaEden.setMangaImage(imageUrl, activity, imageViewTouch, (ViewGroup) root);
+        MangaEden.setMangaImage(imageUrl, activity, imageViewTouch);
         return root;
     }
 
