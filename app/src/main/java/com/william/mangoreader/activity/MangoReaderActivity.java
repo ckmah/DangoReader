@@ -92,7 +92,9 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         menuItem.setChecked(true);
+
         drawerLayout.closeDrawers();
+
         displayView(menuItem.getItemId());
         return true;
     }

@@ -16,7 +16,6 @@
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:popupMenuStyle">@style/PopupMenuStyle</item>
     </style>
 
@@ -81,7 +80,7 @@
 
     <style name="CardMenuMore">
         <item name="android:layout_alignParentEnd">true</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:paddingTop">@dimen/card_menu_more_padding_top</item>
     </style>
 
