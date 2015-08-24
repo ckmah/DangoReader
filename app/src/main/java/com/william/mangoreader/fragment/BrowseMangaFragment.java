@@ -34,7 +34,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
-    private CardLayoutAdapter cgAdapter;
+    private CardLayoutAdapter cardAdapter;
     BrowseMangaScrollListener recyclerListener;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -74,10 +74,10 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
         MangoReaderActivity activity = (MangoReaderActivity) getActivity();
-        cgAdapter = new CardLayoutAdapter(activity, true);
-        mRecyclerView.setAdapter(cgAdapter);
+        cardAdapter = new CardLayoutAdapter(activity, true);
+        mRecyclerView.setAdapter(cardAdapter);
 
-         recyclerListener = new BrowseMangaScrollListener() {
+        recyclerListener = new BrowseMangaScrollListener() {
             @Override
             public void loadMore() {
                 fetchMangaListFromMangaEden();
@@ -107,7 +107,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                                 ArrayList<MangaEdenMangaListItem> results = MangaEden.parseMangaEdenMangaListResponse(response.toString());
 
                                 for (MangaEdenMangaListItem m : results) {
-                                    cgAdapter.addItem(m);
+                                    cardAdapter.addItem(m);
                                 }
                                 page++;
                                 BrowseMangaScrollListener.loading = false;
@@ -125,7 +125,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onRefresh() {
         page = 0;
-        cgAdapter.clearList();
+        cardAdapter.clearList();
         swipeRefreshLayout.setRefreshing(false);
     }
 

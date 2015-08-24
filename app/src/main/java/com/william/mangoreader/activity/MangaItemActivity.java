@@ -1,24 +1,33 @@
 package com.william.mangoreader.activity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.william.mangoreader.R;
+import com.william.mangoreader.fragment.MangaItemChapterFragment;
+import com.william.mangoreader.fragment.MangaItemDetailFragment;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * Activity that displays a single manga, and shows manga info and chapters
@@ -29,16 +38,17 @@ public class MangaItemActivity extends AppCompatActivity {
     private RequestQueue queue;
     private MangaEdenMangaDetailItem manga;
 
+    private Palette.Swatch primaryColor;
+
+    private Palette.Swatch secondaryColor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(getResources().getColor(R.color.transparent));
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         setContentView(R.layout.activity_manga_item);
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.manga_item_toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_item);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -48,12 +58,11 @@ public class MangaItemActivity extends AppCompatActivity {
             }
         });
 
-        queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        queue = VolleySingleton.getInstance(this).getRequestQueue();
 
         mangaId = (String) getIntent().getExtras().get("mangaId");
         fetchMangaDetailFromMangaEden();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,18 +104,68 @@ public class MangaItemActivity extends AppCompatActivity {
     }
 
     private void loadContent() {
-        TextView titleView = (TextView) findViewById(R.id.manga_item_title);
-        titleView.setText(manga.title);
-
-        TextView subtitleView = (TextView) findViewById(R.id.manga_item_subtitle);
-        subtitleView.setText(manga.author);
-
-        TextView descriptionView = (TextView) findViewById(R.id.manga_item_description);
-        descriptionView.setText(manga.description);
-
         ImageView imageView = (ImageView) findViewById(R.id.manga_item_image_view);
-        MangaEden.setImage(manga.imageUrl, this, imageView);
-
-
+        MangaEden.setMangaArt(manga.getImageUrl(), imageView, this);
     }
+
+    public void loadFragments() {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        MangaItemDetailFragment detailsFragment = MangaItemDetailFragment.newInstance(manga);
+        MangaItemChapterFragment chaptersFragment = MangaItemChapterFragment.newInstance(manga);
+        fragmentTransaction.add(R.id.manga_item_header, detailsFragment);
+        fragmentTransaction.add(R.id.manga_item_header, chaptersFragment);
+        fragmentTransaction.commit();
+    }
+
+
+    public void extractColorPalette(Bitmap bitmap) {
+        List<Palette.Swatch> swatches = Palette.from(bitmap).generate().getSwatches();
+
+        primaryColor = new Palette.Swatch(R.color.grey, 0);
+        int primaryColorPopulation = 0;
+
+        secondaryColor = new Palette.Swatch(R.color.black, 0);
+        int secondaryColorPopulation = 0;
+
+        // extract primary color
+        for (Palette.Swatch swatch : swatches) {
+            int population = swatch.getPopulation();
+            if (population > primaryColorPopulation) {
+                primaryColorPopulation = population;
+                primaryColor = swatch;
+            }
+        }
+        // extract secondary color
+        for (Palette.Swatch swatch : swatches) {
+            int population = swatch.getPopulation();
+            if (population > secondaryColorPopulation && population != primaryColorPopulation) {
+                secondaryColorPopulation = population;
+                secondaryColor = swatch;
+            }
+        }
+
+        setLayoutColors(primaryColor);
+    }
+
+    public void setLayoutColors(Palette.Swatch primaryColor) {
+        Window window = getWindow();
+        // status bar assigned primary color
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(primaryColor.getRgb());
+
+        // scrim assigned primary color
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.manga_item_collapsing_toolbar);
+        collapsingToolbarLayout.setContentScrimColor(primaryColor.getRgb());
+    }
+
+    public Palette.Swatch getPrimaryColor() {
+        return primaryColor;
+    }
+
+    public Palette.Swatch getSecondaryColor() {
+        return secondaryColor;
+    }
+
+
 }

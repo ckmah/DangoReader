@@ -10,25 +10,34 @@
 
     <dimen name="card_title_text_size">16sp</dimen>
     <dimen name="card_subtitle_text_size">12sp</dimen>
-    <dimen name="card_main_content_native_material_large_image_paddingLeft">8dp</dimen>
-    <dimen name="card_main_content_native_material_large_image_paddingRight">8dp</dimen>
-    <dimen name="card_main_content_native_material_large_image_paddingTop">4dp</dimen>
-    <dimen name="card_main_content_native_material_large_image_paddingBottom">8dp</dimen>
-
-    <dimen name="card_default_native_margin_bottom">4dp</dimen>
-    <dimen name="card_default_native_margin_left">4dp</dimen>
-    <dimen name="card_default_native_margin_right">4dp</dimen>
-    <dimen name="card_default_native_margin_top">4dp</dimen>
+    <dimen name="card_menu_more_padding_top">4dp</dimen>
 
     <dimen name="card_base_empty_height">0dp</dimen>
-    <dimen name="card_main_content_native_default_paddingBottom">4dp</dimen>
-    <dimen name="card_main_content_native_default_paddingLeft">4dp</dimen>
-    <dimen name="card_main_content_native_default_paddingRight">4dp</dimen>
-    <dimen name="card_main_content_native_default_paddingTop">4dp</dimen>
 
-    <dimen name="card_title_margin_right">8dp</dimen>
+    <dimen name="card_title_margin_right">16dp</dimen>
     <dimen name="card_title_margin_left">8dp</dimen>
     <dimen name="card_title_margin_top">8dp</dimen>
-    <dimen name="card_title_margin_bottom">8dp</dimen>
+    <dimen name="card_title_margin_bottom">4dp</dimen>
+
+    <!-- Manga Item Styles -->
+    <dimen name="manga_item_header_padding">16dp</dimen>
+
+    <dimen name="manga_item_title_text_size">24sp</dimen>
+    <dimen name="manga_item_title_padding_bottom">8sp</dimen>
+
+    <dimen name="manga_item_subtitle_text_size">15sp</dimen>
+    <dimen name="manga_item_subtitle_padding_bottom">8sp</dimen>
+
+    <dimen name="manga_item_description_text_size">13sp</dimen>
+    <dimen name="manga_item_description_line_spacing_extra">5sp</dimen>
+
+    <dimen name="chapter_row_padding">12dp</dimen>
+    <dimen name="chapter_number_textsize">18sp</dimen>
+    <dimen name="chapter_number_padding_right">10sp</dimen>
+    <dimen name="chapter_title_textsize">13sp</dimen>
+    <dimen name="chapters_padding_bottom">80dp</dimen>
+
+    <dimen name="manga_image_margin">50px</dimen>
+
 
 </resources>

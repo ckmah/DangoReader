@@ -16,7 +16,6 @@
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:popupMenuStyle">@style/PopupMenuStyle</item>
     </style>
 
@@ -79,13 +78,18 @@
         <item name="textAllCaps">true</item>
     </style>
 
+    <style name="CardMenuMore">
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:paddingTop">@dimen/card_menu_more_padding_top</item>
+    </style>
+
     <style name="CardTitle">
         <item name="android:ellipsize">end</item>
         <item name="android:textStyle">normal</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/card_title_text_size</item>
-        <!--<item name="android:layout_gravity">left|center_vertical</item>-->
         <item name="android:layout_marginLeft">@dimen/card_title_margin_left</item>
         <item name="android:layout_marginTop">@dimen/card_title_margin_top</item>
         <item name="android:layout_marginRight">@dimen/card_title_margin_right</item>
@@ -110,6 +114,55 @@
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="android:layout_height">250dp</item>
+    </style>
+
+    <style name="MangaItemHeader">
+        <item name="android:padding">@dimen/manga_item_header_padding</item>
+    </style>
+
+    <style name="MangaItemTitle">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/manga_item_title_text_size</item>
+        <item name="android:paddingBottom">@dimen/manga_item_title_padding_bottom</item>
+    </style>
+
+    <style name="MangaItemSubtitle">
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">@dimen/manga_item_subtitle_text_size</item>
+        <item name="android:paddingBottom">@dimen/manga_item_subtitle_padding_bottom</item>
+    </style>
+
+    <style name="MangaItemDescription">
+        <item name="android:textSize">@dimen/manga_item_description_text_size</item>
+        <item name="android:lineSpacingExtra">@dimen/manga_item_description_line_spacing_extra
+        </item>
+    </style>
+
+    <style name="fragment_chapters">
+        <item name="android:divider">?android:dividerHorizontal</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:showDividers">middle|end</item>
+        <item name="android:paddingBottom">@dimen/chapters_padding_bottom</item>
+    </style>
+
+    <style name="chapter_row">
+        <item name="android:padding">@dimen/chapter_row_padding</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="ChapterNumber">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/chapter_number_textsize</item>
+        <item name="android:paddingRight">@dimen/chapter_number_padding_right</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ChapterTitle">
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">@dimen/chapter_title_textsize</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
 </resources>

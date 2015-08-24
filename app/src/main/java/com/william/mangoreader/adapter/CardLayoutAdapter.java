@@ -25,7 +25,7 @@ import java.util.ArrayList;
 /**
  * Layout adapter for adding cards
  */
-public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
+public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHolder>  {
 
     private ArrayList<MangaEdenMangaListItem> mangaEdenMangaListItems;
     private Activity activity;
@@ -45,11 +45,10 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecyclerViewCardHolder viewHolder, int position) {
         viewHolder.setTitle(mangaEdenMangaListItems.get(position).getTitle());
         viewHolder.setSubtitle("Placeholder");
-        MangaEden.setImage(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.getThumbnail());
-//        viewHolder.setThumbnail(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext());
+        MangaEden.setThumbnail(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.getThumbnail());
         viewHolder.setMangaEdenId(mangaEdenMangaListItems.get(position).getId());
     }
 
@@ -72,10 +71,10 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewHolder> 
     }
 
     @Override
-    public RecyclerViewHolder onCreateViewHolder(final ViewGroup viewGroup, int position) {
+    public RecyclerViewCardHolder onCreateViewHolder(final ViewGroup viewGroup, int position) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View itemView = inflater.inflate(R.layout.manga_card, viewGroup, false);
-        final RecyclerViewHolder holder = new RecyclerViewHolder(itemView);
+        final RecyclerViewCardHolder holder = new RecyclerViewCardHolder(itemView);
 
         final CardView cardView = (CardView) itemView.findViewById(R.id.card_view);
 

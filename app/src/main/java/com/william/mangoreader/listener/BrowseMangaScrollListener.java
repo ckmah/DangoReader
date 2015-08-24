@@ -3,9 +3,6 @@ package com.william.mangoreader.listener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-/**
- * Created by Clarence on 8/9/2015.
- */
 public abstract class BrowseMangaScrollListener extends RecyclerView.OnScrollListener {
 
     public int previousTotal = 0; // The total number of items in the dataset after the last load
@@ -25,17 +22,13 @@ public abstract class BrowseMangaScrollListener extends RecyclerView.OnScrollLis
 
         if (loading) {
             if (totalItemCount > previousTotal) {
-                loading = false;
                 previousTotal = totalItemCount;
             }
         }
         if (!loading && (totalItemCount - visibleItemCount)
                 <= (firstVisibleItem + visibleThreshold)) {
-            // End has been reached
-
-            loadMore();
-
             loading = true;
+            loadMore();
         }
     }
 
