@@ -105,8 +105,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
     private void loadContent() {
         ImageView imageView = (ImageView) findViewById(R.id.manga_item_image_view);
-        MangaEden.setMangaArt(manga.getImageUrl(), getApplicationContext(), imageView, this);
-
+        MangaEden.setMangaArt(manga.getImageUrl(), imageView, this);
     }
 
     public void loadFragments() {

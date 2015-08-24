@@ -134,10 +134,10 @@ public class MangaEden {
 
     }
 
-    static public void setMangaArt(String url, Context context, final ImageView imageView, final MangaItemActivity activity) {
+    static public void setMangaArt(String url, final ImageView imageView, final MangaItemActivity activity) {
         url = MANGAEDEN_IMAGE_CDN + url;
 
-        Picasso.with(context)
+        Picasso.with(activity)
                 .load(url)
                 .fit().centerCrop()
                 .placeholder(R.drawable.ic_image_white)
@@ -158,6 +158,7 @@ public class MangaEden {
 
         Picasso.with(context)
                 .load(url)
+                .fit().centerInside()
                 .noFade()
                 .placeholder(R.drawable.ic_image_white)
                 .into(imageView);
