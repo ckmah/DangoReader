@@ -29,6 +29,8 @@ import com.william.mangoreader.volley.VolleySingleton;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -39,7 +41,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private RequestQueue queue;
-    private int page;
 
     public BrowseMangaFragment() {
         // Required empty public constructor
@@ -96,7 +97,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private void fetchMangaListFromMangaEden() {
-        String url = MangaEden.MANGAEDEN_MANGALIST_PREFIX + page + MangaEden.MANGAEDEN_MANGALIST_SUFFIX;
+        String url = MangaEden.MANGAEDEN_MANGALIST;
 
         queue.add(new JsonObjectRequest
                         (url, new Response.Listener<JSONObject>() {
@@ -105,11 +106,17 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                             public void onResponse(JSONObject response) {
 
                                 ArrayList<MangaEdenMangaListItem> results = MangaEden.parseMangaEdenMangaListResponse(response.toString());
+                                Collections.sort(results, new Comparator<MangaEdenMangaListItem>(){
 
+                                    @Override
+                                    public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                                        return ((Integer) lhs.getHits()).compareTo(rhs.getHits());
+                                    }
+                                });
+                                Collections.reverse(results);
                                 for (MangaEdenMangaListItem m : results) {
                                     cardAdapter.addItem(m);
                                 }
-                                page++;
                                 BrowseMangaScrollListener.loading = false;
 
                             }
@@ -124,7 +131,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void onRefresh() {
-        page = 0;
         cardAdapter.clearList();
         swipeRefreshLayout.setRefreshing(false);
     }
