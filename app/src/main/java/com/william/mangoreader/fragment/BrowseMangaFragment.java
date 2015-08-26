@@ -22,7 +22,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
-import com.william.mangoreader.listener.BrowseMangaScrollListener;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
@@ -39,7 +38,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private CardLayoutAdapter cardAdapter;
-    BrowseMangaScrollListener recyclerListener;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private RequestQueue queue;
@@ -83,28 +81,15 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         cardAdapter = new CardLayoutAdapter(activity, true);
         cardAdapter.setAllManga(allManga);
         mRecyclerView.setAdapter(cardAdapter);
-
-        recyclerListener = new BrowseMangaScrollListener() {
-            @Override
-            public void loadMore() {
-                fetchMangaListFromMangaEden();
-            }
-        };
-
-        mRecyclerView.addOnScrollListener(recyclerListener);
-
     }
 
     private void initSwipeRefresh(View rootView) {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.browse_swipe_refresh);
-
         swipeRefreshLayout.setOnRefreshListener(this);
-
     }
 
     private void fetchMangaListFromMangaEden() {
         String url = MangaEden.MANGAEDEN_MANGALIST;
-
         queue.add(new JsonObjectRequest(
                         url,
                         new Response.Listener<JSONObject>() {
@@ -125,9 +110,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                                 allManga.clear();
                                 allManga.addAll(results);
                                 cardAdapter.getFilter().filter("");
-
-                                BrowseMangaScrollListener.loading = false;
-
+                                swipeRefreshLayout.setRefreshing(false);
                             }
                         },
                         new Response.ErrorListener() {
@@ -142,7 +125,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onRefresh() {
         cardAdapter.clearList();
-        swipeRefreshLayout.setRefreshing(false);
+        fetchMangaListFromMangaEden();
     }
 
     @Override
@@ -155,12 +138,22 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                if (query.isEmpty()) {
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    swipeRefreshLayout.setEnabled(false);
+                }
                 cardAdapter.getFilter().filter(query);
                 return true; // The listener has handled the query
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    swipeRefreshLayout.setEnabled(false);
+                }
                 cardAdapter.getFilter().filter(newText);
                 return false; // The searchview should show suggestions
             }
@@ -189,6 +182,4 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     public void onDetach() {
         super.onDetach();
     }
-
-
 }
