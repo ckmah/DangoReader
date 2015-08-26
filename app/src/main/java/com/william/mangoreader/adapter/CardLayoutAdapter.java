@@ -2,8 +2,6 @@ package com.william.mangoreader.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -11,63 +9,63 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.Toast;
 
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangaItemActivity;
-import com.william.mangoreader.daogen.DaoMaster;
-import com.william.mangoreader.daogen.DaoSession;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Layout adapter for adding cards
  */
-public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHolder>  {
+public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHolder> implements Filterable {
 
-    private ArrayList<MangaEdenMangaListItem> mangaEdenMangaListItems;
+    private List<MangaEdenMangaListItem> allManga;
+    private List<MangaEdenMangaListItem> filteredManga;
     private Activity activity;
     private boolean browseFlag; //right now, this specifies whether we're in a browsemangafragment or mylibraryfragment
 
-    private SQLiteDatabase dbase;
-    private DaoMaster daoMaster;
-    private DaoSession daoSession;
-
-    private Cursor cursor;
-
     public CardLayoutAdapter(Activity activity, boolean browseFlag) {
-        mangaEdenMangaListItems = new ArrayList<>();
+        filteredManga = new ArrayList<>();
         this.activity = activity;
         this.browseFlag = browseFlag;
         // Pass context or other static stuff that will be needed.
     }
 
+    public void setAllManga(List<MangaEdenMangaListItem> allManga) {
+        this.allManga = allManga;
+    }
+
     @Override
     public void onBindViewHolder(RecyclerViewCardHolder viewHolder, int position) {
-        viewHolder.setTitle(mangaEdenMangaListItems.get(position).getTitle());
+        viewHolder.setTitle(filteredManga.get(position).getTitle());
         viewHolder.setSubtitle("Placeholder");
-        MangaEden.setThumbnail(mangaEdenMangaListItems.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.getThumbnail());
-        viewHolder.setMangaEdenId(mangaEdenMangaListItems.get(position).getId());
+        MangaEden.setThumbnail(filteredManga.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.getThumbnail());
+        viewHolder.setMangaEdenId(filteredManga.get(position).getId());
     }
 
     public void clearList() {
-        mangaEdenMangaListItems.clear();
+        filteredManga.clear();
         notifyDataSetChanged();
     }
 
     private void addToList(int pos) {
-        Toast.makeText(activity, "\"" + mangaEdenMangaListItems.get(pos).getTitle() + "\" added to your library.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "\"" + filteredManga.get(pos).getTitle() + "\" added to your library.", Toast.LENGTH_SHORT).show();
     }
 
     private void removeFromList(int pos) {
-        Toast.makeText(activity, "\"" + mangaEdenMangaListItems.get(pos).getTitle() + "\" removed from your library.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "\"" + filteredManga.get(pos).getTitle() + "\" removed from your library.", Toast.LENGTH_SHORT).show();
 
         // needed to update UI without reading in entire database
-        mangaEdenMangaListItems.remove(pos);
+        filteredManga.remove(pos);
         notifyItemRemoved(pos);
-        notifyItemRangeChanged(pos, mangaEdenMangaListItems.size());
+        notifyItemRangeChanged(pos, filteredManga.size());
     }
 
     @Override
@@ -136,14 +134,45 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHold
 
     @Override
     public int getItemCount() {
-        return mangaEdenMangaListItems.size();
+        return filteredManga.size();
     }
 
-    public void addItem(MangaEdenMangaListItem m) {
-        mangaEdenMangaListItems.add(m);
-        notifyItemInserted(mangaEdenMangaListItems.size());
-
+    @Override
+    public Filter getFilter() {
+        return new CardLayoutFilter();
     }
 
+    /**
+     * Performs the filtering of the cards by the query term
+     */
+    private class CardLayoutFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence query) {
+            filteredManga.clear();
+            FilterResults results = new FilterResults();
 
+            if (query.length() == 0) {
+                // If search term empty, show all manga
+                filteredManga.addAll(allManga);
+            } else {
+                // Otherwise, do a case-blind search
+                // TODO replace with better fuzzy match algorithm
+                String filterPattern = query.toString().toLowerCase().trim();
+
+                for (MangaEdenMangaListItem item : allManga) {
+                    if (item.getTitle().toLowerCase().contains(filterPattern)) {
+                        filteredManga.add(item);
+                    }
+                }
+            }
+            results.values = filteredManga;
+            results.count = filteredManga.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            notifyDataSetChanged();
+        }
+    }
 }

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +22,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
-import com.william.mangoreader.listener.BrowseMangaScrollListener;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
@@ -29,17 +29,21 @@ import com.william.mangoreader.volley.VolleySingleton;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private CardLayoutAdapter cardAdapter;
-    BrowseMangaScrollListener recyclerListener;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private RequestQueue queue;
-    private int page;
+
+    // In-memory list of all manga, period
+    private List<MangaEdenMangaListItem> allManga = new ArrayList<>();
 
     public BrowseMangaFragment() {
         // Required empty public constructor
@@ -75,45 +79,41 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
         MangoReaderActivity activity = (MangoReaderActivity) getActivity();
         cardAdapter = new CardLayoutAdapter(activity, true);
+        cardAdapter.setAllManga(allManga);
         mRecyclerView.setAdapter(cardAdapter);
-
-        recyclerListener = new BrowseMangaScrollListener() {
-            @Override
-            public void loadMore() {
-                fetchMangaListFromMangaEden();
-            }
-        };
-
-        mRecyclerView.addOnScrollListener(recyclerListener);
-
     }
 
     private void initSwipeRefresh(View rootView) {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.browse_swipe_refresh);
-
         swipeRefreshLayout.setOnRefreshListener(this);
-
     }
 
     private void fetchMangaListFromMangaEden() {
-        String url = MangaEden.MANGAEDEN_MANGALIST_PREFIX + page + MangaEden.MANGAEDEN_MANGALIST_SUFFIX;
-
-        queue.add(new JsonObjectRequest
-                        (url, new Response.Listener<JSONObject>() {
+        String url = MangaEden.MANGAEDEN_MANGALIST;
+        queue.add(new JsonObjectRequest(
+                        url,
+                        new Response.Listener<JSONObject>() {
 
                             @Override
                             public void onResponse(JSONObject response) {
-
                                 ArrayList<MangaEdenMangaListItem> results = MangaEden.parseMangaEdenMangaListResponse(response.toString());
+                                Collections.sort(results, new Comparator<MangaEdenMangaListItem>() {
 
-                                for (MangaEdenMangaListItem m : results) {
-                                    cardAdapter.addItem(m);
-                                }
-                                page++;
-                                BrowseMangaScrollListener.loading = false;
+                                    @Override
+                                    public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                                        return ((Integer) lhs.getHits()).compareTo(rhs.getHits());
+                                    }
+                                });
+                                Collections.reverse(results);
 
+                                // Update list of all manga and display them
+                                allManga.clear();
+                                allManga.addAll(results);
+                                cardAdapter.getFilter().filter("");
+                                swipeRefreshLayout.setRefreshing(false);
                             }
-                        }, new Response.ErrorListener() {
+                        },
+                        new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 System.out.println("Response error: " + error.toString());
@@ -124,14 +124,40 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void onRefresh() {
-        page = 0;
         cardAdapter.clearList();
-        swipeRefreshLayout.setRefreshing(false);
+        fetchMangaListFromMangaEden();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuinflator) {
         menuinflator.inflate(R.menu.menu_browse_manga, menu);
+
+        // Configure the SearchView to filter the cards
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query.isEmpty()) {
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    swipeRefreshLayout.setEnabled(false);
+                }
+                cardAdapter.getFilter().filter(query);
+                return true; // The listener has handled the query
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    swipeRefreshLayout.setEnabled(false);
+                }
+                cardAdapter.getFilter().filter(newText);
+                return false; // The searchview should show suggestions
+            }
+        });
     }
 
     @Override
@@ -156,6 +182,4 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     public void onDetach() {
         super.onDetach();
     }
-
-
 }

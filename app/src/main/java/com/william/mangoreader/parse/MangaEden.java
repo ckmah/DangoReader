@@ -23,8 +23,7 @@ import java.util.ArrayList;
 
 public class MangaEden {
 
-    public static final String MANGAEDEN_MANGALIST_PREFIX = "https://www.mangaeden.com/api/list/0/?p=";
-    public static final String MANGAEDEN_MANGALIST_SUFFIX = "&l=25";
+    public static final String MANGAEDEN_MANGALIST = "https://www.mangaeden.com/api/list/0";
 
     public static final String MANGAEDEN_IMAGE_CDN = "https://cdn.mangaeden.com/mangasimg/";
 
