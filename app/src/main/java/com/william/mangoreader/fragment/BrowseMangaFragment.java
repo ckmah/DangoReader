@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +32,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -41,6 +43,9 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private RequestQueue queue;
+
+    // In-memory list of all manga, period
+    private List<MangaEdenMangaListItem> allManga = new ArrayList<>();
 
     public BrowseMangaFragment() {
         // Required empty public constructor
@@ -76,6 +81,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
         MangoReaderActivity activity = (MangoReaderActivity) getActivity();
         cardAdapter = new CardLayoutAdapter(activity, true);
+        cardAdapter.setAllManga(allManga);
         mRecyclerView.setAdapter(cardAdapter);
 
         recyclerListener = new BrowseMangaScrollListener() {
@@ -99,14 +105,14 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     private void fetchMangaListFromMangaEden() {
         String url = MangaEden.MANGAEDEN_MANGALIST;
 
-        queue.add(new JsonObjectRequest
-                        (url, new Response.Listener<JSONObject>() {
+        queue.add(new JsonObjectRequest(
+                        url,
+                        new Response.Listener<JSONObject>() {
 
                             @Override
                             public void onResponse(JSONObject response) {
-
                                 ArrayList<MangaEdenMangaListItem> results = MangaEden.parseMangaEdenMangaListResponse(response.toString());
-                                Collections.sort(results, new Comparator<MangaEdenMangaListItem>(){
+                                Collections.sort(results, new Comparator<MangaEdenMangaListItem>() {
 
                                     @Override
                                     public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
@@ -114,13 +120,17 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                                     }
                                 });
                                 Collections.reverse(results);
-                                for (MangaEdenMangaListItem m : results) {
-                                    cardAdapter.addItem(m);
-                                }
+
+                                // Update list of all manga and display them
+                                allManga.clear();
+                                allManga.addAll(results);
+                                cardAdapter.getFilter().filter("");
+
                                 BrowseMangaScrollListener.loading = false;
 
                             }
-                        }, new Response.ErrorListener() {
+                        },
+                        new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 System.out.println("Response error: " + error.toString());
@@ -138,6 +148,23 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuinflator) {
         menuinflator.inflate(R.menu.menu_browse_manga, menu);
+
+        // Configure the SearchView to filter the cards
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                cardAdapter.getFilter().filter(query);
+                return true; // The listener has handled the query
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                cardAdapter.getFilter().filter(newText);
+                return false; // The searchview should show suggestions
+            }
+        });
     }
 
     @Override
