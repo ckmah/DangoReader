@@ -8,16 +8,15 @@
     <dimen name="actions_action_height">24dp</dimen>
     <dimen name="actions_action_width">24dp</dimen>
 
-    <dimen name="card_title_text_size">16sp</dimen>
+    <dimen name="card_title_text_size">18sp</dimen>
     <dimen name="card_subtitle_text_size">12sp</dimen>
-    <dimen name="card_menu_more_padding_top">4dp</dimen>
+    <dimen name="card_bookmark_padding">8dp</dimen>
 
     <dimen name="card_base_empty_height">0dp</dimen>
 
-    <dimen name="card_title_margin_right">16dp</dimen>
-    <dimen name="card_title_margin_left">8dp</dimen>
-    <dimen name="card_title_margin_top">8dp</dimen>
-    <dimen name="card_title_margin_bottom">4dp</dimen>
+    <dimen name="card_text_margin">8dp</dimen>
+    <dimen name="card_text_right_margin">24dp</dimen>
+    <dimen name="card_bottom_margin">12dp</dimen>
 
     <!-- Manga Item Styles -->
     <dimen name="manga_item_header_padding">16dp</dimen>

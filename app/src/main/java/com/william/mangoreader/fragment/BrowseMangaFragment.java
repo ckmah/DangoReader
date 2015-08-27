@@ -5,9 +5,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +24,7 @@ import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
 import com.william.mangoreader.listener.BrowseMangaScrollListener;
+import com.william.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
@@ -37,7 +39,7 @@ import java.util.List;
 public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager linearLayoutManager;
+    private GridLayoutManager gridLayoutManager;
     private CardLayoutAdapter cardAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -75,13 +77,18 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     private void initRecycler(View rootView) {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_recycler_view);
 
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
 
         MangoReaderActivity activity = (MangoReaderActivity) getActivity();
         cardAdapter = new CardLayoutAdapter(activity, true);
         cardAdapter.setAllManga(allManga);
         mRecyclerView.setAdapter(cardAdapter);
+
+        ItemTouchHelper.Callback callback =
+                new SimpleItemTouchHelperCallback(cardAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(mRecyclerView);
     }
 
     private void initSwipeRefresh(View rootView) {
