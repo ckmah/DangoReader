@@ -26,7 +26,7 @@
             android:name=".activity.MangaViewerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_manga_viewer"
-            android:parentActivityName=".activity.MangaItemActivity">
+            android:parentActivityName=".activity.MangoReaderActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MangaItemActivity" />

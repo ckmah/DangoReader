@@ -139,4 +139,6 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         }
     }
 
+
+
 }
