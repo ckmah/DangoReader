@@ -8,7 +8,8 @@
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
     <color name="grey">@android:color/darker_gray</color>
-    <color name="gradient_dark">#80000000</color>
+    <color name="gradient_dark">#CC000000</color>
+    <color name="translucent_black">#80000000</color>
     <color name="transparent">@android:color/transparent</color>
 
     <!--reds-->

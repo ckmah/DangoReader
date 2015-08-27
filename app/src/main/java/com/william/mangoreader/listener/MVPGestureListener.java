@@ -2,18 +2,14 @@ package com.william.mangoreader.listener;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.Window;
 
 import com.william.mangoreader.activity.viewpager.MangaViewPager;
 
 public class MVPGestureListener implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     private Context context;
-    private Window window;
     private MangaViewPager viewPager;
 
     private boolean systemUIVisible;
@@ -21,33 +17,22 @@ public class MVPGestureListener implements GestureDetector.OnGestureListener, Ge
     private static final float LEFT_SIDE = 0.33f;
     private static final float RIGHT_SIDE = 0.66f;
 
-    public MVPGestureListener(Context context, Window window, ViewPager viewPager) {
+    public MVPGestureListener(Context context, ViewPager viewPager) {
         systemUIVisible = false;
         this.context = context;
-        this.window = window;
         this.viewPager = (MangaViewPager) viewPager;
     }
 
-    private void showSystemUI() {
-        window.getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    public void showSystemUI() {
+
     }
 
-    private void hideSystemUI() {
-        window.getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+    public void hideSystemUI() {
+
     }
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
-        Log.d("GestureListener", "Single tap confirmed.");
         float xPos = event.getX();
         float screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 

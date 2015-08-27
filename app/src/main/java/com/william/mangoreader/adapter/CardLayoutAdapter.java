@@ -3,18 +3,20 @@ package com.william.mangoreader.adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangaItemActivity;
+import com.william.mangoreader.adapter.helper.ItemTouchHelperAdapter;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 
@@ -24,7 +26,7 @@ import java.util.List;
 /**
  * Layout adapter for adding cards
  */
-public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHolder> implements Filterable {
+public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable {
 
     private List<MangaEdenMangaListItem> allManga;
     private List<MangaEdenMangaListItem> filteredManga;
@@ -43,12 +45,13 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHold
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewCardHolder viewHolder, int position) {
-        viewHolder.setTitle(filteredManga.get(position).getTitle());
-        viewHolder.setSubtitle("Placeholder");
-        MangaEden.setThumbnail(filteredManga.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.getThumbnail());
-        viewHolder.setMangaEdenId(filteredManga.get(position).getId());
+    public void onBindViewHolder(CardViewHolder viewHolder, int position) {
+        viewHolder.title.setText(filteredManga.get(position).getTitle());
+        viewHolder.subtitle.setText("Placeholder");
+        MangaEden.setThumbnail(filteredManga.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.thumbnail);
+        viewHolder.mangaEdenId = filteredManga.get(position).getId();
     }
+
 
     public void clearList() {
         filteredManga.clear();
@@ -63,16 +66,16 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHold
         Toast.makeText(activity, "\"" + filteredManga.get(pos).getTitle() + "\" removed from your library.", Toast.LENGTH_SHORT).show();
 
         // needed to update UI without reading in entire database
-        filteredManga.remove(pos);
-        notifyItemRemoved(pos);
-        notifyItemRangeChanged(pos, filteredManga.size());
+//        filteredManga.remove(pos);
+//        notifyItemRemoved(pos);
+//        notifyItemRangeChanged(pos, filteredManga.size());
     }
 
     @Override
-    public RecyclerViewCardHolder onCreateViewHolder(final ViewGroup viewGroup, int position) {
+    public CardViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int position) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View itemView = inflater.inflate(R.layout.manga_card, viewGroup, false);
-        final RecyclerViewCardHolder holder = new RecyclerViewCardHolder(itemView);
+        final CardViewHolder holder = new CardViewHolder(itemView);
 
         final CardView cardView = (CardView) itemView.findViewById(R.id.card_view);
 
@@ -80,57 +83,43 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHold
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, MangaItemActivity.class);
-                intent.putExtra("mangaId", holder.getMangaEdenId());
+                intent.putExtra("mangaId", holder.mangaEdenId);
                 activity.startActivity(intent);
             }
         });
 
-        int cardPosition = holder.getAdapterPosition();
+        ImageButton bookmarkToggle = (ImageButton) cardView.findViewById(R.id.card_bookmark_toggle);
 
-        cardView.findViewById(R.id.card_menu_more).setOnClickListener(new View.OnClickListener() {
+        bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
+
+        bookmarkToggle.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View view) {
-                PopupMenu popupMenu = new PopupMenu(viewGroup.getContext(), view);
+            public void onClick(View button) {
+                button.setSelected(!button.isSelected());
 
-                // RecyclerView does not rebind item, so position is obsolete
-                final int pos = holder.getAdapterPosition();
-
-                // create a different PopupMenu depending whether created in library/browse
-                if (browseFlag) {
-                    popupMenu.inflate(R.menu.menu_card_browse);
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.menu_add_lib:
-                                    addToList(pos);
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        }
-                    });
+                if (button.isSelected()) {
+                    addToList(position);
                 } else {
-                    popupMenu.inflate(R.menu.menu_card_library);
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.menu_remove_lib:
-                                    removeFromList(pos);
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        }
-                    });
+                    removeFromList(position);
                 }
-                popupMenu.show();
             }
         });
+
         return holder;
     }
 
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        //TODO implement for dragging in library
+        return false;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        //TODO add to user library
+        Toast.makeText(activity, "\"" + filteredManga.get(position).getTitle() + "\" added to your library.", Toast.LENGTH_SHORT).show();
+        notifyItemChanged(position);
+    }
 
     @Override
     public int getItemCount() {
@@ -141,6 +130,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHold
     public Filter getFilter() {
         return new CardLayoutFilter();
     }
+
 
     /**
      * Performs the filtering of the cards by the query term
@@ -174,5 +164,22 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<RecyclerViewCardHold
         protected void publishResults(CharSequence constraint, FilterResults results) {
             notifyDataSetChanged();
         }
+    }
+
+    public static class CardViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView title;
+        public TextView subtitle;
+        public ImageView thumbnail;
+        public String mangaEdenId; //TODO what do in future?
+
+        public CardViewHolder(View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.card_title);
+            subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
+            thumbnail = (ImageView) itemView.findViewById(R.id.card_thumbnail);
+
+        }
+
     }
 }
