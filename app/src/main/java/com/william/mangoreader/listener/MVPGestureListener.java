@@ -2,16 +2,19 @@ package com.william.mangoreader.listener;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
-public class MVPGestureListener extends GestureDetector.SimpleOnGestureListener {
+import com.william.mangoreader.activity.viewpager.MangaViewPager;
+
+public class MVPGestureListener implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     private Context context;
     private Window window;
-    private ViewPager viewPager;
+    private MangaViewPager viewPager;
 
     private boolean systemUIVisible;
 
@@ -22,7 +25,7 @@ public class MVPGestureListener extends GestureDetector.SimpleOnGestureListener 
         systemUIVisible = false;
         this.context = context;
         this.window = window;
-        this.viewPager = viewPager;
+        this.viewPager = (MangaViewPager) viewPager;
     }
 
     private void showSystemUI() {
@@ -44,6 +47,7 @@ public class MVPGestureListener extends GestureDetector.SimpleOnGestureListener 
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
+        Log.d("GestureListener", "Single tap confirmed.");
         float xPos = event.getX();
         float screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
@@ -64,7 +68,7 @@ public class MVPGestureListener extends GestureDetector.SimpleOnGestureListener 
                 systemUIVisible = true;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -73,18 +77,39 @@ public class MVPGestureListener extends GestureDetector.SimpleOnGestureListener 
     }
 
     @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                           float velocityY) {
-        viewPager.onTouchEvent(e1);
-        viewPager.onTouchEvent(e2);
-        return true;
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
     }
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        viewPager.onTouchEvent(e1);
-        viewPager.onTouchEvent(e2);
-        return true;
+        return false;
     }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
+    }
+
 
 }
