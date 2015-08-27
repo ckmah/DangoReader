@@ -1,6 +1,7 @@
 package com.william.mangoreader.fragment;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
+import com.william.mangoreader.listener.BrowseMangaScrollListener;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
@@ -89,27 +91,20 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     private void fetchMangaListFromMangaEden() {
         String url = MangaEden.MANGAEDEN_MANGALIST;
+
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
+
         queue.add(new JsonObjectRequest(
                         url,
                         new Response.Listener<JSONObject>() {
-
                             @Override
                             public void onResponse(JSONObject response) {
-                                ArrayList<MangaEdenMangaListItem> results = MangaEden.parseMangaEdenMangaListResponse(response.toString());
-                                Collections.sort(results, new Comparator<MangaEdenMangaListItem>() {
-
-                                    @Override
-                                    public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
-                                        return ((Integer) lhs.getHits()).compareTo(rhs.getHits());
-                                    }
-                                });
-                                Collections.reverse(results);
-
-                                // Update list of all manga and display them
-                                allManga.clear();
-                                allManga.addAll(results);
-                                cardAdapter.getFilter().filter("");
-                                swipeRefreshLayout.setRefreshing(false);
+                                sortMangaInBackground(response);
                             }
                         },
                         new Response.ErrorListener() {
@@ -121,9 +116,46 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         );
     }
 
+    private void sortMangaInBackground(JSONObject response) {
+        new AsyncTask<JSONObject, Void, List<MangaEdenMangaListItem>>() {
+
+            @Override
+            protected List<MangaEdenMangaListItem> doInBackground(JSONObject... params) {
+                // On background thread, sort manga by most to least # of views
+                List<MangaEdenMangaListItem> results = MangaEden.parseMangaEdenMangaListResponse(params[0].toString());
+                Collections.sort(results, new Comparator<MangaEdenMangaListItem>() {
+
+                    @Override
+                    public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                        return ((Integer) rhs.getHits()).compareTo(lhs.getHits());
+                    }
+                });
+                return results;
+            }
+
+            @Override
+            protected void onPostExecute(List<MangaEdenMangaListItem> results) {
+                // On UI thread, update list of all manga and display them
+                allManga.clear();
+                allManga.addAll(results);
+                cardAdapter.getFilter().filter("");
+
+
+                // Hide the refresh layout
+                swipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+
+                BrowseMangaScrollListener.loading = false;
+            }
+        }.execute(response);
+    }
+
     @Override
     public void onRefresh() {
-        cardAdapter.clearList();
         fetchMangaListFromMangaEden();
     }
 
