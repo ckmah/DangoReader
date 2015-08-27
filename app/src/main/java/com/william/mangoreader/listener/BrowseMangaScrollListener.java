@@ -3,6 +3,7 @@ package com.william.mangoreader.listener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+@Deprecated
 public abstract class BrowseMangaScrollListener extends RecyclerView.OnScrollListener {
 
     public int previousTotal = 0; // The total number of items in the dataset after the last load
