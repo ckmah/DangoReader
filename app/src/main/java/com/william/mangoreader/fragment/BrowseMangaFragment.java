@@ -17,24 +17,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
-import com.william.mangoreader.listener.BrowseMangaScrollListener;
 import com.william.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
+import com.william.mangoreader.listener.BrowseMangaScrollListener;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
 
 public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -106,35 +104,31 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
             }
         });
 
-        queue.add(new JsonObjectRequest(
-                        url,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                sortMangaInBackground(response);
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                System.out.println("Response error: " + error.toString());
-                            }
-                        })
-        );
-    }
-
-    private void sortMangaInBackground(JSONObject response) {
-        new AsyncTask<JSONObject, Void, List<MangaEdenMangaListItem>>() {
+        MangaEden.getMangaEdenService().listAllManga(new Callback<MangaEden.MangaEdenList>() {
+            @Override
+            public void success(MangaEden.MangaEdenList mangaEdenList, retrofit.client.Response response) {
+                sortMangaInBackground(mangaEdenList);
+            }
 
             @Override
-            protected List<MangaEdenMangaListItem> doInBackground(JSONObject... params) {
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    private void sortMangaInBackground(MangaEden.MangaEdenList list) {
+        new AsyncTask<MangaEden.MangaEdenList, Void, List<MangaEdenMangaListItem>>() {
+
+            @Override
+            protected List<MangaEdenMangaListItem> doInBackground(MangaEden.MangaEdenList... params) {
                 // On background thread, sort manga by most to least # of views
-                List<MangaEdenMangaListItem> results = MangaEden.parseMangaEdenMangaListResponse(params[0].toString());
+                List<MangaEdenMangaListItem> results = params[0].manga;
                 Collections.sort(results, new Comparator<MangaEdenMangaListItem>() {
 
                     @Override
                     public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
-                        return ((Integer) rhs.getHits()).compareTo(lhs.getHits());
+                        return ((Integer) rhs.hits).compareTo(lhs.hits);
                     }
                 });
                 return results;
@@ -158,7 +152,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
                 BrowseMangaScrollListener.loading = false;
             }
-        }.execute(response);
+        }.execute(list);
     }
 
     @Override

@@ -20,6 +20,11 @@ import com.william.mangoreader.model.MangaEdenMangaListItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.RestAdapter;
+import retrofit.http.GET;
+
 
 public class MangaEden {
 
@@ -42,25 +47,28 @@ public class MangaEden {
 
     public static final ObjectMapper mapper = new ObjectMapper(); // create once, reuse
 
-    static public ArrayList<MangaEdenMangaListItem> parseMangaEdenMangaListResponse(String jsonString) {
 
-        ArrayList<MangaEdenMangaListItem> mangaCardModels = new ArrayList<>();
 
-        try {
-            JsonNode root = mapper.readTree(jsonString);
-            ArrayNode mangas = (ArrayNode) root.get("manga");
+    public class MangaEdenList {
+        public List<MangaEdenMangaListItem> manga;
+    }
 
-            for (int i = 0; i < mangas.size(); i++) {
-                JsonNode m = mangas.get(i);
-                MangaEdenMangaListItem item = mapper.treeToValue(m, MangaEdenMangaListItem.class);
-                mangaCardModels.add(item);
-            }
+    public interface MangaEdenService {
+        @GET("/list/0")
+        void listAllManga(retrofit.Callback<MangaEdenList> list);
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+    private static MangaEdenService service;
+
+    public static MangaEdenService getMangaEdenService() {
+        if (service == null) {
+            RestAdapter restAdapter = new RestAdapter.Builder()
+                    .setEndpoint("https://www.mangaeden.com/api/")
+                    .build();
+
+            service = restAdapter.create(MangaEdenService.class);
         }
-
-        return mangaCardModels;
+        return service;
     }
 
     static public MangaEdenMangaDetailItem parseMangaEdenMangaDetailResponse(String jsonString) {
