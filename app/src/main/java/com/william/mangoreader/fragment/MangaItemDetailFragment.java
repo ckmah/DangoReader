@@ -1,5 +1,6 @@
 package com.william.mangoreader.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.graphics.Palette;
@@ -67,8 +68,16 @@ public class MangaItemDetailFragment extends Fragment {
         secondaryColor = ((MangaItemActivity) getActivity()).getSecondaryColor();
 
         rootView.setBackgroundColor(secondaryColor.getRgb());
-        titleView.setTextColor(secondaryColor.getTitleTextColor());
-        subtitleView.setTextColor(secondaryColor.getTitleTextColor());
-        descriptionView.setTextColor(secondaryColor.getBodyTextColor());
+
+        int textColor = contrastTextColor(secondaryColor.getRgb());
+        titleView.setTextColor(textColor);
+        subtitleView.setTextColor(textColor);
+        descriptionView.setTextColor(textColor);
+    }
+
+    public int contrastTextColor(int color) {
+        // Contrast formula derived from http://stackoverflow.com/a/1855903/1222351
+        double luminance = 0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color);
+        return luminance > 127 ? Color.BLACK : Color.WHITE;
     }
 }
