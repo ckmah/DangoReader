@@ -6,9 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
@@ -24,7 +22,6 @@ import com.william.mangoreader.model.MangaEdenMangaListItem;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RequestInterceptor;
@@ -62,6 +59,9 @@ public class MangaEden {
         public List<MangaEdenMangaListItem> manga;
     }
 
+    public class MangaEdenChapter {
+        public List<MangaEdenImageItem> images;
+    }
 
     public interface MangaEdenService {
         @GET("/list/0")
@@ -69,6 +69,9 @@ public class MangaEden {
 
         @GET("/manga/{id}")
         void getMangaDetails(@Path("id") String mangaId, retrofit.Callback<MangaEdenMangaDetailItem> callback);
+
+        @GET("/chapter/{id}")
+        void getMangaImages(@Path("id") String mangaId, retrofit.Callback<MangaEdenChapter> callback);
     }
 
     private static MangaEdenService service;
@@ -89,6 +92,7 @@ public class MangaEden {
 
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(MangaEdenMangaChapterItem.class, new MangaEdenMangaChapterItem.ChapterDeserializer())
+                    .registerTypeAdapter(MangaEdenImageItem.class, new MangaEdenImageItem.ImageDeserializer())
                     .create();
 
             service = new RestAdapter.Builder()
@@ -107,27 +111,6 @@ public class MangaEden {
                     .create(MangaEdenService.class);
         }
         return service;
-    }
-
-    static public ArrayList<MangaEdenImageItem> parseMangaEdenMangaImageResponse(String jsonString) {
-        ArrayList<MangaEdenImageItem> mangaImageModels = new ArrayList<>();
-        try {
-            JsonNode root = mapper.readTree(jsonString);
-            ArrayNode images = (ArrayNode) root.get("images");
-
-            for (JsonNode node : images) {
-                MangaEdenImageItem item = new MangaEdenImageItem();
-                item.setPageNumber(node.get(IMAGE_PAGE_NUMBER_INDEX).asInt());
-                item.setUrl(node.get(IMAGE_URL_INDEX).asText());
-
-                mangaImageModels.add(item);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return mangaImageModels;
     }
 
     static public void setThumbnail(String url, Context context, final ImageView imageView) {
