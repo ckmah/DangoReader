@@ -21,10 +21,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.william.mangoreader.R;
-import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
-import com.william.mangoreader.listener.BrowseMangaScrollListener;
 import com.william.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
+import com.william.mangoreader.listener.BrowseMangaScrollListener;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
@@ -80,8 +79,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        MangoReaderActivity activity = (MangoReaderActivity) getActivity();
-        cardAdapter = new CardLayoutAdapter(activity, true);
+        cardAdapter = new CardLayoutAdapter(getActivity(), true);
         cardAdapter.setAllManga(allManga);
         mRecyclerView.setAdapter(cardAdapter);
 

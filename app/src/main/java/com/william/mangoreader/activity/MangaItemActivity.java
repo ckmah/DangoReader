@@ -1,27 +1,29 @@
 package com.william.mangoreader.activity;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.william.mangoreader.DividerItemDecoration;
 import com.william.mangoreader.R;
-import com.william.mangoreader.fragment.MangaItemChapterFragment;
-import com.william.mangoreader.fragment.MangaItemDetailFragment;
+import com.william.mangoreader.adapter.MangaItemAdapter;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
@@ -39,14 +41,18 @@ public class MangaItemActivity extends AppCompatActivity {
     private RequestQueue queue;
     private MangaEdenMangaDetailItem manga;
 
-    private Palette.Swatch primaryColor;
+    private RecyclerView mRecyclerView;
+    private MangaItemAdapter mangaItemAdapter;
 
+    private Palette.Swatch primaryColor;
     private Palette.Swatch secondaryColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_item);
+
+        manga = new MangaEdenMangaDetailItem();
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_item);
         setSupportActionBar(mToolbar);
@@ -58,6 +64,8 @@ public class MangaItemActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        initRecyclerView();
 
         queue = VolleySingleton.getInstance(this).getRequestQueue();
 
@@ -105,23 +113,26 @@ public class MangaItemActivity extends AppCompatActivity {
     }
 
     private void loadContent() {
+        mangaItemAdapter.loadMangaInfo(manga);
+
+        mRecyclerView.setVisibility(View.VISIBLE);
+        findViewById(R.id.manga_item_header_placeholder).setVisibility(View.GONE);
+
         ImageView imageView = (ImageView) findViewById(R.id.manga_item_image_view);
         MangaEden.setMangaArt(manga.getImageUrl(), imageView, this);
     }
 
-    public void loadFragments() {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        MangaItemDetailFragment detailsFragment = MangaItemDetailFragment.newInstance(manga);
-        MangaItemChapterFragment chaptersFragment = MangaItemChapterFragment.newInstance(manga);
+    public void initRecyclerView() {
+        mRecyclerView = (RecyclerView) findViewById(R.id.manga_item_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mangaItemAdapter = new MangaItemAdapter(this, manga);
+        mRecyclerView.setAdapter(mangaItemAdapter);
 
-        // remove placeholder view
-        View placeholder = findViewById(R.id.manga_item_header_placeholder);
-        ViewGroup vg = (ViewGroup) (placeholder.getParent());
-        vg.removeView(placeholder);
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+        mRecyclerView.addItemDecoration(itemDecoration);
 
-        fragmentTransaction.add(R.id.manga_item_header, detailsFragment);
-        fragmentTransaction.add(R.id.manga_item_header, chaptersFragment);
-        fragmentTransaction.commit();
+        mRecyclerView.setVisibility(View.GONE);
     }
 
 
@@ -164,12 +175,32 @@ public class MangaItemActivity extends AppCompatActivity {
         // scrim assigned primary color
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.manga_item_collapsing_toolbar);
         collapsingToolbarLayout.setContentScrimColor(primaryColor.getRgb());
+
+        // details assigned secondary color
+        View detailsView = findViewById(R.id.details_view);
+        if (detailsView == null)
+            return;
+        detailsView.setBackgroundColor(secondaryColor.getRgb());
+
+        int textColor = contrastTextColor(secondaryColor.getRgb());
+        ((TextView) detailsView.findViewById(R.id.manga_item_title)).setTextColor(textColor);
+        ((TextView) detailsView.findViewById(R.id.manga_item_subtitle)).setTextColor(textColor);
+        ((TextView) detailsView.findViewById(R.id.manga_item_description)).setTextColor(textColor);
+
     }
 
+    public int contrastTextColor(int color) {
+        // Contrast formula derived from http://stackoverflow.com/a/1855903/1222351
+        double luminance = 0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color);
+        return luminance > 127 ? Color.BLACK : Color.WHITE;
+    }
+
+    @Deprecated
     public Palette.Swatch getPrimaryColor() {
         return primaryColor;
     }
 
+    @Deprecated
     public Palette.Swatch getSecondaryColor() {
         return secondaryColor;
     }

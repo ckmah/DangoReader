@@ -13,6 +13,7 @@ import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangaItemActivity;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 
+@Deprecated
 public class MangaItemDetailFragment extends Fragment {
     private static final String DESCRIPTION_FRAGMENT_KEY = "description_fragment_key";
     private static final String SWATCH_KEY = "swatch_key";
@@ -48,7 +49,7 @@ public class MangaItemDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mangaDetailItem = (MangaEdenMangaDetailItem) getArguments().getSerializable(DESCRIPTION_FRAGMENT_KEY);
-        rootView = inflater.inflate(R.layout.fragment_details, container, false);
+        rootView = inflater.inflate(R.layout.details_view, container, false);
 
         titleView = (TextView) rootView.findViewById(R.id.manga_item_title);
         titleView.setText(mangaDetailItem.getTitle());

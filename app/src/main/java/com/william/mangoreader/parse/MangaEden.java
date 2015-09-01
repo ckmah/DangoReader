@@ -147,7 +147,6 @@ public class MangaEden {
                         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                         imageView.setImageBitmap(bitmap);
                         activity.extractColorPalette(bitmap);
-                        activity.loadFragments();
                     }
                 });
     }

@@ -1,21 +1,25 @@
 package com.william.mangoreader.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.william.mangoreader.R;
-import com.william.mangoreader.activity.MangaViewerActivity;
-import com.william.mangoreader.model.MangaEdenMangaChapterItem;
+import com.william.mangoreader.adapter.MangaItemAdapter;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 
+@Deprecated
 public class MangaItemChapterFragment extends Fragment {
     private static final String CHAPTER_FRAGMENT_KEY = "chapter_fragment_key";
     private MangaEdenMangaDetailItem mangaDetailItem;
+
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private MangaItemAdapter chapterAdapter;
 
     public MangaItemChapterFragment() {
         // required empty constructor
@@ -39,31 +43,21 @@ public class MangaItemChapterFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mangaDetailItem = (MangaEdenMangaDetailItem) getArguments().getSerializable(CHAPTER_FRAGMENT_KEY);
-        View rootView = inflater.inflate(R.layout.fragment_chapters, container, false);
+//        View rootView = inflater.inflate(R.layout.fragment_chapters, container, false);
+//
+//        initRecycler(rootView);
+//        return rootView;
+        return null;
+    }
 
-        for (final MangaEdenMangaChapterItem chapterItem : mangaDetailItem.getChapters()) {
-            View chapterRow = inflater.inflate(R.layout.chapter_row, null);
+    private void initRecycler(View rootView) {
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.manga_item_recycler_view);
 
-            chapterRow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(container.getContext(), MangaViewerActivity.class);
-                    intent.putExtra("chapterId", chapterItem.getId());
-                    container.getContext().startActivity(intent);
-                }
-            });
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
-            TextView chapterNumber = (TextView) chapterRow.findViewById(R.id.chapter_number);
-            TextView chapterTitle = (TextView) chapterRow.findViewById(R.id.chapter_title);
+        chapterAdapter = new MangaItemAdapter(getActivity(), mangaDetailItem);
 
-            chapterNumber.setText("Chapter " + chapterItem.getNumber());
-            chapterTitle.setText(chapterItem.getTitle());
-
-            ViewGroup insertPoint = (ViewGroup) rootView;
-
-            insertPoint.addView(chapterRow);
-        }
-
-        return rootView;
+        mRecyclerView.setAdapter(chapterAdapter);
     }
 }
