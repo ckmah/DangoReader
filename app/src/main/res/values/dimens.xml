@@ -22,16 +22,20 @@
     <dimen name="manga_item_header_padding">16dp</dimen>
 
     <dimen name="manga_item_title_text_size">24sp</dimen>
-    <dimen name="manga_item_title_padding_bottom">8sp</dimen>
+    <dimen name="manga_item_title_margin_bottom">8sp</dimen>
 
     <dimen name="manga_item_subtitle_text_size">15sp</dimen>
-    <dimen name="manga_item_subtitle_padding_bottom">8sp</dimen>
+    <dimen name="manga_item_subtitle_margin_bottom">8sp</dimen>
 
     <dimen name="manga_item_description_text_size">13sp</dimen>
     <dimen name="manga_item_description_line_spacing_extra">5sp</dimen>
 
-    <dimen name="chapter_row_padding">12dp</dimen>
-    <dimen name="chapter_number_textsize">18sp</dimen>
+    <dimen name="manga_item_placeholder_total_line_spacing">10sp</dimen>
+
+    <dimen name="chapter_row_padding_top">16dp</dimen>
+    <dimen name="chapter_row_padding_bottom">20dp</dimen>
+    <dimen name="chapter_row_padding_side">16dp</dimen>
+    <dimen name="chapter_number_textsize">16sp</dimen>
     <dimen name="chapter_number_padding_right">10sp</dimen>
     <dimen name="chapter_title_textsize">13sp</dimen>
     <dimen name="chapters_padding_bottom">80dp</dimen>

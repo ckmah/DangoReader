@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -112,6 +113,12 @@ public class MangaItemActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         MangaItemDetailFragment detailsFragment = MangaItemDetailFragment.newInstance(manga);
         MangaItemChapterFragment chaptersFragment = MangaItemChapterFragment.newInstance(manga);
+
+        // remove placeholder view
+        View placeholder = findViewById(R.id.manga_item_header_placeholder);
+        ViewGroup vg = (ViewGroup) (placeholder.getParent());
+        vg.removeView(placeholder);
+
         fragmentTransaction.add(R.id.manga_item_header, detailsFragment);
         fragmentTransaction.add(R.id.manga_item_header, chaptersFragment);
         fragmentTransaction.commit();

@@ -112,20 +112,20 @@
         <item name="android:layout_height">250dp</item>
     </style>
 
-    <style name="MangaItemHeader">
+    <style name="MangaItemDetails">
         <item name="android:padding">@dimen/manga_item_header_padding</item>
     </style>
 
     <style name="MangaItemTitle">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/manga_item_title_text_size</item>
-        <item name="android:paddingBottom">@dimen/manga_item_title_padding_bottom</item>
+        <item name="android:layout_marginBottom">@dimen/manga_item_title_margin_bottom</item>
     </style>
 
     <style name="MangaItemSubtitle">
         <item name="android:textColor">@android:color/darker_gray</item>
         <item name="android:textSize">@dimen/manga_item_subtitle_text_size</item>
-        <item name="android:paddingBottom">@dimen/manga_item_subtitle_padding_bottom</item>
+        <item name="android:layout_marginBottom">@dimen/manga_item_subtitle_margin_bottom</item>
     </style>
 
     <style name="MangaItemDescription">
@@ -133,6 +133,28 @@
         <item name="android:lineSpacingExtra">@dimen/manga_item_description_line_spacing_extra
         </item>
     </style>
+
+    <style name="MangaItemPlaceholder">
+        <item name="android:background">@color/md_grey_400</item>
+    </style>
+
+    <style name="MangaItemPlaceholderTitle" parent="MangaItemPlaceholder">
+        <item name="android:layout_width">155dp</item>
+        <item name="android:layout_height">@dimen/manga_item_title_text_size</item>
+        <item name="android:layout_marginBottom">16dp</item>
+    </style>
+
+    <style name="MangaItemPlaceholderSubtitle" parent="MangaItemPlaceholder">
+        <item name="android:layout_width">105dp</item>
+        <item name="android:layout_height">@dimen/manga_item_subtitle_text_size</item>
+        <item name="android:layout_marginBottom">16dp</item>
+    </style>
+
+    <style name="MangaItemPlaceholderDescription" parent="MangaItemPlaceholder">
+        <item name="android:layout_height">@dimen/manga_item_description_text_size</item>
+        <item name="android:layout_marginBottom">12dp</item>
+    </style>
+
 
     <style name="fragment_chapters">
         <item name="android:divider">?android:dividerHorizontal</item>
@@ -142,7 +164,10 @@
     </style>
 
     <style name="chapter_row">
-        <item name="android:padding">@dimen/chapter_row_padding</item>
+        <item name="android:paddingTop">@dimen/chapter_row_padding_top</item>
+        <item name="android:paddingBottom">@dimen/chapter_row_padding_bottom</item>
+        <item name="android:paddingLeft">@dimen/chapter_row_padding_side</item>
+        <item name="android:paddingRight">@dimen/chapter_row_padding_side</item>
         <item name="android:background">@color/white</item>
     </style>
 
@@ -159,6 +184,15 @@
         <item name="android:textSize">@dimen/chapter_title_textsize</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MangaItemPlaceholderChapter" parent="MangaItemPlaceholder">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">@dimen/chapter_number_textsize</item>
+        <item name="android:layout_marginTop">@dimen/chapter_row_padding_top</item>
+        <item name="android:layout_marginBottom">@dimen/chapter_row_padding_bottom</item>
+        <item name="android:layout_marginLeft">@dimen/chapter_row_padding_side</item>
+        <item name="android:layout_marginRight">@dimen/chapter_row_padding_side</item>
     </style>
 
 </resources>

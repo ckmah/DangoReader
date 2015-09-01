@@ -17,8 +17,11 @@
             android:id="@+id/manga_item_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_vertical"
-            android:orientation="vertical" />
+            android:orientation="vertical">
+
+            <include layout="@layout/manga_item_header_placeholder" />
+        </LinearLayout>
+
 
     </android.support.v4.widget.NestedScrollView>
 
