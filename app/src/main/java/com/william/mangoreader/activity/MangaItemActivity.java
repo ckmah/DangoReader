@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -113,13 +112,7 @@ public class MangaItemActivity extends AppCompatActivity {
     }
 
     private void loadContent() {
-        mangaItemAdapter.loadMangaInfo(manga);
-
-        mRecyclerView.setVisibility(View.VISIBLE);
-        findViewById(R.id.manga_item_header_placeholder).setVisibility(View.GONE);
-
-        ImageView imageView = (ImageView) findViewById(R.id.manga_item_image_view);
-        MangaEden.setMangaArt(manga.getImageUrl(), imageView, this);
+        updateRecyclerView();
     }
 
     public void initRecyclerView() {
@@ -135,9 +128,15 @@ public class MangaItemActivity extends AppCompatActivity {
         mRecyclerView.setVisibility(View.GONE);
     }
 
+    public void updateRecyclerView() {
+        mangaItemAdapter.loadMangaInfo(manga);
+
+        mRecyclerView.setVisibility(View.VISIBLE);
+        findViewById(R.id.manga_item_header_placeholder).setVisibility(View.GONE);
+    }
 
     public void extractColorPalette(Bitmap bitmap) {
-        List<Palette.Swatch> swatches = Palette.from(bitmap).generate().getSwatches();
+        List<Palette.Swatch> swatches = Palette.from(bitmap).maximumColorCount(20).generate().getSwatches();
 
         primaryColor = new Palette.Swatch(R.color.grey, 0);
         int primaryColorPopulation = 0;
@@ -184,7 +183,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
         int textColor = contrastTextColor(secondaryColor.getRgb());
         ((TextView) detailsView.findViewById(R.id.manga_item_title)).setTextColor(textColor);
-        ((TextView) detailsView.findViewById(R.id.manga_item_subtitle)).setTextColor(textColor);
+        ((TextView) detailsView.findViewById(R.id.manga_item_author)).setTextColor(textColor);
         ((TextView) detailsView.findViewById(R.id.manga_item_description)).setTextColor(textColor);
 
     }
@@ -204,6 +203,4 @@ public class MangaItemActivity extends AppCompatActivity {
     public Palette.Swatch getSecondaryColor() {
         return secondaryColor;
     }
-
-
 }

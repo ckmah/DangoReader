@@ -6,15 +6,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.william.mangoreader.R;
+import com.william.mangoreader.activity.MangaItemActivity;
 import com.william.mangoreader.activity.MangaViewerActivity;
 import com.william.mangoreader.model.MangaEdenMangaChapterItem;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
+import com.william.mangoreader.parse.MangaEden;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Layout adapter for adding chapters
@@ -30,11 +36,7 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public MangaItemAdapter(Activity activity, MangaEdenMangaDetailItem manga) {
         this.activity = activity;
         data = new ArrayList<>();
-
-        if (manga.getTitle() != null) {
-            data.add(manga);
-            data.addAll(manga.getChapters());
-        }
+        data.add(manga);
     }
 
     public void loadMangaInfo(MangaEdenMangaDetailItem manga) {
@@ -49,6 +51,9 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * Returns 0 for details, 1 for chapter.
      */
     public int getItemViewType(int position) {
+        // data not retrieved yet
+        if (((MangaEdenMangaDetailItem) data.get(0)).getTitle() == null)
+            return -1;
         return data.get(position) instanceof MangaEdenMangaChapterItem ? 1 : 0;
     }
 
@@ -76,7 +81,6 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 return chapterHolder;
         }
-
     }
 
     @Override
@@ -85,9 +89,44 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             case 0:
                 DetailsViewHolder detailsHolder = (DetailsViewHolder) holder;
                 MangaEdenMangaDetailItem detailsItem = (MangaEdenMangaDetailItem) data.get(position);
+                MangaEden.setMangaArt(detailsItem.getImageUrl(), detailsHolder.imageView, (MangaItemActivity) activity);
                 detailsHolder.titleView.setText(detailsItem.getTitle());
-                detailsHolder.subtitleView.setText(detailsItem.getAuthor());
+                detailsHolder.authorView.setText(detailsItem.getAuthor());
+
+                String categories = "";
+                for (String c : detailsItem.getCategories())
+                    categories += c + " / ";
+
+                if (!categories.isEmpty())
+                    detailsHolder.categoryView.setText(categories.substring(0, categories.length() - 2));
+
+                detailsHolder.hitsView.setText("" + detailsItem.getHits());
+                detailsHolder.languageView.setText((detailsItem.getLanguage() == 0) ? "English" : "Italian");
+
+                Date lastChapterDate = new Date(detailsItem.getLastChapterDate() * 1000L);
+                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT-8"));
+                detailsHolder.lastChapterDateView.setText(sdf.format(lastChapterDate));
+
+                String status = "";
+                switch (detailsItem.getStatus()) {
+                    case 0:
+                        status = "Suspended";
+                        break;
+                    case 1:
+                        status = "Ongoing";
+                        break;
+                    case 2:
+                        status = "Completed";
+                    default:
+                        break;
+                }
+                detailsHolder.statusView.setText(status);
+
+                Date dateCreated = new Date(detailsItem.getDateCreated() * 1000L);
+                detailsHolder.createdView.setText(sdf.format(dateCreated));
                 detailsHolder.descriptionView.setText(detailsItem.getDescription());
+
                 break;
             case 1:
                 ChapterViewHolder chapterHolder = (ChapterViewHolder) holder;
@@ -97,9 +136,8 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 chapterHolder.mangaEdenChapterId = chapterItem.getId();
                 break;
             default:
+                // initialize without data
         }
-
-
     }
 
     @Override
@@ -109,14 +147,28 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public class DetailsViewHolder extends RecyclerView.ViewHolder {
 
+        public ImageView imageView;
         public TextView titleView;
-        public TextView subtitleView;
+        public TextView authorView;
+        public TextView categoryView;
+        public TextView hitsView;
+        public TextView languageView;
+        public TextView lastChapterDateView;
+        public TextView statusView;
+        public TextView createdView;
         public TextView descriptionView;
 
         public DetailsViewHolder(View detailsView) {
             super(detailsView);
+            imageView = (ImageView) detailsView.findViewById(R.id.manga_item_image_view);
             titleView = (TextView) detailsView.findViewById(R.id.manga_item_title);
-            subtitleView = (TextView) detailsView.findViewById(R.id.manga_item_subtitle);
+            authorView = (TextView) detailsView.findViewById(R.id.manga_item_author);
+            categoryView = (TextView) detailsView.findViewById(R.id.manga_item_categories);
+            hitsView = (TextView) detailsView.findViewById(R.id.manga_item_hits);
+            languageView = (TextView) detailsView.findViewById(R.id.manga_item_language);
+            lastChapterDateView = (TextView) detailsView.findViewById(R.id.manga_item_last_chapter_date);
+            statusView = (TextView) detailsView.findViewById(R.id.manga_item_status);
+            createdView = (TextView) detailsView.findViewById(R.id.manga_item_created);
             descriptionView = (TextView) detailsView.findViewById(R.id.manga_item_description);
         }
     }

@@ -3,7 +3,6 @@ package com.william.mangoreader.parse;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.text.Html;
 import android.widget.ImageView;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 
 public class MangaEden {
 
-    public static final String MANGAEDEN_MANGALIST = "https://www.mangaeden.com/api/list/0";
+    public static final String MANGAEDEN_MANGALIST = "https://www.mangaeden.com/api/list/0?p=0&l=1000";
 
     public static final String MANGAEDEN_IMAGE_CDN = "https://cdn.mangaeden.com/mangasimg/";
 
@@ -37,8 +36,6 @@ public class MangaEden {
     private static final int MANGA_DETAIL_DATE_INDEX = 1;
     private static final int MANGA_DETAIL_TITLE_INDEX = 2;
     private static final int MANGA_DETAIL_ID_INDEX = 3;
-
-    private static int mainColor;
 
     public static final ObjectMapper mapper = new ObjectMapper(); // create once, reuse
 
@@ -66,11 +63,18 @@ public class MangaEden {
     static public MangaEdenMangaDetailItem parseMangaEdenMangaDetailResponse(String jsonString) {
         MangaEdenMangaDetailItem item = new MangaEdenMangaDetailItem();
         try {
+
             JsonNode root = mapper.readTree(jsonString);
-            String author = root.get("author").asText();
-            String title = root.get("title").asText();
-            String description = root.get("description").asText();
-            String imageUrl = root.get("image").asText();
+            item.setAuthor(root.get("author").asText());
+            item.setTitle(root.get("title").asText());
+            item.setDescription(root.get("description").asText());
+            item.setImageUrl(root.get("image").asText());
+            item.setNumChapters(root.get("chapters_len").asInt());
+            item.setDateCreated(root.get("created").asLong());
+            item.setHits(root.get("hits").asInt());
+            item.setLanguage(root.get("language").asInt());
+            item.setLastChapterDate(root.get("last_chapter_date").asLong());
+            item.setStatus(root.get("status").asInt());
 
             // map chapter listing
             ArrayList<MangaEdenMangaChapterItem> chapterList = new ArrayList<>();
@@ -78,7 +82,6 @@ public class MangaEden {
             for (JsonNode node : chapterListNode) {
                 MangaEdenMangaChapterItem chapterItem = new MangaEdenMangaChapterItem();
                 if (node.isArray()) {
-
                     chapterItem.setNumber(node.get(MANGA_DETAIL_NUMBER_INDEX).asInt());
                     chapterItem.setDate(node.get(MANGA_DETAIL_DATE_INDEX).asLong());
                     String chapterTitle = node.get(MANGA_DETAIL_TITLE_INDEX).asText();
@@ -87,12 +90,15 @@ public class MangaEden {
                 }
                 chapterList.add(chapterItem);
             }
-
-            item.setAuthor(author);
-            item.setDescription(Html.fromHtml(description).toString());
-            item.setImageUrl(imageUrl);
-            item.setTitle(title);
             item.setChapters(chapterList);
+
+            // category list
+            ArrayList<String> categories = new ArrayList<>();
+            JsonNode categoriesNode = root.withArray("categories");
+            for (JsonNode node : categoriesNode) {
+                categories.add(node.asText());
+            }
+            item.setCategories(categories);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -146,7 +152,6 @@ public class MangaEden {
                     public void onSuccess() {
                         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                         imageView.setImageBitmap(bitmap);
-                        activity.extractColorPalette(bitmap);
                     }
                 });
     }

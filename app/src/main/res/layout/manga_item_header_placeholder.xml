@@ -3,11 +3,10 @@
     android:id="@+id/manga_item_header_placeholder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="250dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="?android:attr/actionBarSize">
 
     <LinearLayout
-        android:id="@+id/details_fragment"
         style="@style/MangaItemDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,36 +14,74 @@
 
         <View style="@style/MangaItemPlaceholderTitle" />
 
-        <View style="@style/MangaItemPlaceholderSubtitle" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <View
-                style="@style/MangaItemPlaceholderDescription"
-                android:layout_width="330dp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:orientation="vertical">
 
-            <View
-                style="@style/MangaItemPlaceholderDescription"
-                android:layout_width="280dp" />
+                <View style="@style/MangaItemPlaceholderAuthor" />
 
-            <View
-                style="@style/MangaItemPlaceholderDescription"
-                android:layout_width="320dp" />
+                <View style="@style/MangaItemPlaceholderTag" />
 
+                <View style="@style/MangaItemPlaceholderProperty" />
 
-            <View
-                style="@style/MangaItemPlaceholderDescription"
-                android:layout_width="340dp" />
+                <View style="@style/MangaItemPlaceholderTag" />
 
+                <View style="@style/MangaItemPlaceholderProperty" />
 
-            <View
-                style="@style/MangaItemPlaceholderDescription"
-                android:layout_width="240dp" />
+                <View style="@style/MangaItemPlaceholderTag" />
 
+                <View style="@style/MangaItemPlaceholderProperty" />
+
+                <View style="@style/MangaItemPlaceholderTag" />
+
+                <View style="@style/MangaItemPlaceholderProperty" />
+
+                <View style="@style/MangaItemPlaceholderTag" />
+
+                <View style="@style/MangaItemPlaceholderProperty" />
+
+                <View style="@style/MangaItemPlaceholderTag" />
+
+                <View style="@style/MangaItemPlaceholderProperty" />
+            </LinearLayout>
+            <View style="@style/MangaItemPlaceholderImage"/>
         </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    style="@style/MangaItemPlaceholderDescription"
+                    android:layout_width="330dp" />
+
+                <View
+                    style="@style/MangaItemPlaceholderDescription"
+                    android:layout_width="280dp" />
+
+                <View
+                    style="@style/MangaItemPlaceholderDescription"
+                    android:layout_width="320dp" />
+
+
+                <View
+                    style="@style/MangaItemPlaceholderDescription"
+                    android:layout_width="340dp" />
+
+
+                <View
+                    style="@style/MangaItemPlaceholderDescription"
+                    android:layout_width="240dp" />
+
+            </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -52,6 +89,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <View style="@style/MangaItemPlaceholderChapter" />
+
+        <View style="@style/MangaItemPlaceholderChapter" />
 
         <View style="@style/MangaItemPlaceholderChapter" />
 

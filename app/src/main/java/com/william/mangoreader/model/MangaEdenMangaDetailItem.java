@@ -6,33 +6,46 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-@JsonIgnoreProperties({"aka", "aka-alias", "alias", "artist", "artist_kw", "author_kw", "autoManga", "baka", "chapters",
-        "created", "hits", "imageUrl", "language", "last_chapter_date", "released", "startsWith", "status", "title_kw",
+@JsonIgnoreProperties({"aka", "aka-alias", "alias", "artist", "artist_kw", "author_kw",
+        "autoManga", "baka", "imageUrl", "released", "startsWith", "title_kw",
         "type", "updatedKeywords", "url"})
 public class MangaEdenMangaDetailItem implements Serializable {
     @JsonProperty("author")
     private String author;
 
-    @JsonProperty("categories")
-    private ArrayList<String> categories;
+    @JsonProperty("title")
+    private String title;
 
-    @JsonProperty("chapters")
-    private ArrayList<MangaEdenMangaChapterItem> chapters; //TODO make chapter object
+    @JsonProperty("description")
+    private String description;
+
+    @JsonProperty("image")
+    private String imageUrl;
 
     @JsonProperty("chapters_len")
     private int numChapters;
 
     @JsonProperty("created")
-    private float dateCreated;
+    private long dateCreated;
 
-    @JsonProperty("description")
-    private String description;
+    @JsonProperty("hits")
+    private int hits;
 
-    @JsonProperty("title")
-    private String title;
+    @JsonProperty("language")
+    private int language;
 
-    @JsonProperty("image")
-    private String imageUrl;
+    @JsonProperty("last_chapter_date")
+    private long lastChapterDate;
+
+    @JsonProperty("status")
+    private int status;
+
+    @JsonProperty("chapters")
+    private ArrayList<MangaEdenMangaChapterItem> chapters;
+
+    @JsonProperty("categories")
+    private ArrayList<String> categories;
+
 
     public String getAuthor() {
         return author;
@@ -88,5 +101,45 @@ public class MangaEdenMangaDetailItem implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public long getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(long dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public int getHits() {
+        return hits;
+    }
+
+    public void setHits(int hits) {
+        this.hits = hits;
+    }
+
+    public int getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(int language) {
+        this.language = language;
+    }
+
+    public long getLastChapterDate() {
+        return lastChapterDate;
+    }
+
+    public void setLastChapterDate(long lastChapterDate) {
+        this.lastChapterDate = lastChapterDate;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
