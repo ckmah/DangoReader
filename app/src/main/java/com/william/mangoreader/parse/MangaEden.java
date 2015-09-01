@@ -3,13 +3,14 @@ package com.william.mangoreader.parse;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Callback;
@@ -29,7 +30,9 @@ import java.util.List;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
+import retrofit.converter.GsonConverter;
 import retrofit.http.GET;
+import retrofit.http.Path;
 
 
 public class MangaEden {
@@ -59,9 +62,13 @@ public class MangaEden {
         public List<MangaEdenMangaListItem> manga;
     }
 
+
     public interface MangaEdenService {
         @GET("/list/0")
-        void listAllManga(retrofit.Callback<MangaEdenList> list);
+        void listAllManga(retrofit.Callback<MangaEdenList> callback);
+
+        @GET("/manga/{id}")
+        void getMangaDetails(@Path("id") String mangaId, retrofit.Callback<MangaEdenMangaDetailItem> callback);
     }
 
     private static MangaEdenService service;
@@ -80,6 +87,10 @@ public class MangaEden {
                 Log.e("OKHttp", "Could not create http cache", e);
             }
 
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(MangaEdenMangaChapterItem.class, new MangaEdenMangaChapterItem.ChapterDeserializer())
+                    .create();
+
             service = new RestAdapter.Builder()
                     .setEndpoint("https://www.mangaeden.com/api/")
                     .setClient(new OkClient(okHttpClient))
@@ -91,48 +102,11 @@ public class MangaEden {
                             request.addHeader("Cache-Control", "public, max-age=" + maxStale);
                         }
                     })
+                    .setConverter(new GsonConverter(gson))
                     .build()
                     .create(MangaEdenService.class);
         }
         return service;
-    }
-
-    static public MangaEdenMangaDetailItem parseMangaEdenMangaDetailResponse(String jsonString) {
-        MangaEdenMangaDetailItem item = new MangaEdenMangaDetailItem();
-        try {
-            JsonNode root = mapper.readTree(jsonString);
-            String author = root.get("author").asText();
-            String title = root.get("title").asText();
-            String description = root.get("description").asText();
-            String imageUrl = root.get("image").asText();
-
-            // map chapter listing
-            ArrayList<MangaEdenMangaChapterItem> chapterList = new ArrayList<>();
-            JsonNode chapterListNode = root.withArray("chapters");
-            for (JsonNode node : chapterListNode) {
-                MangaEdenMangaChapterItem chapterItem = new MangaEdenMangaChapterItem();
-                if (node.isArray()) {
-
-                    chapterItem.setNumber(node.get(MANGA_DETAIL_NUMBER_INDEX).asInt());
-                    chapterItem.setDate(node.get(MANGA_DETAIL_DATE_INDEX).asLong());
-                    String chapterTitle = node.get(MANGA_DETAIL_TITLE_INDEX).asText();
-                    chapterItem.setTitle(chapterTitle.equals("null") ? "" : chapterTitle);
-                    chapterItem.setId(node.get(MANGA_DETAIL_ID_INDEX).asText());
-                }
-                chapterList.add(chapterItem);
-            }
-
-            item.setAuthor(author);
-            item.setDescription(Html.fromHtml(description).toString());
-            item.setImageUrl(imageUrl);
-            item.setTitle(title);
-            item.setChapters(chapterList);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return item;
     }
 
     static public ArrayList<MangaEdenImageItem> parseMangaEdenMangaImageResponse(String jsonString) {

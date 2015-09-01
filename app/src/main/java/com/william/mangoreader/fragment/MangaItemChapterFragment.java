@@ -56,7 +56,7 @@ public class MangaItemChapterFragment extends Fragment {
             TextView chapterNumber = (TextView) chapterRow.findViewById(R.id.chapter_number);
             TextView chapterTitle = (TextView) chapterRow.findViewById(R.id.chapter_title);
 
-            chapterNumber.setText("Chapter " + chapterItem.getNumber());
+            chapterNumber.setText("Chapter " + (int) chapterItem.getNumber());
             chapterTitle.setText(chapterItem.getTitle());
 
             ViewGroup insertPoint = (ViewGroup) rootView;
