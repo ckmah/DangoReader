@@ -33,21 +33,7 @@ import retrofit.http.Path;
 
 
 public class MangaEden {
-
-    public static final String MANGAEDEN_MANGALIST = "https://www.mangaeden.com/api/list/0";
-
     public static final String MANGAEDEN_IMAGE_CDN = "https://cdn.mangaeden.com/mangasimg/";
-
-    public static final String MANGAEDEN_MANGADETAIL_PREFIX = "https://www.mangaeden.com/api/manga/";
-    public static final String MANGAEDEN_CHAPTERDETAIL_PREFIX = "https://www.mangaeden.com/api/chapter/";
-
-    public static final int IMAGE_PAGE_NUMBER_INDEX = 0;
-    public static final int IMAGE_URL_INDEX = 1;
-
-    private static final int MANGA_DETAIL_NUMBER_INDEX = 0;
-    private static final int MANGA_DETAIL_DATE_INDEX = 1;
-    private static final int MANGA_DETAIL_TITLE_INDEX = 2;
-    private static final int MANGA_DETAIL_ID_INDEX = 3;
 
     private static int mainColor;
 

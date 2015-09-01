@@ -97,7 +97,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     private void fetchMangaListFromMangaEden() {
         Log.d("SORTING", "FETCHING");
-        String url = MangaEden.MANGAEDEN_MANGALIST;
 
         swipeRefreshLayout.post(new Runnable() {
             @Override
