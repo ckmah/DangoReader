@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,17 @@ import android.widget.Toast;
 
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.MangaItemActivity;
+import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.helper.ItemTouchHelperAdapter;
+import com.william.mangoreader.daogen.UserLibraryManga;
+import com.william.mangoreader.daogen.UserLibraryMangaDao;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * Layout adapter for adding cards
@@ -31,12 +37,10 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     private List<MangaEdenMangaListItem> allManga;
     private List<MangaEdenMangaListItem> filteredManga;
     private Activity activity;
-    private boolean browseFlag; //right now, this specifies whether we're in a browsemangafragment or mylibraryfragment
 
-    public CardLayoutAdapter(Activity activity, boolean browseFlag) {
+    public CardLayoutAdapter(Activity activity) {
         filteredManga = new ArrayList<>();
         this.activity = activity;
-        this.browseFlag = browseFlag;
         // Pass context or other static stuff that will be needed.
     }
 
@@ -49,7 +53,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         viewHolder.title.setText(filteredManga.get(position).getTitle());
         viewHolder.subtitle.setText("Placeholder");
         MangaEden.setThumbnail(filteredManga.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.thumbnail);
-        viewHolder.mangaEdenId = filteredManga.get(position).getId();
+        viewHolder.manga = filteredManga.get(position);
     }
 
 
@@ -58,23 +62,37 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         notifyDataSetChanged();
     }
 
-    private void addToList(int pos) {
-        Toast.makeText(activity, "\"" + filteredManga.get(pos).getTitle() + "\" added to your library.", Toast.LENGTH_SHORT).show();
+    private void addToLibrary(MangaEdenMangaListItem m) {
+        UserLibraryManga mangaItem = new UserLibraryManga(
+                null,
+                m.getId(),
+                activity.getString(R.string.library_page1),
+                m.getTitle(),
+                m.getImageUrl(),
+                m.getStatus(),
+                m.getLastChapterDate(),
+                m.getHits());
+        ((MangoReaderActivity) activity).userLibraryMangaDao.insert(mangaItem);
+        Toast.makeText(activity, "\"" + m.getTitle() + "\" added to your library.", Toast.LENGTH_SHORT).show();
     }
 
-    private void removeFromList(int pos) {
-        Toast.makeText(activity, "\"" + filteredManga.get(pos).getTitle() + "\" removed from your library.", Toast.LENGTH_SHORT).show();
-
-        // needed to update UI without reading in entire database
-//        filteredManga.remove(pos);
-//        notifyItemRemoved(pos);
-//        notifyItemRangeChanged(pos, filteredManga.size());
+    private void removeFromLibrary(MangaEdenMangaListItem m) {
+        QueryBuilder qb = ((MangoReaderActivity) activity).userLibraryMangaDao.queryBuilder();
+        qb.where(UserLibraryMangaDao.Properties.Title.eq(m.getTitle()), UserLibraryMangaDao.Properties.ImageURL.eq(m.getImageUrl()));
+        List l = qb.list();
+        if (l.size() == 0) {
+            Log.e("MangoReader", "No manga found in user library.");
+        } else {
+            UserLibraryManga mangaItem = (UserLibraryManga) l.get(0);
+            ((MangoReaderActivity) activity).userLibraryMangaDao.delete(mangaItem);
+            Toast.makeText(activity, "\"" + m.getTitle() + "\" removed from your library.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public CardViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int position) {
-        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View itemView = inflater.inflate(R.layout.manga_card, viewGroup, false);
+    public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View itemView = inflater.inflate(R.layout.manga_card, parent, false);
         final CardViewHolder holder = new CardViewHolder(itemView);
 
         final CardView cardView = (CardView) itemView.findViewById(R.id.card_view);
@@ -83,7 +101,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, MangaItemActivity.class);
-                intent.putExtra("mangaId", holder.mangaEdenId);
+                intent.putExtra("mangaId", holder.manga.getId());
                 activity.startActivity(intent);
             }
         });
@@ -98,9 +116,9 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                 button.setSelected(!button.isSelected());
 
                 if (button.isSelected()) {
-                    addToList(position);
+                    addToLibrary(holder.manga);
                 } else {
-                    removeFromList(position);
+                    removeFromLibrary(holder.manga);
                 }
             }
         });
@@ -171,7 +189,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         public TextView title;
         public TextView subtitle;
         public ImageView thumbnail;
-        public String mangaEdenId; //TODO what do in future?
+        public MangaEdenMangaListItem manga;
 
         public CardViewHolder(View itemView) {
             super(itemView);
@@ -180,6 +198,5 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             thumbnail = (ImageView) itemView.findViewById(R.id.card_thumbnail);
 
         }
-
     }
 }

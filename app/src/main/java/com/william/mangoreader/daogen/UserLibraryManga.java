@@ -7,6 +7,7 @@ package com.william.mangoreader.daogen;
 public class UserLibraryManga {
 
     private Long id;
+    private String MangaEdenId;
     private String tabs;
     /** Not-null value. */
     private String title;
@@ -22,8 +23,9 @@ public class UserLibraryManga {
         this.id = id;
     }
 
-    public UserLibraryManga(Long id, String tabs, String title, String imageURL, String status, Long lastChapterDate, Integer hits) {
+    public UserLibraryManga(Long id, String MangaEdenId, String tabs, String title, String imageURL, String status, Long lastChapterDate, Integer hits) {
         this.id = id;
+        this.MangaEdenId = MangaEdenId;
         this.tabs = tabs;
         this.title = title;
         this.imageURL = imageURL;
@@ -38,6 +40,14 @@ public class UserLibraryManga {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getMangaEdenId() {
+        return MangaEdenId;
+    }
+
+    public void setMangaEdenId(String MangaEdenId) {
+        this.MangaEdenId = MangaEdenId;
     }
 
     public String getTabs() {
