@@ -24,12 +24,13 @@ public class UserLibraryMangaDao extends AbstractDao<UserLibraryManga, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Tabs = new Property(1, String.class, "tabs", false, "TABS");
-        public final static Property Title = new Property(2, String.class, "title", false, "TITLE");
-        public final static Property ImageURL = new Property(3, String.class, "imageURL", false, "IMAGE_URL");
-        public final static Property Status = new Property(4, String.class, "status", false, "STATUS");
-        public final static Property LastChapterDate = new Property(5, Long.class, "lastChapterDate", false, "LAST_CHAPTER_DATE");
-        public final static Property Hits = new Property(6, Integer.class, "hits", false, "HITS");
+        public final static Property MangaEdenId = new Property(1, String.class, "MangaEdenId", false, "MANGA_EDEN_ID");
+        public final static Property Tabs = new Property(2, String.class, "tabs", false, "TABS");
+        public final static Property Title = new Property(3, String.class, "title", false, "TITLE");
+        public final static Property ImageURL = new Property(4, String.class, "imageURL", false, "IMAGE_URL");
+        public final static Property Status = new Property(5, String.class, "status", false, "STATUS");
+        public final static Property LastChapterDate = new Property(6, Long.class, "lastChapterDate", false, "LAST_CHAPTER_DATE");
+        public final static Property Hits = new Property(7, Integer.class, "hits", false, "HITS");
     };
 
 
@@ -46,12 +47,13 @@ public class UserLibraryMangaDao extends AbstractDao<UserLibraryManga, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER_LIBRARY_MANGA\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"TABS\" TEXT," + // 1: tabs
-                "\"TITLE\" TEXT NOT NULL ," + // 2: title
-                "\"IMAGE_URL\" TEXT," + // 3: imageURL
-                "\"STATUS\" TEXT," + // 4: status
-                "\"LAST_CHAPTER_DATE\" INTEGER," + // 5: lastChapterDate
-                "\"HITS\" INTEGER);"); // 6: hits
+                "\"MANGA_EDEN_ID\" TEXT," + // 1: MangaEdenId
+                "\"TABS\" TEXT," + // 2: tabs
+                "\"TITLE\" TEXT NOT NULL ," + // 3: title
+                "\"IMAGE_URL\" TEXT," + // 4: imageURL
+                "\"STATUS\" TEXT," + // 5: status
+                "\"LAST_CHAPTER_DATE\" INTEGER," + // 6: lastChapterDate
+                "\"HITS\" INTEGER);"); // 7: hits
     }
 
     /** Drops the underlying database table. */
@@ -70,30 +72,35 @@ public class UserLibraryMangaDao extends AbstractDao<UserLibraryManga, Long> {
             stmt.bindLong(1, id);
         }
  
+        String MangaEdenId = entity.getMangaEdenId();
+        if (MangaEdenId != null) {
+            stmt.bindString(2, MangaEdenId);
+        }
+ 
         String tabs = entity.getTabs();
         if (tabs != null) {
-            stmt.bindString(2, tabs);
+            stmt.bindString(3, tabs);
         }
-        stmt.bindString(3, entity.getTitle());
+        stmt.bindString(4, entity.getTitle());
  
         String imageURL = entity.getImageURL();
         if (imageURL != null) {
-            stmt.bindString(4, imageURL);
+            stmt.bindString(5, imageURL);
         }
  
         String status = entity.getStatus();
         if (status != null) {
-            stmt.bindString(5, status);
+            stmt.bindString(6, status);
         }
  
         Long lastChapterDate = entity.getLastChapterDate();
         if (lastChapterDate != null) {
-            stmt.bindLong(6, lastChapterDate);
+            stmt.bindLong(7, lastChapterDate);
         }
  
         Integer hits = entity.getHits();
         if (hits != null) {
-            stmt.bindLong(7, hits);
+            stmt.bindLong(8, hits);
         }
     }
 
@@ -108,12 +115,13 @@ public class UserLibraryMangaDao extends AbstractDao<UserLibraryManga, Long> {
     public UserLibraryManga readEntity(Cursor cursor, int offset) {
         UserLibraryManga entity = new UserLibraryManga( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // tabs
-            cursor.getString(offset + 2), // title
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // imageURL
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // status
-            cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5), // lastChapterDate
-            cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6) // hits
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // MangaEdenId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // tabs
+            cursor.getString(offset + 3), // title
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // imageURL
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // status
+            cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6), // lastChapterDate
+            cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7) // hits
         );
         return entity;
     }
@@ -122,12 +130,13 @@ public class UserLibraryMangaDao extends AbstractDao<UserLibraryManga, Long> {
     @Override
     public void readEntity(Cursor cursor, UserLibraryManga entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setTabs(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setTitle(cursor.getString(offset + 2));
-        entity.setImageURL(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setStatus(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setLastChapterDate(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
-        entity.setHits(cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6));
+        entity.setMangaEdenId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setTabs(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setTitle(cursor.getString(offset + 3));
+        entity.setImageURL(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setStatus(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setLastChapterDate(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
+        entity.setHits(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
      }
     
     /** @inheritdoc */

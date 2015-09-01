@@ -17,6 +17,7 @@ public class MyDaoGenerator {
     private static void addUserLibraryManga(Schema schema) {
         Entity userLibraryManga = schema.addEntity("UserLibraryManga");
         userLibraryManga.addIdProperty();
+        userLibraryManga.addStringProperty("MangaEdenId");
         userLibraryManga.addStringProperty("tabs"); //for which tab/tabs
         userLibraryManga.addStringProperty("title").notNull();
         userLibraryManga.addStringProperty("imageURL");
