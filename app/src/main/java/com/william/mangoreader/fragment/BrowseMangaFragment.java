@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -95,6 +96,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private void fetchMangaListFromMangaEden() {
+        Log.d("SORTING", "FETCHING");
         String url = MangaEden.MANGAEDEN_MANGALIST;
 
         swipeRefreshLayout.post(new Runnable() {
@@ -104,7 +106,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
             }
         });
 
-        MangaEden.getMangaEdenService().listAllManga(new Callback<MangaEden.MangaEdenList>() {
+        MangaEden.getMangaEdenService(getActivity()).listAllManga(new Callback<MangaEden.MangaEdenList>() {
             @Override
             public void success(MangaEden.MangaEdenList mangaEdenList, retrofit.client.Response response) {
                 sortMangaInBackground(mangaEdenList);
@@ -112,12 +114,22 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
             @Override
             public void failure(RetrofitError error) {
+                Log.d("SORTING", "FAILED");
+                Log.d("SORTING", error.getMessage());
 
+                // Hide the refresh layout
+                swipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
             }
         });
     }
 
     private void sortMangaInBackground(MangaEden.MangaEdenList list) {
+        Log.d("SORTING", "STARTING");
         new AsyncTask<MangaEden.MangaEdenList, Void, List<MangaEdenMangaListItem>>() {
 
             @Override
@@ -151,6 +163,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                 });
 
                 BrowseMangaScrollListener.loading = false;
+                Log.d("SORTING", "ENDING");
             }
         }.execute(list);
     }

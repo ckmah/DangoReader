@@ -4,11 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Html;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.william.mangoreader.R;
@@ -18,11 +21,14 @@ import com.william.mangoreader.model.MangaEdenMangaChapterItem;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 import retrofit.http.GET;
 
 
@@ -60,13 +66,33 @@ public class MangaEden {
 
     private static MangaEdenService service;
 
-    public static MangaEdenService getMangaEdenService() {
+    public static MangaEdenService getMangaEdenService(Context context) {
         if (service == null) {
-            RestAdapter restAdapter = new RestAdapter.Builder()
-                    .setEndpoint("https://www.mangaeden.com/api/")
-                    .build();
+            Log.d("SORTING", "CREATING NEW CACHE");
 
-            service = restAdapter.create(MangaEdenService.class);
+            OkHttpClient okHttpClient = new OkHttpClient();
+            try {
+                // TODO try wiping cache to see what happens
+                File httpCacheDirectory = new File(context.getCacheDir(), "responses");
+                Cache cache = new Cache(httpCacheDirectory, 20 * 1024 * 1024);
+                okHttpClient.setCache(cache);
+            } catch(IOException e) {
+                Log.e("OKHttp", "Could not create http cache", e);
+            }
+
+            service = new RestAdapter.Builder()
+                    .setEndpoint("https://www.mangaeden.com/api/")
+                    .setClient(new OkClient(okHttpClient))
+                    .setRequestInterceptor(new RequestInterceptor() {
+                        @Override
+                        public void intercept(RequestFacade request) {
+                            // TODO test to make sure it does get cached i.e. doesn't use internet for the next day
+                            int maxStale = 60 * 60 * 24; // tolerate 1 day stale
+                            request.addHeader("Cache-Control", "public, max-age=" + maxStale);
+                        }
+                    })
+                    .build()
+                    .create(MangaEdenService.class);
         }
         return service;
     }
