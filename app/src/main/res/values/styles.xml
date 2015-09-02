@@ -119,6 +119,7 @@
     <style name="MangaItemTitle">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/manga_item_title_text_size</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:layout_marginBottom">@dimen/manga_item_title_margin_bottom</item>
     </style>
 
@@ -130,7 +131,7 @@
 
 
     <style name="MangaItemTag">
-        <item name="android:textColor">@color/md_grey_700</item>
+        <item name="android:textColor">@color/md_grey_800</item>
         <item name="android:textSize">@dimen/manga_item_tag_text_size</item>
         <item name="android:layout_marginBottom">@dimen/manga_item_tag_margin_bottom</item>
     </style>
@@ -196,13 +197,12 @@
         </item>
     </style>
 
-    <style name="fragment_chapters">
+    <style name="chapter_list">
         <item name="android:divider">?android:dividerHorizontal</item>
         <item name="android:orientation">vertical</item>
         <item name="android:showDividers">middle|end</item>
         <item name="android:clipToPadding">false</item>
         <item name="android:scrollbars">vertical</item>
-        <!--<item name="android:fillViewport">true</item>-->
         <item name="android:paddingBottom">@dimen/chapters_padding_bottom</item>
     </style>
 
@@ -211,7 +211,7 @@
         <item name="android:paddingBottom">@dimen/chapter_row_padding_bottom</item>
         <item name="android:paddingLeft">@dimen/chapter_row_padding_side</item>
         <item name="android:paddingRight">@dimen/chapter_row_padding_side</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@color/md_grey_100</item>
     </style>
 
     <style name="ChapterNumber">

@@ -9,12 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
+        android:foreground="?attr/selectableItemBackground"
         android:padding="8dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:background="?attr/selectableItemBackgroundBorderless">
+            android:layout_height="250dp">
 
             <ImageView
                 android:id="@+id/card_thumbnail"

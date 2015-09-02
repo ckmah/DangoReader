@@ -22,7 +22,7 @@
     <dimen name="manga_item_header_padding">16dp</dimen>
 
     <dimen name="manga_item_title_text_size">20sp</dimen>
-    <dimen name="manga_item_title_margin_bottom">8sp</dimen>
+    <dimen name="manga_item_title_margin_bottom">4sp</dimen>
 
     <dimen name="manga_item_author_text_size">16sp</dimen>
     <dimen name="manga_item_author_margin_bottom">10sp</dimen>
