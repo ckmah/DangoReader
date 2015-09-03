@@ -6,7 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -21,7 +21,7 @@ public class MangaEdenMangaDetailItem implements Serializable {
     private int numChapters;
 
     @SerializedName("created")
-    private float dateCreated;
+    private long dateCreated;
 
     @SerializedName("description")
     private String description;
