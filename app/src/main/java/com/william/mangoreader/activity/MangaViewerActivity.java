@@ -5,13 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.william.mangoreader.R;
 import com.william.mangoreader.activity.viewpager.MangaViewPager;
 import com.william.mangoreader.adapter.MangaImagePagerAdapter;
@@ -20,15 +18,17 @@ import com.william.mangoreader.model.MangaEdenImageItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
 
 public class MangaViewerActivity extends AppCompatActivity {
 
     private static float STATUS_BAR_HEIGHT;
 
-    private ArrayList<MangaEdenImageItem> images;
+    private List<MangaEdenImageItem> images;
     private MangaViewPager mangaViewPager;
     private MangaImagePagerAdapter imageAdapter;
 
@@ -104,25 +104,21 @@ public class MangaViewerActivity extends AppCompatActivity {
     }
 
     private void fetchMangaImagesFromMangaEden() {
-        String url = MangaEden.MANGAEDEN_CHAPTERDETAIL_PREFIX + chapterId;
 
-        queue.add(new JsonObjectRequest
-                        (url, new Response.Listener<JSONObject>() {
+        MangaEden.getMangaEdenService(this).getMangaImages(chapterId, new Callback<MangaEden.MangaEdenChapter>() {
+            @Override
+            public void success(MangaEden.MangaEdenChapter chapter, retrofit.client.Response response) {
+                images = chapter.images;
+                imageAdapter = new MangaImagePagerAdapter(getSupportFragmentManager(), images.size());
+                mangaViewPager.setAdapter(imageAdapter);
+                loadContent();
+            }
 
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                images = MangaEden.parseMangaEdenMangaImageResponse(response.toString());
-                                imageAdapter = new MangaImagePagerAdapter(getSupportFragmentManager(), images.size());
-                                mangaViewPager.setAdapter(imageAdapter);
-                                loadContent();
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                System.out.println("Response error: " + error.toString());
-                            }
-                        })
-        );
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("ERROR", error.getMessage());
+            }
+        });
     }
 
     private void loadContent() {
@@ -136,7 +132,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         return true;
     }
 
-    public ArrayList<MangaEdenImageItem> getImages() {
+    public List<MangaEdenImageItem> getImages() {
         return images;
     }
 

@@ -4,32 +4,33 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.william.mangoreader.DividerItemDecoration;
 import com.william.mangoreader.R;
 import com.william.mangoreader.adapter.MangaItemAdapter;
+import com.william.mangoreader.fragment.MangaItemChapterFragment;
+import com.william.mangoreader.fragment.MangaItemDetailFragment;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
 
-import org.json.JSONObject;
-
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
 
 /**
  * Activity that displays a single manga, and shows manga info and chapters
@@ -42,7 +43,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private MangaItemAdapter mangaItemAdapter;
-
+    
     private Palette.Swatch primaryColor;
     private Palette.Swatch secondaryColor;
 
@@ -92,23 +93,18 @@ public class MangaItemActivity extends AppCompatActivity {
     }
 
     private void fetchMangaDetailFromMangaEden() {
-        String url = MangaEden.MANGAEDEN_MANGADETAIL_PREFIX + mangaId;
+        MangaEden.getMangaEdenService(this).getMangaDetails(mangaId, new Callback<MangaEdenMangaDetailItem>() {
+            @Override
+            public void success(MangaEdenMangaDetailItem item, retrofit.client.Response response) {
+                manga = item;
+                loadContent();
+            }
 
-        queue.add(new JsonObjectRequest
-                        (url, new Response.Listener<JSONObject>() {
-
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                manga = MangaEden.parseMangaEdenMangaDetailResponse(response.toString());
-                                loadContent();
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                System.out.println("Response error: " + error.toString());
-                            }
-                        })
-        );
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("ERROR", error.getMessage());
+            }
+        });
     }
 
     private void loadContent() {

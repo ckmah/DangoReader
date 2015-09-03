@@ -46,10 +46,10 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
     @Override
     public void onBindViewHolder(CardViewHolder viewHolder, int position) {
-        viewHolder.title.setText(filteredManga.get(position).getTitle());
+        viewHolder.title.setText(filteredManga.get(position).title);
         viewHolder.subtitle.setText("Placeholder");
-        MangaEden.setThumbnail(filteredManga.get(position).getImageUrl(), activity.getApplicationContext(), viewHolder.thumbnail);
-        viewHolder.mangaEdenId = filteredManga.get(position).getId();
+        MangaEden.setThumbnail(filteredManga.get(position).imageUrl, activity.getApplicationContext(), viewHolder.thumbnail);
+        viewHolder.mangaEdenId = filteredManga.get(position).id;
     }
 
 
@@ -59,11 +59,11 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     }
 
     private void addToList(int pos) {
-        Toast.makeText(activity, "\"" + filteredManga.get(pos).getTitle() + "\" added to your library.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "\"" + filteredManga.get(pos).title + "\" added to your library.", Toast.LENGTH_SHORT).show();
     }
 
     private void removeFromList(int pos) {
-        Toast.makeText(activity, "\"" + filteredManga.get(pos).getTitle() + "\" removed from your library.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "\"" + filteredManga.get(pos).title + "\" removed from your library.", Toast.LENGTH_SHORT).show();
 
         // needed to update UI without reading in entire database
 //        filteredManga.remove(pos);
@@ -117,7 +117,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     @Override
     public void onItemDismiss(int position) {
         //TODO add to user library
-        Toast.makeText(activity, "\"" + filteredManga.get(position).getTitle() + "\" added to your library.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "\"" + filteredManga.get(position).title + "\" added to your library.", Toast.LENGTH_SHORT).show();
         notifyItemChanged(position);
     }
 
@@ -150,7 +150,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                 String filterPattern = query.toString().toLowerCase().trim();
 
                 for (MangaEdenMangaListItem item : allManga) {
-                    if (item.getTitle().toLowerCase().contains(filterPattern)) {
+                    if (item.title.toLowerCase().contains(filterPattern)) {
                         filteredManga.add(item);
                     }
                 }
