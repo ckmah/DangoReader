@@ -3,7 +3,13 @@ package com.william.mangoreader.model;
 
 import android.graphics.Bitmap;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+
 import java.io.Serializable;
+import java.lang.reflect.Type;
 
 public class MangaEdenImageItem implements Serializable {
 
@@ -33,5 +39,15 @@ public class MangaEdenImageItem implements Serializable {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public static class ImageDeserializer implements JsonDeserializer<MangaEdenImageItem> {
+        @Override
+        public MangaEdenImageItem deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            MangaEdenImageItem item = new MangaEdenImageItem();
+            item.setPageNumber(json.getAsJsonArray().get(0).getAsInt());
+            item.setUrl(json.getAsJsonArray().get(1).getAsString());
+            return item;
+        }
     }
 }
