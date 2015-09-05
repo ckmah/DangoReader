@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryPageFragment extends Fragment {
-
-    private List<UserLibraryManga> userLibrary;
+    private final static String PAGE_NUM = "ARG_PAGE";
+    private List<UserLibraryManga> userLibraryCategory;
 
     public static LibraryPageFragment newInstance(int page) {
         Bundle args = new Bundle();
-        args.putInt("ARG_PAGE", page);
+        args.putInt(PAGE_NUM, page);
         LibraryPageFragment fragment = new LibraryPageFragment();
         fragment.setArguments(args);
         return fragment;
@@ -46,26 +46,32 @@ public class LibraryPageFragment extends Fragment {
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
         CardLayoutAdapter cgAdapter = new CardLayoutAdapter(getActivity());
-        //TODO hack methods, refactor later
-        userLibrary = ((MangoReaderActivity) getActivity()).userLibraryMangaDao.loadAll();
-        cgAdapter.setAllManga(convertUserLibraryManga(userLibrary));
-        cgAdapter.getFilter().filter("");
+        userLibraryCategory = new ArrayList<>();
+        //TODO hacky methods still hacky. refactor later
+        String category = getResources().getStringArray(R.array.library_categories)[getArguments().getInt(PAGE_NUM)];
+        for (UserLibraryManga manga : ((MangoReaderActivity) getActivity()).userLibraryMangaDao.loadAll()) {
+            if (manga.getTab().compareTo(category) == 0)
+                userLibraryCategory.add(manga);
+        }
+
+        cgAdapter.setAllManga(convertUserLibraryManga(userLibraryCategory));
+        cgAdapter.getFilter().filter(""); // TODO why is this needed?
         mRecyclerView.setAdapter(cgAdapter);
 
         return rootView;
     }
 
     //TODO more hacks :( holy shit I hate greendao
-    private List<MangaEdenMangaListItem> convertUserLibraryManga(List<UserLibraryManga> m) {
+    private List<MangaEdenMangaListItem> convertUserLibraryManga(List<UserLibraryManga> libraryMangaList) {
         List<MangaEdenMangaListItem> result = new ArrayList<>();
-        for (UserLibraryManga temp : m) {
+        for (UserLibraryManga manga : libraryMangaList) {
             MangaEdenMangaListItem temp2 = new MangaEdenMangaListItem();
-            temp2.title = temp.getTitle();
-            temp2.imageUrl = temp.getImageURL();
-            temp2.status = temp.getStatus();
-            temp2.hits = temp.getHits();
-            temp2.lastChapterDate = temp.getLastChapterDate();
-            temp2.id = temp.getMangaEdenId();
+            temp2.title = manga.getTitle();
+            temp2.imageUrl = manga.getImageURL();
+            temp2.status = manga.getStatus();
+            temp2.hits = manga.getHits();
+            temp2.lastChapterDate = manga.getLastChapterDate();
+            temp2.id = manga.getMangaEdenId();
             result.add(temp2);
         }
         return result;

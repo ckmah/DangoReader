@@ -51,6 +51,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
 
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "user-library-db", null);
         userLibraryDb = helper.getWritableDatabase();
+//        helper.onUpgrade(userLibraryDb, userLibraryDb.getVersion(), 1000); // DEBUG PURPOSES ONLY
         daoMaster = new DaoMaster(userLibraryDb);
         daoSession = daoMaster.newSession();
         userLibraryMangaDao = daoSession.getUserLibraryMangaDao();

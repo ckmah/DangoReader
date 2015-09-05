@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
 import com.william.mangoreader.R;
 import com.william.mangoreader.fragment.LibraryPageFragment;
 
@@ -22,7 +23,7 @@ public class LibraryPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return LibraryPageFragment.newInstance(position + 1);
+        return LibraryPageFragment.newInstance(position);
     }
 
     @Override
@@ -31,17 +32,6 @@ public class LibraryPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public CharSequence getPageTitle(int position) {
-        switch (position) {
-            case 0:
-                return context.getString(R.string.library_page1);
-            case 1:
-                return context.getString(R.string.library_page2);
-            case 2:
-                return context.getString(R.string.library_page3);
-            case 3:
-                return context.getString(R.string.library_page4);
-            default:
-                return null;
-        }
+        return context.getResources().getStringArray(R.array.library_categories)[position];
     }
 }

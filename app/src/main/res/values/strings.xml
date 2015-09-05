@@ -22,6 +22,13 @@
     </string-array>
 
     <!-- library section labels -->
+    <string-array name="library_categories">
+        <item>@string/library_page1</item>
+        <item>@string/library_page2</item>
+        <item>@string/library_page3</item>
+        <item>@string/library_page4</item>
+    </string-array>
+
     <string name="library_page1">Reading</string>
     <string name="library_page2">Backlog</string>
     <string name="library_page3">On Hold</string>
