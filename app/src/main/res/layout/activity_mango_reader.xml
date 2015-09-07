@@ -35,8 +35,7 @@
                 android:id="@+id/sliding_tabs"
                 style="@style/TabLayout"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlways" />
+                android:layout_height="wrap_content" />
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout

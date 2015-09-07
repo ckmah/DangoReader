@@ -10,13 +10,20 @@ public class MyDaoGenerator {
         String src = "app/src/main/java";
         Schema schema = new Schema(1000, pkg + ".daogen");
 
-        addMyLibraryManga(schema);
+        addUserLibraryManga(schema);
         new DaoGenerator().generateAll(schema, src);
     }
 
-    private static void addMyLibraryManga(Schema schema) {
-        Entity note = schema.addEntity("MyLibraryMangaCard");
-        note.addIdProperty();
-        note.addStringProperty("title").notNull();
+    private static void addUserLibraryManga(Schema schema) {
+        Entity userLibraryManga = schema.addEntity("UserLibraryManga");
+//        userLibraryManga.addIdProperty();
+        userLibraryManga.addStringProperty("MangaEdenId").primaryKey();
+        userLibraryManga.addStringProperty("tab"); //for which tab
+        userLibraryManga.addStringProperty("title").notNull();
+        userLibraryManga.addStringProperty("imageURL");
+        userLibraryManga.addStringProperty("status");
+        userLibraryManga.addLongProperty("lastChapterDate");
+        userLibraryManga.addIntProperty("hits");
     }
 }
+

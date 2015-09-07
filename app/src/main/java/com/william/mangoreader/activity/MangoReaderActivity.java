@@ -17,9 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
 import com.william.mangoreader.R;
 import com.william.mangoreader.daogen.DaoMaster;
 import com.william.mangoreader.daogen.DaoSession;
+import com.william.mangoreader.daogen.UserLibraryMangaDao;
 import com.william.mangoreader.fragment.BrowseMangaFragment;
 import com.william.mangoreader.fragment.MyLibraryFragment;
 
@@ -31,9 +33,10 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
 
-    private SQLiteDatabase db;
-    private DaoMaster daoMaster;
-    private DaoSession daoSession;
+    public SQLiteDatabase userLibraryDb;
+    public DaoMaster daoMaster;
+    public DaoSession daoSession;
+    public UserLibraryMangaDao userLibraryMangaDao;
 
     private Cursor cursor;
 
@@ -46,9 +49,13 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         initNavigation();
         initSpinner();
 
-//        initDaoDB();
-//        mangaEntries = new EntriesDataSource(this);
-//        mangaEntries.open();
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "user-library-db", null);
+        userLibraryDb = helper.getWritableDatabase();
+//        helper.onUpgrade(userLibraryDb, userLibraryDb.getVersion(), 1000); // DEBUG PURPOSES ONLY
+        daoMaster = new DaoMaster(userLibraryDb);
+        daoSession = daoMaster.newSession();
+        userLibraryMangaDao = daoSession.getUserLibraryMangaDao();
+
 
         displayView(R.id.navigation_item_1);
     }
@@ -75,13 +82,6 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
                 R.array.browse_sources, R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(R.layout.drop_list);
         spinner.setAdapter(adapter);
-    }
-
-    private void initDaoDB() {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
-        db = helper.getWritableDatabase();
-        daoMaster = new DaoMaster(db);
-        daoSession = daoMaster.newSession();
     }
 
     @Override
