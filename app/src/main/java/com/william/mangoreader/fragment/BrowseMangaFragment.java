@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -68,6 +69,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                 getRequestQueue();
 
         fetchMangaListFromMangaEden();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Browse");
         setHasOptionsMenu(true);
         return rootView;
     }
@@ -78,7 +80,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        cardAdapter = new CardLayoutAdapter(getActivity(), true);
+        cardAdapter = new CardLayoutAdapter(getActivity());
         cardAdapter.setAllManga(allManga);
         mRecyclerView.setAdapter(cardAdapter);
 

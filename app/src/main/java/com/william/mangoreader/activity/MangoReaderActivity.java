@@ -15,8 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import com.william.mangoreader.R;
 import com.william.mangoreader.daogen.DaoMaster;
@@ -47,7 +45,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
 
         initToolbar();
         initNavigation();
-        initSpinner();
+//        initSpinner();
 
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "user-library-db", null);
         userLibraryDb = helper.getWritableDatabase();
@@ -77,11 +75,11 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
 
     private void initSpinner() {
         // spinner for source selection
-        Spinner spinner = (Spinner) findViewById(R.id.spinner_browse_sources);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
-                R.array.browse_sources, R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(R.layout.drop_list);
-        spinner.setAdapter(adapter);
+//        Spinner spinner = (Spinner) findViewById(R.id.spinner_browse_sources);
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
+//                R.array.browse_sources, R.layout.simple_spinner_item);
+//        adapter.setDropDownViewResource(R.layout.drop_list);
+//        spinner.setAdapter(adapter);
     }
 
     @Override
@@ -111,13 +109,13 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         // create corresponding fragment
         switch (id) {
             case R.id.navigation_item_1: // library
-                findViewById(R.id.spinner_browse_sources).setVisibility(View.GONE);
+//                findViewById(R.id.spinner_browse_sources).setVisibility(View.GONE);
                 findViewById(R.id.sliding_tabs).setVisibility(View.VISIBLE);
                 fragment = new MyLibraryFragment();
                 title = getString(R.string.title_my_library);
                 break;
             case R.id.navigation_item_2: // browse
-                findViewById(R.id.spinner_browse_sources).setVisibility(View.VISIBLE);
+//                findViewById(R.id.spinner_browse_sources).setVisibility(View.VISIBLE);
                 findViewById(R.id.sliding_tabs).setVisibility(View.GONE);
                 fragment = new BrowseMangaFragment();
                 title = getString(R.string.title_browse);
