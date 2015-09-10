@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    style="@style/sort_dialog">
+
+    <RadioGroup
+        android:id="@+id/sort_radiogroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></RadioGroup>
+
+    <Switch
+        android:id="@+id/reverse_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reverse Order" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <GridLayout
+            android:id="@+id/genre_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:columnCount="3"
+            android:orientation="vertical"
+            android:rowCount="11">
+
+        </GridLayout>
+    </ScrollView>
+
+</LinearLayout>

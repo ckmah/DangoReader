@@ -21,6 +21,7 @@ public class MyDaoGenerator {
         userLibraryManga.addStringProperty("tab"); //for which tab
         userLibraryManga.addStringProperty("title").notNull();
         userLibraryManga.addStringProperty("imageURL");
+        userLibraryManga.addStringProperty("genres"); // csv style list
         userLibraryManga.addStringProperty("status");
         userLibraryManga.addLongProperty("lastChapterDate");
         userLibraryManga.addIntProperty("hits");

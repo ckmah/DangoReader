@@ -229,5 +229,9 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="sort_dialog" parent="AlertDialog.AppCompat"></style>
+
+    <style name="genre_checkbox"></style>
+
 
 </resources>

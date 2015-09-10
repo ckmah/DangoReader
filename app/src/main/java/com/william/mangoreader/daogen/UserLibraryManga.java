@@ -11,6 +11,7 @@ public class UserLibraryManga {
     /** Not-null value. */
     private String title;
     private String imageURL;
+    private String genres;
     private String status;
     private Long lastChapterDate;
     private Integer hits;
@@ -22,11 +23,12 @@ public class UserLibraryManga {
         this.MangaEdenId = MangaEdenId;
     }
 
-    public UserLibraryManga(String MangaEdenId, String tab, String title, String imageURL, String status, Long lastChapterDate, Integer hits) {
+    public UserLibraryManga(String MangaEdenId, String tab, String title, String imageURL, String genres, String status, Long lastChapterDate, Integer hits) {
         this.MangaEdenId = MangaEdenId;
         this.tab = tab;
         this.title = title;
         this.imageURL = imageURL;
+        this.genres = genres;
         this.status = status;
         this.lastChapterDate = lastChapterDate;
         this.hits = hits;
@@ -64,6 +66,14 @@ public class UserLibraryManga {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    public String getGenres() {
+        return genres;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
     }
 
     public String getStatus() {

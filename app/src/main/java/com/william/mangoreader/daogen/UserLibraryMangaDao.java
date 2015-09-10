@@ -25,9 +25,10 @@ public class UserLibraryMangaDao extends AbstractDao<UserLibraryManga, String> {
         public final static Property Tab = new Property(1, String.class, "tab", false, "TAB");
         public final static Property Title = new Property(2, String.class, "title", false, "TITLE");
         public final static Property ImageURL = new Property(3, String.class, "imageURL", false, "IMAGE_URL");
-        public final static Property Status = new Property(4, String.class, "status", false, "STATUS");
-        public final static Property LastChapterDate = new Property(5, Long.class, "lastChapterDate", false, "LAST_CHAPTER_DATE");
-        public final static Property Hits = new Property(6, Integer.class, "hits", false, "HITS");
+        public final static Property Genres = new Property(4, String.class, "genres", false, "GENRES");
+        public final static Property Status = new Property(5, String.class, "status", false, "STATUS");
+        public final static Property LastChapterDate = new Property(6, Long.class, "lastChapterDate", false, "LAST_CHAPTER_DATE");
+        public final static Property Hits = new Property(7, Integer.class, "hits", false, "HITS");
     };
 
 
@@ -47,9 +48,10 @@ public class UserLibraryMangaDao extends AbstractDao<UserLibraryManga, String> {
                 "\"TAB\" TEXT," + // 1: tab
                 "\"TITLE\" TEXT NOT NULL ," + // 2: title
                 "\"IMAGE_URL\" TEXT," + // 3: imageURL
-                "\"STATUS\" TEXT," + // 4: status
-                "\"LAST_CHAPTER_DATE\" INTEGER," + // 5: lastChapterDate
-                "\"HITS\" INTEGER);"); // 6: hits
+                "\"GENRES\" TEXT," + // 4: genres
+                "\"STATUS\" TEXT," + // 5: status
+                "\"LAST_CHAPTER_DATE\" INTEGER," + // 6: lastChapterDate
+                "\"HITS\" INTEGER);"); // 7: hits
     }
 
     /** Drops the underlying database table. */
@@ -78,20 +80,25 @@ public class UserLibraryMangaDao extends AbstractDao<UserLibraryManga, String> {
         if (imageURL != null) {
             stmt.bindString(4, imageURL);
         }
+
+        String genres = entity.getGenres();
+        if (genres != null) {
+            stmt.bindString(5, genres);
+        }
  
         String status = entity.getStatus();
         if (status != null) {
-            stmt.bindString(5, status);
+            stmt.bindString(6, status);
         }
  
         Long lastChapterDate = entity.getLastChapterDate();
         if (lastChapterDate != null) {
-            stmt.bindLong(6, lastChapterDate);
+            stmt.bindLong(7, lastChapterDate);
         }
  
         Integer hits = entity.getHits();
         if (hits != null) {
-            stmt.bindLong(7, hits);
+            stmt.bindLong(8, hits);
         }
     }
 
@@ -109,9 +116,10 @@ public class UserLibraryMangaDao extends AbstractDao<UserLibraryManga, String> {
                 cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // tab
                 cursor.getString(offset + 2), // title
                 cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // imageURL
-                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // status
-                cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5), // lastChapterDate
-                cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6) // hits
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // genres
+                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // status
+                cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6), // lastChapterDate
+                cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7) // hits
         );
         return entity;
     }
@@ -123,9 +131,10 @@ public class UserLibraryMangaDao extends AbstractDao<UserLibraryManga, String> {
         entity.setTab(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setTitle(cursor.getString(offset + 2));
         entity.setImageURL(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setStatus(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setLastChapterDate(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
-        entity.setHits(cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6));
+        entity.setGenres(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setStatus(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setLastChapterDate(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
+        entity.setHits(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
      }
     
     /** @inheritdoc */

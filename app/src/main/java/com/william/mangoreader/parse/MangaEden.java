@@ -6,7 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
@@ -32,14 +31,7 @@ import retrofit.http.GET;
 import retrofit.http.Path;
 
 public class MangaEden {
-
-
     public static final String MANGAEDEN_IMAGE_CDN = "https://cdn.mangaeden.com/mangasimg/";
-
-    private static int mainColor;
-
-    public static final ObjectMapper mapper = new ObjectMapper(); // create once, reuse
-    
 
     public class MangaEdenList {
         public List<MangaEdenMangaListItem> manga;
@@ -72,7 +64,7 @@ public class MangaEden {
                 File httpCacheDirectory = new File(context.getCacheDir(), "responses");
                 Cache cache = new Cache(httpCacheDirectory, 20 * 1024 * 1024);
                 okHttpClient.setCache(cache);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 Log.e("OKHttp", "Could not create http cache", e);
             }
 
@@ -107,7 +99,6 @@ public class MangaEden {
                 .fit().centerCrop()
                 .transform(PaletteTransformation.instance())
                 .into(imageView);
-
     }
 
     static public void setMangaArt(String url, final ImageView imageView, final MangaItemActivity activity) {
@@ -136,6 +127,5 @@ public class MangaEden {
                 .noFade()
                 .placeholder(R.drawable.ic_image_white)
                 .into(imageView);
-
     }
 }

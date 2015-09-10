@@ -17,6 +17,7 @@ import com.william.mangoreader.daogen.UserLibraryManga;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LibraryPageFragment extends Fragment {
@@ -47,32 +48,34 @@ public class LibraryPageFragment extends Fragment {
 
         CardLayoutAdapter cgAdapter = new CardLayoutAdapter(getActivity());
         userLibraryCategory = new ArrayList<>();
-        //TODO hacky methods still hacky. refactor later
-        String category = getResources().getStringArray(R.array.library_categories)[getArguments().getInt(PAGE_NUM)];
+
+        int page = getArguments().getInt((PAGE_NUM));
+        String category = getResources().getStringArray(R.array.library_categories)[page];
         for (UserLibraryManga manga : ((MangoReaderActivity) getActivity()).userLibraryMangaDao.loadAll()) {
             if (manga.getTab().compareTo(category) == 0)
                 userLibraryCategory.add(manga);
         }
 
         cgAdapter.setAllManga(convertUserLibraryManga(userLibraryCategory));
-        cgAdapter.getFilter().filter(""); // TODO why is this needed?
+        cgAdapter.getFilter().filter(""); // copies allManga to filteredManga
         mRecyclerView.setAdapter(cgAdapter);
 
         return rootView;
     }
 
-    //TODO more hacks :( holy shit I hate greendao
+    //TODO refactor this greendao hackiness
     private List<MangaEdenMangaListItem> convertUserLibraryManga(List<UserLibraryManga> libraryMangaList) {
         List<MangaEdenMangaListItem> result = new ArrayList<>();
         for (UserLibraryManga manga : libraryMangaList) {
-            MangaEdenMangaListItem temp2 = new MangaEdenMangaListItem();
-            temp2.title = manga.getTitle();
-            temp2.imageUrl = manga.getImageURL();
-            temp2.status = manga.getStatus();
-            temp2.hits = manga.getHits();
-            temp2.lastChapterDate = manga.getLastChapterDate();
-            temp2.id = manga.getMangaEdenId();
-            result.add(temp2);
+            MangaEdenMangaListItem mangaListItem = new MangaEdenMangaListItem();
+            mangaListItem.title = manga.getTitle();
+            mangaListItem.imageUrl = manga.getImageURL();
+            mangaListItem.genres = Arrays.asList(manga.getGenres().split("\t"));
+            mangaListItem.status = manga.getStatus();
+            mangaListItem.hits = manga.getHits();
+            mangaListItem.lastChapterDate = manga.getLastChapterDate();
+            mangaListItem.id = manga.getMangaEdenId();
+            result.add(mangaListItem);
         }
         return result;
     }

@@ -3,6 +3,7 @@ package com.william.mangoreader.fragment;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,6 @@ import com.android.volley.RequestQueue;
 import com.william.mangoreader.R;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
 import com.william.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
-import com.william.mangoreader.listener.BrowseMangaScrollListener;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
@@ -161,7 +161,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                     }
                 });
 
-                BrowseMangaScrollListener.loading = false;
                 Log.d("SORTING", "ENDING");
             }
         }.execute(list);
@@ -202,6 +201,18 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                 return false; // The searchview should show suggestions
             }
         });
+
+        MenuItem sortItem = menu.findItem(R.id.action_sort);
+        sortItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                DialogFragment dialog = SortDialogFragment.newInstance(cardAdapter);
+                dialog.show(getActivity().getSupportFragmentManager(), "SortDialogFragment");
+                return false;
+            }
+        });
+
+
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,11 @@ import com.william.mangoreader.daogen.UserLibraryMangaDao;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
@@ -35,7 +40,7 @@ import de.greenrobot.dao.query.QueryBuilder;
 /**
  * Layout adapter for adding cards
  */
-public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable {
+public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable, Serializable {
 
     private List<MangaEdenMangaListItem> allManga;
     private List<MangaEdenMangaListItem> filteredManga;
@@ -77,21 +82,30 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         builder.setItems(R.array.library_categories, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                String genres = TextUtils.join("\t", m.genres);
                 mangaItem[0] = new UserLibraryManga(
 //                null, //TODO need more robust primary key
                         m.id,
                         activity.getResources().getStringArray(R.array.library_categories)[which],
                         m.title,
                         m.imageUrl,
+                        genres,
                         m.status,
                         m.lastChapterDate,
                         m.hits);
 
                 ((MangoReaderActivity) activity).userLibraryMangaDao.insert(mangaItem[0]);
+
+                // popup snackbar for undo option
                 String added = "\"" + m.title + "\" added to your library.";
                 Snackbar
                         .make(activity.findViewById(R.id.drawer_layout), added, Snackbar.LENGTH_LONG)
-                                // .setAction() //TODO add undo on click
+                        .setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                removeFromLibrary(m);
+                            }
+                        })
                         .show();
             }
         });
@@ -177,33 +191,118 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         return new CardLayoutFilter();
     }
 
+    // mimics filter
+    public Filter getFilter(int sortOptionIndex, boolean isReverseOrder, List<Integer> selectedGenres) {
+        return new CardLayoutFilter(sortOptionIndex, isReverseOrder, selectedGenres);
+    }
+
 
     /**
      * Performs the filtering of the cards by the query term
      */
     private class CardLayoutFilter extends Filter {
+        private final int sortOptionIndex;
+        private final boolean isReverseOrder;
+        private final List<Integer> selectedGenresIndices;
+
+        public CardLayoutFilter() {
+            sortOptionIndex = -1;
+            isReverseOrder = false;
+            selectedGenresIndices = null;
+        }
+
+        public CardLayoutFilter(int sortOptionIndex, boolean isReverseOrder, List<Integer> selectedGenresIndices) {
+            this.sortOptionIndex = sortOptionIndex;
+            this.isReverseOrder = isReverseOrder;
+            this.selectedGenresIndices = selectedGenresIndices;
+        }
+
         @Override
         protected FilterResults performFiltering(CharSequence query) {
             filteredManga.clear();
             FilterResults results = new FilterResults();
 
-            if (query.length() == 0) {
-                // If search term empty, show all manga
-                filteredManga.addAll(allManga);
-            } else {
-                // Otherwise, do a case-blind search
-                // TODO replace with better fuzzy match algorithm
-                String filterPattern = query.toString().toLowerCase().trim();
+            if (sortOptionIndex != -1)
+                dialogFilter();
+            else {
+                if (query.length() == 0) {
+                    // If search term empty, show all manga
+                    filteredManga.addAll(allManga);
+                } else {
+                    // Otherwise, do a case-blind search
+                    // TODO replace with better fuzzy match algorithm
+                    String filterPattern = query.toString().toLowerCase().trim();
 
-                for (MangaEdenMangaListItem item : allManga) {
-                    if (item.title.toLowerCase().contains(filterPattern)) {
-                        filteredManga.add(item);
+                    for (MangaEdenMangaListItem item : allManga) {
+                        if (item.title.toLowerCase().contains(filterPattern)) {
+                            filteredManga.add(item);
+                        }
                     }
                 }
             }
             results.values = filteredManga;
             results.count = filteredManga.size();
             return results;
+        }
+
+        private void dialogFilter() {
+            String[] allGenres = activity.getResources().getStringArray(R.array.genre_list);
+            Collection<String> selectedGenres = new ArrayList<>();
+
+            // retrieve genre names
+            for (Integer index : selectedGenresIndices) {
+                selectedGenres.add(allGenres[index].toLowerCase());
+                Log.d("SORTING", "selected genre: " + allGenres[index].toLowerCase());
+            }
+
+            // filter genres first
+            for (MangaEdenMangaListItem manga : allManga) {
+                Collection<String> genres = new ArrayList<>();
+
+                for (String genre : manga.genres)
+                    genres.add(genre.toLowerCase());
+
+                genres.retainAll(selectedGenres); // removes genres not found in selected
+                if (genres.size() > 0) {
+                    filteredManga.add(manga);
+                }
+            }
+
+            // sort by specified order
+            switch (sortOptionIndex) {
+                case 1: // sort by popularity
+                    Collections.sort(filteredManga, new Comparator<MangaEdenMangaListItem>() {
+                        @Override
+                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+
+                            return ((Integer) rhs.hits).compareTo(lhs.hits);
+
+                        }
+                    });
+                case 2: // sort alphabetically
+                    Collections.sort(filteredManga, new Comparator<MangaEdenMangaListItem>() {
+                        @Override
+                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                            return rhs.title.compareTo(lhs.title);
+                        }
+                    });
+
+                    // ascending is Z to A
+                    if (!isReverseOrder)
+                        Collections.reverse(filteredManga);
+                    return;
+                default: // sort by recently updated
+                    Collections.sort(filteredManga, new Comparator<MangaEdenMangaListItem>() {
+                        @Override
+                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                            return ((Long) rhs.lastChapterDate).compareTo(lhs.lastChapterDate);
+                        }
+                    });
+            }
+
+            // reverse list
+            if (isReverseOrder)
+                Collections.reverse(filteredManga);
         }
 
         @Override

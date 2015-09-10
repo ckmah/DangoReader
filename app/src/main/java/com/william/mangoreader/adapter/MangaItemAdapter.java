@@ -16,6 +16,7 @@ import com.william.mangoreader.model.MangaEdenMangaChapterItem;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.parse.MangaEden;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -104,7 +105,7 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 detailsHolder.languageView.setText((detailsItem.getLanguage() == 0) ? "English" : "Italian");
 
                 Date lastChapterDate = new Date(detailsItem.getLastChapterDate() * 1000L);
-                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+                DateFormat sdf = SimpleDateFormat.getDateInstance();
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT-8"));
                 detailsHolder.lastChapterDateView.setText(sdf.format(lastChapterDate));
 

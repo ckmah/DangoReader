@@ -41,6 +41,88 @@
         <item>@string/browse_source3</item>
     </string-array>
 
+    <!-- sort order in browse -->
+    <string-array name="sort_items">
+        <item>@string/recently_updated</item>
+        <item>@string/popular</item>
+        <item>@string/a_to_z</item>
+    </string-array>
+
+    <string name="recently_updated">Recently Updated</string>
+    <string name="popular">Popular</string>
+    <string name="a_to_z">A to Z</string>
+
+    <string-array name="genre_list">
+        <item>@string/genre_action</item>
+        <item>@string/genre_adult</item>
+        <item>@string/genre_adventure</item>
+        <item>@string/genre_comedy</item>
+        <item>@string/genre_doujinshi</item>
+        <item>@string/genre_drama</item>
+        <item>@string/genre_ecchi</item>
+        <item>@string/genre_fantasy</item>
+        <item>@string/genre_gender_bender</item>
+        <item>@string/genre_harem</item>
+        <item>@string/genre_historical</item>
+        <item>@string/genre_horror</item>
+        <item>@string/genre_josei</item>
+        <item>@string/genre_martial_arts</item>
+        <item>@string/genre_mature</item>
+        <item>@string/genre_mecha</item>
+        <item>@string/genre_mystery</item>
+        <item>@string/genre_one_shot</item>
+        <item>@string/genre_psychological</item>
+        <item>@string/genre_romance</item>
+        <item>@string/genre_school_life</item>
+        <item>@string/genre_sci_fi</item>
+        <item>@string/genre_seinen</item>
+        <item>@string/genre_shoujo</item>
+        <item>@string/genre_shounen</item>
+        <item>@string/genre_slice_of_life</item>
+        <item>@string/genre_smut</item>
+        <item>@string/genre_sports</item>
+        <item>@string/genre_supernatural</item>
+        <item>@string/genre_tragedy</item>
+        <item>@string/genre_webtoons</item>
+        <item>@string/genre_yaoi</item>
+        <item>@string/genre_yuri</item>
+    </string-array>
+
+    <string name="genre_action">Action</string>
+    <string name="genre_adult">Adult</string>
+    <string name="genre_adventure">Adventure</string>
+    <string name="genre_comedy">Comedy</string>
+    <string name="genre_doujinshi">Doujinshi</string>
+    <string name="genre_drama">Drama</string>
+    <string name="genre_ecchi">Ecchi</string>
+    <string name="genre_fantasy">Fantasy</string>
+    <string name="genre_gender_bender">Gender Bender</string>
+    <string name="genre_harem">Harem</string>
+    <string name="genre_historical">Historical</string>
+    <string name="genre_horror">Horror</string>
+    <string name="genre_josei">Josei</string>
+    <string name="genre_martial_arts">Martial Arts</string>
+    <string name="genre_mature">Mature</string>
+    <string name="genre_mecha">Mecha</string>
+    <string name="genre_mystery">Mystery</string>
+    <string name="genre_one_shot">One Shot</string>
+    <string name="genre_psychological">Psychological</string>
+    <string name="genre_romance">Romance</string>
+    <string name="genre_school_life">School Life</string>
+    <string name="genre_sci_fi">Sci-fi</string>
+    <string name="genre_seinen">Seinen</string>
+    <string name="genre_shoujo">Shoujo</string>
+    <string name="genre_shounen">Shounen</string>
+    <string name="genre_slice_of_life">Slice Of Life</string>
+    <string name="genre_smut">Smut</string>
+    <string name="genre_sports">Sports</string>
+    <string name="genre_supernatural">Supernatural</string>
+    <string name="genre_tragedy">Tragedy</string>
+    <string name="genre_webtoons">Webtoons</string>
+    <string name="genre_yaoi">Yaoi</string>
+    <string name="genre_yuri">Yuri</string>
+
+
     <string name="browse_source1">MangaEden</string>
     <string name="browse_source2">MangaPanda</string>
     <string name="browse_source3">MangaHere</string>
@@ -65,7 +147,8 @@
     <!-- manga item activity intent keyValues -->
     <string name="manga_title">Manga Title</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_manga_viewer">MangaViewer</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
 </resources>
