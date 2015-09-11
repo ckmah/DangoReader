@@ -118,14 +118,13 @@
 
     <!-- expandedTitleTextAppearance and collapsedTitleTetAppearance must extend from TextAppearance-->
     <style name="MangaItemExpandedTitle" parent="@android:style/TextAppearance.Large">
+        <item name="android:textSize">30sp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:layout_marginBottom">56dp</item>
-        <item name="android:textSize">26sp</item>
+        <item name="android:layout_marginBottom">50dp</item>
     </style>
 
     <style name="MangaItemCollapsedTitle" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">@color/white</item>
-        <item name="android:layout_marginBottom">50dp</item>
     </style>
 
     <style name="MangaItemAuthor">
@@ -133,6 +132,7 @@
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_marginStart">56dp</item>
         <item name="android:layout_marginEnd">48dp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="MangaItemTag">
