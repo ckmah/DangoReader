@@ -3,6 +3,7 @@ package com.william.mangoreader.adapter;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -83,8 +84,9 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String genres = TextUtils.join("\t", m.genres);
+
                 mangaItem[0] = new UserLibraryManga(
-//                null, //TODO need more robust primary key
+//                        TABLE_ID, //TODO
                         m.id,
                         activity.getResources().getStringArray(R.array.library_categories)[which],
                         m.title,
@@ -94,19 +96,26 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                         m.lastChapterDate,
                         m.hits);
 
-                ((MangoReaderActivity) activity).userLibraryMangaDao.insert(mangaItem[0]);
-
-                // popup snackbar for undo option
-                String added = "\"" + m.title + "\" added to your library.";
-                Snackbar
-                        .make(activity.findViewById(R.id.drawer_layout), added, Snackbar.LENGTH_LONG)
-                        .setAction("UNDO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                removeFromLibrary(m);
-                            }
-                        })
-                        .show();
+                try {
+                    ((MangoReaderActivity) activity).userLibraryMangaDao.insert(mangaItem[0]);
+                    // popup snackbar for undo option
+                    String added = "\"" + m.title + "\" added to your library.";
+                    Snackbar
+                            .make(activity.findViewById(R.id.drawer_layout), added, Snackbar.LENGTH_LONG)
+                            .setAction("UNDO", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    removeFromLibrary(m);
+                                }
+                            })
+                            .show();
+                } catch (SQLiteConstraintException e) {
+                    String duplicate = "\"" + m.title + "\" is already in your library.";
+                    Snackbar
+                            .make(activity.findViewById(R.id.drawer_layout), duplicate, Snackbar.LENGTH_SHORT)
+                            .show();
+                    Log.d("LIBRARY", "Entry already exists");
+                }
             }
         });
         builder.show();
@@ -151,11 +160,12 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         ImageButton bookmarkToggle = (ImageButton) cardView.findViewById(R.id.card_bookmark_toggle);
 
         bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
+        bookmarkToggle.setSelected(false);
 
         bookmarkToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                button.setSelected(!button.isSelected());
+                button.setSelected(!button.isSelected()); //TODO toggles other buttons randomly; instead check if item is in library and toggle
 
                 if (button.isSelected()) {
                     addToLibrary(holder.manga);

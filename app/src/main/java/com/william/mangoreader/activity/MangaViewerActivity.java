@@ -46,16 +46,16 @@ public class MangaViewerActivity extends AppCompatActivity {
         STATUS_BAR_HEIGHT = (float) Math.ceil(25 * getResources().getDisplayMetrics().density);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_viewer);
-        mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        mToolbar.setVisibility(View.GONE);
 
-        setSupportActionBar(mToolbar);
+        mToolbar.setVisibility(View.GONE);
         getSupportActionBar().setTitle("");
 
         images = new ArrayList<>();

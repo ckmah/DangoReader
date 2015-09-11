@@ -48,8 +48,8 @@ public class MangaItemActivity extends AppCompatActivity {
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_item);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +61,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
         queue = VolleySingleton.getInstance(this).getRequestQueue();
 
-        mangaId = (String) getIntent().getExtras().get("mangaId");
+        mangaId = getIntent().getStringExtra("mangaId");
         fetchMangaDetailFromMangaEden();
     }
 
