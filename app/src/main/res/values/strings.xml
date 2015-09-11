@@ -150,5 +150,6 @@
     <string name="title_activity_manga_viewer">MangaViewer</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="action_refresh">Refresh</string>
 
 </resources>

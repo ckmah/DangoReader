@@ -3,6 +3,7 @@ package com.william.mangoreader.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -12,7 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
 import com.william.mangoreader.R;
 import com.william.mangoreader.adapter.LibraryPagerAdapter;
 
@@ -49,24 +50,23 @@ public class MyLibraryFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //     Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_my_library, menu);
+
+        // TODO implement fetching manga
+        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
+        refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Snackbar
+                        .make(getActivity().findViewById(R.id.drawer_layout), "Fetching manga...", Snackbar.LENGTH_SHORT)
+                        .show();
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.action_search) {
-            Toast.makeText(getActivity().getApplicationContext(), "Search action is selected!", Toast.LENGTH_SHORT).show();
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
