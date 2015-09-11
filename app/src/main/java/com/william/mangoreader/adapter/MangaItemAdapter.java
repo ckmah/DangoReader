@@ -91,8 +91,8 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 DetailsViewHolder detailsHolder = (DetailsViewHolder) holder;
                 MangaEdenMangaDetailItem detailsItem = (MangaEdenMangaDetailItem) data.get(position);
                 MangaEden.setMangaArt(detailsItem.getImageUrl(), detailsHolder.imageView, (MangaItemActivity) activity);
-                detailsHolder.titleView.setText(detailsItem.getTitle());
-                detailsHolder.authorView.setText(detailsItem.getAuthor());
+//                detailsHolder.titleView.setText(detailsItem.getTitle());
+//                detailsHolder.authorView.setText(detailsItem.getAuthor());
 
                 String categories = "";
                 for (String c : detailsItem.getCategories())
@@ -162,8 +162,8 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public DetailsViewHolder(View detailsView) {
             super(detailsView);
             imageView = (ImageView) detailsView.findViewById(R.id.manga_item_image_view);
-            titleView = (TextView) detailsView.findViewById(R.id.manga_item_title);
-            authorView = (TextView) detailsView.findViewById(R.id.manga_item_author);
+//            titleView = (TextView) detailsView.findViewById(R.id.manga_item_title);
+//            authorView = (TextView) detailsView.findViewById(R.id.manga_item_author);
             categoryView = (TextView) detailsView.findViewById(R.id.manga_item_categories);
             hitsView = (TextView) detailsView.findViewById(R.id.manga_item_hits);
             languageView = (TextView) detailsView.findViewById(R.id.manga_item_language);

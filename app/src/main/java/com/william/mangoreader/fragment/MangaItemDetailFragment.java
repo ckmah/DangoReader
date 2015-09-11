@@ -51,11 +51,11 @@ public class MangaItemDetailFragment extends Fragment {
         mangaDetailItem = (MangaEdenMangaDetailItem) getArguments().getSerializable(DESCRIPTION_FRAGMENT_KEY);
         rootView = inflater.inflate(R.layout.details_view, container, false);
 
-        titleView = (TextView) rootView.findViewById(R.id.manga_item_title);
-        titleView.setText(mangaDetailItem.getTitle());
-
-        subtitleView = (TextView) rootView.findViewById(R.id.manga_item_author);
-        subtitleView.setText(mangaDetailItem.getAuthor());
+//        titleView = (TextView) rootView.findViewById(R.id.manga_item_title);
+//        titleView.setText(mangaDetailItem.getTitle());
+//
+//        subtitleView = (TextView) rootView.findViewById(R.id.manga_item_author);
+//        subtitleView.setText(mangaDetailItem.getAuthor());
 
         descriptionView = (TextView) rootView.findViewById(R.id.manga_item_description);
         descriptionView.setText(mangaDetailItem.getDescription());

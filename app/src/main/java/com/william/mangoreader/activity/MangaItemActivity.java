@@ -1,7 +1,5 @@
 package com.william.mangoreader.activity;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -24,8 +20,6 @@ import com.william.mangoreader.adapter.MangaItemAdapter;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
-
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -41,7 +35,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private MangaItemAdapter mangaItemAdapter;
-    
+
     private Palette.Swatch primaryColor;
     private Palette.Swatch secondaryColor;
 
@@ -106,6 +100,9 @@ public class MangaItemActivity extends AppCompatActivity {
     }
 
     private void loadContent() {
+        ((TextView) findViewById(R.id.subtitle_author)).setText(manga.getAuthor());
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.manga_item_collapsing_toolbar);
+        collapsingToolbarLayout.setTitle(manga.getTitle());
         updateRecyclerView();
     }
 
@@ -127,65 +124,6 @@ public class MangaItemActivity extends AppCompatActivity {
 
         mRecyclerView.setVisibility(View.VISIBLE);
         findViewById(R.id.manga_item_header_placeholder).setVisibility(View.GONE);
-    }
-
-    public void extractColorPalette(Bitmap bitmap) {
-        List<Palette.Swatch> swatches = Palette.from(bitmap).maximumColorCount(20).generate().getSwatches();
-
-        primaryColor = new Palette.Swatch(R.color.grey, 0);
-        int primaryColorPopulation = 0;
-
-        secondaryColor = new Palette.Swatch(R.color.black, 0);
-        int secondaryColorPopulation = 0;
-
-        // extract primary color
-        for (Palette.Swatch swatch : swatches) {
-            int population = swatch.getPopulation();
-            if (population > primaryColorPopulation) {
-                primaryColorPopulation = population;
-                primaryColor = swatch;
-            }
-        }
-        // extract secondary color
-        for (Palette.Swatch swatch : swatches) {
-            int population = swatch.getPopulation();
-            if (population > secondaryColorPopulation && population != primaryColorPopulation) {
-                secondaryColorPopulation = population;
-                secondaryColor = swatch;
-            }
-        }
-
-        setLayoutColors(primaryColor);
-    }
-
-    public void setLayoutColors(Palette.Swatch primaryColor) {
-        Window window = getWindow();
-        // status bar assigned primary color
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(primaryColor.getRgb());
-
-        // scrim assigned primary color
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.manga_item_collapsing_toolbar);
-        collapsingToolbarLayout.setContentScrimColor(primaryColor.getRgb());
-
-        // details assigned secondary color
-        View detailsView = findViewById(R.id.details_view);
-        if (detailsView == null)
-            return;
-        detailsView.setBackgroundColor(secondaryColor.getRgb());
-
-        int textColor = contrastTextColor(secondaryColor.getRgb());
-        ((TextView) detailsView.findViewById(R.id.manga_item_title)).setTextColor(textColor);
-        ((TextView) detailsView.findViewById(R.id.manga_item_author)).setTextColor(textColor);
-        ((TextView) detailsView.findViewById(R.id.manga_item_description)).setTextColor(textColor);
-
-    }
-
-    public int contrastTextColor(int color) {
-        // Contrast formula derived from http://stackoverflow.com/a/1855903/1222351
-        double luminance = 0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color);
-        return luminance > 127 ? Color.BLACK : Color.WHITE;
     }
 
     @Deprecated
