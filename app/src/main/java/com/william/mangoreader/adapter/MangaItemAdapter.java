@@ -19,6 +19,7 @@ import com.william.mangoreader.parse.MangaEden;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -41,9 +42,12 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void loadMangaInfo(MangaEdenMangaDetailItem manga) {
+        List<MangaEdenMangaChapterItem> chaptersCopy = new ArrayList<>(manga.getChapters());
+        Collections.reverse(chaptersCopy);
+
         data.clear();
         data.add(manga);
-        data.addAll(manga.getChapters());
+        data.addAll(chaptersCopy);
         notifyDataSetChanged();
     }
 
