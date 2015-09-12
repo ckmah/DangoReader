@@ -1,6 +1,5 @@
 package com.william.mangoreader.activity;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -55,7 +54,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         userLibraryMangaDao = daoSession.getUserLibraryMangaDao();
 
 
-        displayView(R.id.navigation_item_1);
+        displayView(R.id.browse_nav_item);
     }
 
     private void initToolbar() {
@@ -108,22 +107,22 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
 
         // create corresponding fragment
         switch (id) {
-            case R.id.navigation_item_1: // library
+            case R.id.library_nav_item: // library
 //                findViewById(R.id.spinner_browse_sources).setVisibility(View.GONE);
                 findViewById(R.id.sliding_tabs).setVisibility(View.VISIBLE);
                 fragment = new MyLibraryFragment();
                 title = getString(R.string.title_my_library);
                 break;
-            case R.id.navigation_item_2: // browse
+            case R.id.browse_nav_item: // browse
 //                findViewById(R.id.spinner_browse_sources).setVisibility(View.VISIBLE);
                 findViewById(R.id.sliding_tabs).setVisibility(View.GONE);
                 fragment = new BrowseMangaFragment();
                 title = getString(R.string.title_browse);
                 break;
-            case R.id.navigation_item_3: // settings
-                Intent settingsIntent = new Intent(MangoReaderActivity.this, SettingsActivity.class);
-                startActivity(settingsIntent);
-                return;
+//            case R.id.navigation_item_3: // settings
+//                Intent settingsIntent = new Intent(MangoReaderActivity.this, SettingsActivity.class);
+//                startActivity(settingsIntent);
+//                return;
             default:
                 break;
         }
