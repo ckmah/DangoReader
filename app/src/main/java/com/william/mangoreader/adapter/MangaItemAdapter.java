@@ -76,6 +76,7 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     public void onClick(View v) {
                         Intent intent = new Intent(activity, MangaViewerActivity.class);
                         intent.putExtra("chapterId", chapterHolder.mangaEdenChapterId);
+                        intent.putExtra("chapterTitle", chapterHolder.titleView.getText().toString());
                         activity.startActivity(intent);
                     }
                 });

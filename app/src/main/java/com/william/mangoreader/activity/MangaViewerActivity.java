@@ -56,7 +56,8 @@ public class MangaViewerActivity extends AppCompatActivity {
         });
 
         mToolbar.setVisibility(View.GONE);
-        getSupportActionBar().setTitle("");
+        String chapterTitle = (String) getIntent().getExtras().get("chapterTitle");
+        getSupportActionBar().setTitle(chapterTitle);
 
         images = new ArrayList<>();
         chapterId = (String) getIntent().getExtras().get("chapterId");
