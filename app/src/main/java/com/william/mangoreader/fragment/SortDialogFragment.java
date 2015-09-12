@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,6 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Switch;
 
 import com.william.mangoreader.R;
 import com.william.mangoreader.adapter.CardLayoutAdapter;
@@ -67,13 +68,25 @@ public class SortDialogFragment extends DialogFragment {
         ((RadioButton) radioGroup.getChildAt(0)).setChecked(true);
 
         // add checkbox for each genre
-        GridLayout genreLayout = (GridLayout) dialogLayout.findViewById(R.id.genre_options);
+        final GridLayout genreLayout = (GridLayout) dialogLayout.findViewById(R.id.genre_options);
         for (int index = 0; index < genreList.length; index++) {
             AppCompatCheckBox checkBox = new AppCompatCheckBox(getActivity());
             checkBox.setId(genreListIds.get(index));
             checkBox.setText(genreList[index]);
             genreLayout.addView(checkBox);
         }
+
+        // auto check/uncheck dialog buttons
+        AppCompatCheckBox genreToggle = (AppCompatCheckBox) dialogLayout.findViewById(R.id.genre_toggle);
+        genreToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                for (int index = 0; index < genreLayout.getChildCount(); index++) {
+                    AppCompatCheckBox genre = (AppCompatCheckBox) genreLayout.getChildAt(index);
+                    genre.setChecked(isChecked);
+                }
+            }
+        });
 
         return new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Base_Theme_AppCompat_Light))
                 .setView(dialogLayout)
@@ -88,23 +101,14 @@ public class SortDialogFragment extends DialogFragment {
                         int sortOptionIndex = sortOptions.indexOfChild(radioButton);
 
                         // listen for reverse switch
-                        Switch reverseSwitch = (Switch) dialogLayout.findViewById(R.id.reverse_switch);
-                        final boolean[] sortReverse = {false};
-                        reverseSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                if (isChecked)
-                                    sortReverse[0] = true;
-                            }
-                        });
+                        SwitchCompat reverseSwitch = (SwitchCompat) dialogLayout.findViewById(R.id.reverse_switch);
 
                         // listen for selected genres
                         GridLayout genreList = (GridLayout) dialogLayout.findViewById(R.id.genre_options);
                         final boolean[] isCheckedGenres = new boolean[genreList.getChildCount()];
                         for (int index = 0; index < genreList.getChildCount(); index++) {
-                            final int finalIndex = index;
-                            AppCompatCheckBox genre = (AppCompatCheckBox) genreList.getChildAt(finalIndex);
-                            isCheckedGenres[finalIndex] = genre.isChecked();
+                            AppCompatCheckBox genre = (AppCompatCheckBox) genreList.getChildAt(index);
+                            isCheckedGenres[index] = genre.isChecked();
                         }
 
                         List<Integer> selectedGenres = new ArrayList<>();
@@ -113,7 +117,8 @@ public class SortDialogFragment extends DialogFragment {
                                 selectedGenres.add(index);
                         }
 
-                        cardAdapter.getFilter(sortOptionIndex, sortReverse[0], selectedGenres).filter("");
+                        cardAdapter.getFilter(sortOptionIndex, reverseSwitch.isChecked(), selectedGenres).filter("");
+                        ((RecyclerView)getActivity().findViewById(R.id.browse_recycler_view)).scrollToPosition(0);
                         // User clicked OK button
                     }
                 })
