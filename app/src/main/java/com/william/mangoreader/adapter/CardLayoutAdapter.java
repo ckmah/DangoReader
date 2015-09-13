@@ -71,12 +71,19 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         notifyDataSetChanged();
     }
 
+    private List findMangaInLibrary(final MangaEdenMangaListItem m) {
+        QueryBuilder qb = MangoReaderActivity.userLibraryMangaDao.queryBuilder();
+        qb.where(UserLibraryMangaDao.Properties.Title.eq(m.title), UserLibraryMangaDao.Properties.ImageURL.eq(m.imageUrl));
+        return qb.list();
+    }
+
     /**
      * Creates dialog for user to select library category to add to.
      *
      * @param m
      */
-    private void addToLibrary(final MangaEdenMangaListItem m) {
+    private boolean addToLibrary(final MangaEdenMangaListItem m, final View button) {
+        final boolean[] isAdded = {false};
         final UserLibraryManga[] mangaItem = new UserLibraryManga[1];
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Choose a category");
@@ -97,7 +104,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                         m.hits);
 
                 try {
-                    ((MangoReaderActivity) activity).userLibraryMangaDao.insert(mangaItem[0]);
+                    MangoReaderActivity.userLibraryMangaDao.insert(mangaItem[0]);
                     // popup snackbar for undo option
                     String added = "\"" + m.title + "\" added to your library.";
                     Snackbar
@@ -105,10 +112,11 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                             .setAction("UNDO", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    removeFromLibrary(m);
+                                    removeFromLibrary(m, button);
                                 }
                             })
                             .show();
+                    isAdded[0] = true;
                 } catch (SQLiteConstraintException e) {
                     String duplicate = "\"" + m.title + "\" is already in your library.";
                     Snackbar
@@ -120,22 +128,26 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         });
         builder.show();
 
-
+        return isAdded[0];
     }
 
-    private void removeFromLibrary(MangaEdenMangaListItem m) {
-        QueryBuilder qb = ((MangoReaderActivity) activity).userLibraryMangaDao.queryBuilder();
-        qb.where(UserLibraryMangaDao.Properties.Title.eq(m.title), UserLibraryMangaDao.Properties.ImageURL.eq(m.imageUrl));
-        List l = qb.list();
+    private void removeFromLibrary(final MangaEdenMangaListItem m, final View button) {
+        final List l = findMangaInLibrary(m);
         if (l.size() == 0) {
             Log.e("MangoReader", "No manga found in user library.");
         } else {
-            UserLibraryManga mangaItem = (UserLibraryManga) l.get(0);
-            ((MangoReaderActivity) activity).userLibraryMangaDao.delete(mangaItem);
+            final UserLibraryManga mangaItem = (UserLibraryManga) l.get(0);
+            MangoReaderActivity.userLibraryMangaDao.delete(mangaItem);
             String removed = "\"" + m.title + "\" removed from your library.";
             Snackbar
                     .make(activity.findViewById(R.id.drawer_layout), removed, Snackbar.LENGTH_LONG)
-                            // .setAction() //TODO add undo on click
+                    .setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            MangoReaderActivity.userLibraryMangaDao.insert((UserLibraryManga) l.get(0));
+                            button.setSelected(true);
+                        }
+                    })
                     .show();
         }
     }
@@ -152,7 +164,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, MangaItemActivity.class);
-                intent.putExtra("mangaId", holder.manga.id);
+                intent.putExtra("mangaListItem", holder.manga);
                 activity.startActivity(intent);
             }
         });
@@ -165,12 +177,15 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         bookmarkToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                button.setSelected(!button.isSelected()); //TODO toggles other buttons randomly; instead check if item is in library and toggle
+//                button.setSelected(!button.isSelected()); //TODO toggles other buttons randomly; instead check if item is in library and toggle
 
                 if (button.isSelected()) {
-                    addToLibrary(holder.manga);
+                    removeFromLibrary(holder.manga, button);
+                    button.setSelected(!button.isSelected());
                 } else {
-                    removeFromLibrary(holder.manga);
+                    if (addToLibrary(holder.manga, button)) {
+                        button.setSelected(true);
+                    }
                 }
             }
         });

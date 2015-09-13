@@ -34,7 +34,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
     public SQLiteDatabase userLibraryDb;
     public DaoMaster daoMaster;
     public DaoSession daoSession;
-    public UserLibraryMangaDao userLibraryMangaDao;
+    public static UserLibraryMangaDao userLibraryMangaDao;
 
     private Cursor cursor;
 
