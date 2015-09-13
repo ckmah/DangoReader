@@ -259,28 +259,25 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             String[] allGenres = activity.getResources().getStringArray(R.array.genre_list);
             Collection<String> selectedGenres = new ArrayList<>();
 
-            // no genres selected, return all manga
-            if (selectedGenresIndices.size() == 0) {
-                filteredManga.addAll(allManga);
-                return;
-            }
+            // no genres selected, skip filtering
+            if (selectedGenresIndices.size() > 0) {
+                // retrieve genre names
+                for (Integer index : selectedGenresIndices) {
+                    selectedGenres.add(allGenres[index].toLowerCase());
+                    Log.d("SORTING", "selected genre: " + allGenres[index].toLowerCase());
+                }
 
-            // retrieve genre names
-            for (Integer index : selectedGenresIndices) {
-                selectedGenres.add(allGenres[index].toLowerCase());
-                Log.d("SORTING", "selected genre: " + allGenres[index].toLowerCase());
-            }
+                // filter genres first
+                for (MangaEdenMangaListItem manga : allManga) {
+                    Collection<String> genres = new ArrayList<>();
 
-            // filter genres first
-            for (MangaEdenMangaListItem manga : allManga) {
-                Collection<String> genres = new ArrayList<>();
+                    for (String genre : manga.genres)
+                        genres.add(genre.toLowerCase());
 
-                for (String genre : manga.genres)
-                    genres.add(genre.toLowerCase());
-
-                genres.retainAll(selectedGenres); // removes genres not found in selected
-                if (genres.size() > 0) {
-                    allManga.add(manga);
+                    genres.retainAll(selectedGenres); // removes genres not found in selected
+                    if (genres.size() > 0) {
+                        filteredManga.add(manga);
+                    }
                 }
             }
 
