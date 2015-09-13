@@ -232,32 +232,38 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             filteredManga.clear();
             FilterResults results = new FilterResults();
 
-            if (sortOptionIndex != -1)
+            // dialogFragment sorting
+            if (sortOptionIndex != -1) {
                 dialogFilter();
-            else {
-                if (query.length() == 0) {
-                    // If search term empty, show all manga
-                    filteredManga.addAll(allManga);
-                } else {
-                    // Otherwise, do a case-blind search
-                    // TODO replace with better fuzzy match algorithm
-                    String filterPattern = query.toString().toLowerCase().trim();
+            } else if (query.length() == 0) {
+                // If search term empty, show all manga
+                filteredManga.addAll(allManga);
+            } else {
+                // Otherwise, do a case-blind search
+                // TODO replace with better fuzzy match algorithm
+                String filterPattern = query.toString().toLowerCase().trim();
 
-                    for (MangaEdenMangaListItem item : allManga) {
-                        if (item.title.toLowerCase().contains(filterPattern)) {
-                            filteredManga.add(item);
-                        }
+                for (MangaEdenMangaListItem item : allManga) {
+                    if (item.title.toLowerCase().contains(filterPattern)) {
+                        filteredManga.add(item);
                     }
                 }
             }
             results.values = filteredManga;
             results.count = filteredManga.size();
+
             return results;
         }
 
         private void dialogFilter() {
             String[] allGenres = activity.getResources().getStringArray(R.array.genre_list);
             Collection<String> selectedGenres = new ArrayList<>();
+
+            // no genres selected, return all manga
+            if (selectedGenresIndices.size() == 0) {
+                filteredManga.addAll(allManga);
+                return;
+            }
 
             // retrieve genre names
             for (Integer index : selectedGenresIndices) {
@@ -274,45 +280,47 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
                 genres.retainAll(selectedGenres); // removes genres not found in selected
                 if (genres.size() > 0) {
-                    filteredManga.add(manga);
+                    allManga.add(manga);
                 }
             }
 
             // sort by specified order
             switch (sortOptionIndex) {
-                case 1: // sort by popularity
-                    Collections.sort(filteredManga, new Comparator<MangaEdenMangaListItem>() {
-                        @Override
-                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
-
-                            return ((Integer) rhs.hits).compareTo(lhs.hits);
-
-                        }
-                    });
-                case 2: // sort alphabetically
-                    Collections.sort(filteredManga, new Comparator<MangaEdenMangaListItem>() {
-                        @Override
-                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
-                            return rhs.title.compareTo(lhs.title);
-                        }
-                    });
-
-                    // ascending is Z to A
-                    if (!isReverseOrder)
-                        Collections.reverse(filteredManga);
-                    return;
-                default: // sort by recently updated
-                    Collections.sort(filteredManga, new Comparator<MangaEdenMangaListItem>() {
+                case 0: // sort by recently updated
+                    Collections.sort(allManga, new Comparator<MangaEdenMangaListItem>() {
                         @Override
                         public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
                             return ((Long) rhs.lastChapterDate).compareTo(lhs.lastChapterDate);
                         }
                     });
+                    break;
+                case 1: // sort by popularity
+                    Collections.sort(allManga, new Comparator<MangaEdenMangaListItem>() {
+                        @Override
+                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                            return ((Integer) rhs.hits).compareTo(lhs.hits);
+                        }
+                    });
+                    break;
+                case 2: // sort alphabetically
+                    Collections.sort(allManga, new Comparator<MangaEdenMangaListItem>() {
+                        @Override // reverse comparison b/c default is Z to A
+                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                            return lhs.title.compareTo(rhs.title);
+                        }
+                    });
+
+                    break;
+                default:
+                    Log.d("SORTING", "Did not dialog sort by genres properly.");
             }
 
             // reverse list
-            if (isReverseOrder)
-                Collections.reverse(filteredManga);
+            if (isReverseOrder) {
+                Collections.reverse(allManga);
+            }
+
+            filteredManga.addAll(allManga);
         }
 
         @Override
