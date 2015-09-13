@@ -66,7 +66,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
 
     private void initNavigation() {
         NavigationView view = (NavigationView) findViewById(R.id.navigation_view);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.parent_layout);
         view.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.setDrawerListener(mDrawerToggle);

@@ -1,14 +1,9 @@
 package com.william.mangoreader.adapter;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteConstraintException;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.william.mangoreader.R;
+import com.william.mangoreader.UserLibraryHelper;
 import com.william.mangoreader.activity.MangaItemActivity;
-import com.william.mangoreader.activity.MangoReaderActivity;
 import com.william.mangoreader.adapter.helper.ItemTouchHelperAdapter;
-import com.william.mangoreader.daogen.UserLibraryManga;
-import com.william.mangoreader.daogen.UserLibraryMangaDao;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 
@@ -35,8 +28,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * Layout adapter for adding cards
@@ -65,91 +56,9 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         viewHolder.manga = filteredManga.get(position);
     }
 
-
     public void clearList() {
         filteredManga.clear();
         notifyDataSetChanged();
-    }
-
-    private List findMangaInLibrary(final MangaEdenMangaListItem m) {
-        QueryBuilder qb = MangoReaderActivity.userLibraryMangaDao.queryBuilder();
-        qb.where(UserLibraryMangaDao.Properties.Title.eq(m.title), UserLibraryMangaDao.Properties.ImageURL.eq(m.imageUrl));
-        return qb.list();
-    }
-
-    /**
-     * Creates dialog for user to select library category to add to.
-     *
-     * @param m
-     */
-    private boolean addToLibrary(final MangaEdenMangaListItem m, final View button) {
-        final boolean[] isAdded = {false};
-        final UserLibraryManga[] mangaItem = new UserLibraryManga[1];
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Choose a category");
-        builder.setItems(R.array.library_categories, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String genres = TextUtils.join("\t", m.genres);
-
-                mangaItem[0] = new UserLibraryManga(
-//                        TABLE_ID, //TODO
-                        m.id,
-                        activity.getResources().getStringArray(R.array.library_categories)[which],
-                        m.title,
-                        m.imageUrl,
-                        genres,
-                        m.status,
-                        m.lastChapterDate,
-                        m.hits);
-
-                try {
-                    MangoReaderActivity.userLibraryMangaDao.insert(mangaItem[0]);
-                    // popup snackbar for undo option
-                    String added = "\"" + m.title + "\" added to your library.";
-                    Snackbar
-                            .make(activity.findViewById(R.id.drawer_layout), added, Snackbar.LENGTH_LONG)
-                            .setAction("UNDO", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    removeFromLibrary(m, button);
-                                }
-                            })
-                            .show();
-                    isAdded[0] = true;
-                } catch (SQLiteConstraintException e) {
-                    String duplicate = "\"" + m.title + "\" is already in your library.";
-                    Snackbar
-                            .make(activity.findViewById(R.id.drawer_layout), duplicate, Snackbar.LENGTH_SHORT)
-                            .show();
-                    Log.d("LIBRARY", "Entry already exists");
-                }
-            }
-        });
-        builder.show();
-
-        return isAdded[0];
-    }
-
-    private void removeFromLibrary(final MangaEdenMangaListItem m, final View button) {
-        final List l = findMangaInLibrary(m);
-        if (l.size() == 0) {
-            Log.e("MangoReader", "No manga found in user library.");
-        } else {
-            final UserLibraryManga mangaItem = (UserLibraryManga) l.get(0);
-            MangoReaderActivity.userLibraryMangaDao.delete(mangaItem);
-            String removed = "\"" + m.title + "\" removed from your library.";
-            Snackbar
-                    .make(activity.findViewById(R.id.drawer_layout), removed, Snackbar.LENGTH_LONG)
-                    .setAction("UNDO", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            MangoReaderActivity.userLibraryMangaDao.insert((UserLibraryManga) l.get(0));
-                            button.setSelected(true);
-                        }
-                    })
-                    .show();
-        }
     }
 
     @Override
@@ -174,18 +83,14 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
         bookmarkToggle.setSelected(false);
 
+        // add/remove methods take care of toggling bookmark icon
         bookmarkToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-//                button.setSelected(!button.isSelected()); //TODO toggles other buttons randomly; instead check if item is in library and toggle
-
                 if (button.isSelected()) {
-                    removeFromLibrary(holder.manga, button);
-                    button.setSelected(!button.isSelected());
+                    UserLibraryHelper.removeFromLibrary(holder.manga, button, activity, true);
                 } else {
-                    if (addToLibrary(holder.manga, button)) {
-                        button.setSelected(true);
-                    }
+                    UserLibraryHelper.addToLibrary(holder.manga, button, activity);
                 }
             }
         });
@@ -220,7 +125,6 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     public Filter getFilter(int sortOptionIndex, boolean isReverseOrder, List<Integer> selectedGenres) {
         return new CardLayoutFilter(sortOptionIndex, isReverseOrder, selectedGenres);
     }
-
 
     /**
      * Performs the filtering of the cards by the query term

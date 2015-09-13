@@ -51,7 +51,7 @@ public class LibraryPageFragment extends Fragment {
 
         int page = getArguments().getInt((PAGE_NUM));
         String category = getResources().getStringArray(R.array.library_categories)[page];
-        for (UserLibraryManga manga : ((MangoReaderActivity) getActivity()).userLibraryMangaDao.loadAll()) {
+        for (UserLibraryManga manga : MangoReaderActivity.userLibraryMangaDao.loadAll()) {
             if (manga.getTab().compareTo(category) == 0)
                 userLibraryCategory.add(manga);
         }
