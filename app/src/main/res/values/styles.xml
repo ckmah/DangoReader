@@ -32,12 +32,6 @@
         <item name="android:background">@color/transparent</item>
     </style>
 
-    <style name="MangaItemActivityTheme">
-        <item name="android:statusBarColor">@color/transparent</item>
-        <!--<item name="android:windowTranslucentNavigation">false</item>-->
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
     <style name="card_grid_header">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
@@ -56,12 +50,12 @@
         <item name="android:stretchMode">columnWidth</item>
     </style>
 
+    <!-- This style also cloned in v21 -->
     <style name="card_native_actions_button_custom">
         <item name="android:layout_height">24dp</item>
         <item name="android:layout_width">24dp</item>
         <item name="android:padding">0dp</item>
         <item name="android:layout_margin">0dp</item>
-        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <style name="TabLayout" parent="Widget.Design.TabLayout">
@@ -78,8 +72,9 @@
         <item name="textAllCaps">true</item>
     </style>
 
+    <!-- This style also cloned in v21 -->
     <style name="CardBookmarkToggle">
-        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentRight">true</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:padding">@dimen/card_bookmark_padding</item>
     </style>
@@ -131,11 +126,12 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <!-- This style also cloned in v21 -->
     <style name="MangaItemAuthor">
         <item name="android:textColor">@color/white</item>
         <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:layout_marginStart">56dp</item>
-        <item name="android:layout_marginEnd">48dp</item>
+        <item name="android:layout_marginLeft">56dp</item>
+        <item name="android:layout_marginRight">48dp</item>
         <!--<item name="android:textSize">18sp</item>-->
     </style>
 
