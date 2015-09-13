@@ -49,11 +49,25 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     }
 
     @Override
-    public void onBindViewHolder(CardViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final CardViewHolder viewHolder, int position) {
         viewHolder.title.setText(filteredManga.get(position).title);
         viewHolder.subtitle.setText("Placeholder");
         MangaEden.setThumbnail(filteredManga.get(position).imageUrl, activity.getApplicationContext(), viewHolder.thumbnail);
         viewHolder.manga = filteredManga.get(position);
+        viewHolder.bookmarkToggle.setSelected(UserLibraryHelper.findMangaInLibrary(viewHolder.manga).size() > 0);
+        viewHolder.bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
+
+        // add/remove methods take care of toggling bookmark icon
+        viewHolder.bookmarkToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                if (button.isSelected()) {
+                    UserLibraryHelper.removeFromLibrary(viewHolder.manga, button, activity, true);
+                } else {
+                    UserLibraryHelper.addToLibrary(viewHolder.manga, button, activity);
+                }
+            }
+        });
     }
 
     public void clearList() {
@@ -75,23 +89,6 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                 Intent intent = new Intent(activity, MangaItemActivity.class);
                 intent.putExtra("mangaListItem", holder.manga);
                 activity.startActivity(intent);
-            }
-        });
-
-        ImageButton bookmarkToggle = (ImageButton) cardView.findViewById(R.id.card_bookmark_toggle);
-
-        bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
-        bookmarkToggle.setSelected(false);
-
-        // add/remove methods take care of toggling bookmark icon
-        bookmarkToggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View button) {
-                if (button.isSelected()) {
-                    UserLibraryHelper.removeFromLibrary(holder.manga, button, activity, true);
-                } else {
-                    UserLibraryHelper.addToLibrary(holder.manga, button, activity);
-                }
             }
         });
 
@@ -251,13 +248,14 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         public TextView subtitle;
         public ImageView thumbnail;
         public MangaEdenMangaListItem manga;
+        public ImageButton bookmarkToggle;
 
         public CardViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.card_title);
             subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
             thumbnail = (ImageView) itemView.findViewById(R.id.card_thumbnail);
-
+            bookmarkToggle = (ImageButton) itemView.findViewById(R.id.card_bookmark_toggle);
         }
     }
 }
