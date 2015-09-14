@@ -4,15 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="?android:attr/actionBarSize">
+    android:paddingTop="80dp">
 
     <LinearLayout
         style="@style/MangaItemDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <View style="@style/MangaItemPlaceholderTitle" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,8 +22,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:orientation="vertical">
-
-                <View style="@style/MangaItemPlaceholderAuthor" />
 
                 <View style="@style/MangaItemPlaceholderTag" />
 

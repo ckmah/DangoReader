@@ -27,12 +27,14 @@
         <item>@string/library_page2</item>
         <item>@string/library_page3</item>
         <item>@string/library_page4</item>
+        <item>@string/library_page5</item>
     </string-array>
 
-    <string name="library_page1">Reading</string>
-    <string name="library_page2">Backlog</string>
-    <string name="library_page3">On Hold</string>
-    <string name="library_page4">Finished</string>
+    <string name="library_page1">Plan to Read</string>
+    <string name="library_page2">Reading</string>
+    <string name="library_page3">On-Hold</string>
+    <string name="library_page4">Dropped</string>
+    <string name="library_page5">Completed</string>
 
     <!-- browse fragment source names -->
     <string-array name="browse_sources">

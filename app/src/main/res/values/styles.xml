@@ -87,10 +87,14 @@
     <style name="CardTitle">
         <item name="android:ellipsize">end</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">2</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/card_title_text_size</item>
-        <item name="android:layout_margin">@dimen/card_text_margin</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:layout_marginTop">@dimen/card_text_margin</item>
+        <item name="android:layout_marginBottom">@dimen/card_text_margin</item>
+        <item name="android:layout_marginLeft">@dimen/card_text_margin</item>
+        <item name="android:layout_marginRight">@dimen/card_text_right_margin</item>
     </style>
 
     <style name="CardSubtitle">

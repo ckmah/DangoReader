@@ -11,13 +11,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.william.mangoreader.DividerItemDecoration;
 import com.william.mangoreader.R;
+import com.william.mangoreader.UserLibraryHelper;
 import com.william.mangoreader.adapter.MangaItemAdapter;
 import com.william.mangoreader.model.MangaEdenMangaDetailItem;
+import com.william.mangoreader.model.MangaEdenMangaListItem;
 import com.william.mangoreader.parse.MangaEden;
 import com.william.mangoreader.volley.VolleySingleton;
 
@@ -29,7 +32,7 @@ import retrofit.RetrofitError;
  */
 public class MangaItemActivity extends AppCompatActivity {
 
-    private String mangaId;
+    private MangaEdenMangaListItem mangaListItem;
     private RequestQueue queue;
     private MangaEdenMangaDetailItem manga;
 
@@ -61,7 +64,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
         queue = VolleySingleton.getInstance(this).getRequestQueue();
 
-        mangaId = getIntent().getStringExtra("mangaId");
+        mangaListItem = (MangaEdenMangaListItem) getIntent().getSerializableExtra("mangaListItem");
         fetchMangaDetailFromMangaEden();
     }
 
@@ -69,6 +72,25 @@ public class MangaItemActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_manga_item, menu);
+        MenuItem bookmarkItem = menu.findItem(R.id.manga_item_bookmark_button);
+        final MangaItemActivity activity = this;
+        final ImageButton bookmarkToggle = new ImageButton(this);
+
+        bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
+        bookmarkToggle.setSelected((UserLibraryHelper.findMangaInLibrary(mangaListItem).size() > 0));
+        bookmarkToggle.setBackgroundColor(getResources().getColor(R.color.transparent));
+        bookmarkToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bookmarkToggle.isSelected()) {
+                    UserLibraryHelper.removeFromLibrary(mangaListItem, bookmarkToggle, activity, true);
+                } else {
+                    UserLibraryHelper.addToLibrary(mangaListItem, bookmarkToggle, activity);
+                }
+            }
+        });
+        bookmarkItem.setActionView(bookmarkToggle);
+
         return true;
     }
 
@@ -78,7 +100,7 @@ public class MangaItemActivity extends AppCompatActivity {
     }
 
     private void fetchMangaDetailFromMangaEden() {
-        MangaEden.getMangaEdenService(this).getMangaDetails(mangaId, new Callback<MangaEdenMangaDetailItem>() {
+        MangaEden.getMangaEdenService(this).getMangaDetails(mangaListItem.id, new Callback<MangaEdenMangaDetailItem>() {
             @Override
             public void success(MangaEdenMangaDetailItem item, retrofit.client.Response response) {
                 manga = item;
