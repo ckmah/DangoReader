@@ -24,7 +24,7 @@ public class UserLibraryHelper {
 
     public static List findMangaInLibrary(final MangaEdenMangaListItem m) {
         QueryBuilder qb = MangoReaderActivity.userLibraryMangaDao.queryBuilder();
-        qb.where(UserLibraryMangaDao.Properties.Title.eq(m.title), UserLibraryMangaDao.Properties.ImageURL.eq(m.imageUrl));
+        qb.where(UserLibraryMangaDao.Properties.MangaEdenId.eq(m.id));
         return qb.list();
     }
 
