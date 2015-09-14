@@ -52,16 +52,16 @@ public class MyLibraryFragment extends Fragment {
         inflater.inflate(R.menu.menu_my_library, menu);
 
         // TODO implement fetching manga
-        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
-        refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Snackbar
-                        .make(getActivity().findViewById(R.id.parent_layout), "Fetching manga...", Snackbar.LENGTH_SHORT)
-                        .show();
-                return false;
-            }
-        });
+//        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
+//        refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                Snackbar
+//                        .make(getActivity().findViewById(R.id.parent_layout), "Fetching manga...", Snackbar.LENGTH_SHORT)
+//                        .show();
+//                return false;
+//            }
+//        });
         super.onCreateOptionsMenu(menu, inflater);
     }
 
