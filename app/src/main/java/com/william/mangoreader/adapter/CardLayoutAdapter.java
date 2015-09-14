@@ -2,6 +2,7 @@ package com.william.mangoreader.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,13 +35,15 @@ import java.util.List;
  */
 public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable, Serializable {
 
+    public Fragment fragment;
     private List<MangaEdenMangaListItem> allManga;
-    private List<MangaEdenMangaListItem> filteredManga;
-    private Activity activity;
+    public List<MangaEdenMangaListItem> filteredManga;
+    public Activity activity;
 
-    public CardLayoutAdapter(Activity activity) {
+    public CardLayoutAdapter(Activity activity, Fragment fragment) {
         filteredManga = new ArrayList<>();
         this.activity = activity;
+        this.fragment = fragment;
         // Pass context or other static stuff that will be needed.
     }
 
@@ -49,7 +52,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     }
 
     @Override
-    public void onBindViewHolder(final CardViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final CardViewHolder viewHolder, final int position) {
         viewHolder.title.setText(filteredManga.get(position).title);
         viewHolder.subtitle.setText("Placeholder");
         MangaEden.setThumbnail(filteredManga.get(position).imageUrl, activity.getApplicationContext(), viewHolder.thumbnail);
@@ -57,14 +60,15 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         viewHolder.bookmarkToggle.setSelected(UserLibraryHelper.findMangaInLibrary(viewHolder.manga).size() > 0);
         viewHolder.bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
 
+        final CardLayoutAdapter adapter = this;
         // add/remove methods take care of toggling bookmark icon
         viewHolder.bookmarkToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
                 if (button.isSelected()) {
-                    UserLibraryHelper.removeFromLibrary(viewHolder.manga, button, activity, true);
+                    UserLibraryHelper.removeFromLibrary(viewHolder.manga, button, activity, true, adapter, position);
                 } else {
-                    UserLibraryHelper.addToLibrary(viewHolder.manga, button, activity);
+                    UserLibraryHelper.addToLibrary(viewHolder.manga, button, activity, adapter, position);
                 }
             }
         });

@@ -80,7 +80,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        cardAdapter = new CardLayoutAdapter(getActivity());
+        cardAdapter = new CardLayoutAdapter(getActivity(), this);
         cardAdapter.setAllManga(allManga);
         mRecyclerView.setAdapter(cardAdapter);
 

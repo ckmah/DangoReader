@@ -18,6 +18,7 @@ import com.william.mangoreader.model.MangaEdenMangaListItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class LibraryPageFragment extends Fragment {
@@ -46,7 +47,7 @@ public class LibraryPageFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        CardLayoutAdapter cgAdapter = new CardLayoutAdapter(getActivity());
+        CardLayoutAdapter cgAdapter = new CardLayoutAdapter(getActivity(), this);
         userLibraryCategory = new ArrayList<>();
 
         int page = getArguments().getInt((PAGE_NUM));
@@ -57,7 +58,7 @@ public class LibraryPageFragment extends Fragment {
         }
 
         cgAdapter.setAllManga(convertUserLibraryManga(userLibraryCategory));
-        cgAdapter.getFilter().filter(""); // copies allManga to filteredManga
+        cgAdapter.getFilter(2, false, Collections.<Integer>emptyList()).filter(""); // copies allManga to filteredManga, sorted alphabetically
         mRecyclerView.setAdapter(cgAdapter);
 
         return rootView;

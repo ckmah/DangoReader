@@ -3,13 +3,16 @@ package com.william.mangoreader;
 import android.app.Activity;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
 import com.william.mangoreader.activity.MangoReaderActivity;
+import com.william.mangoreader.adapter.CardLayoutAdapter;
 import com.william.mangoreader.daogen.UserLibraryManga;
 import com.william.mangoreader.daogen.UserLibraryMangaDao;
+import com.william.mangoreader.fragment.LibraryPageFragment;
 import com.william.mangoreader.model.MangaEdenMangaListItem;
 
 import java.util.List;
@@ -33,7 +36,7 @@ public class UserLibraryHelper {
      *
      * @param m
      */
-    public static boolean addToLibrary(final MangaEdenMangaListItem m, final View button, final Activity activity) {
+    public static boolean addToLibrary(final MangaEdenMangaListItem m, final View button, final Activity activity, final CardLayoutAdapter adapter, final int position) {
         String genres = TextUtils.join("\t", m.genres);
         added = "\"" + m.title + "\" added to your library under \"Plan to Read\"";
         removed = "\"" + m.title + "\" removed from your library.";
@@ -54,11 +57,18 @@ public class UserLibraryHelper {
                     .setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            removeFromLibrary(m, button, activity, false);
+                            removeFromLibrary(m, button, activity, false, adapter, position);
                             button.setSelected(false);
+                            if (adapter != null) { // basically called from browse or library
+                                removeFromListUpdate(adapter.fragment, adapter, position);
+                            }
                         }
                     })
                     .show();
+
+            if (adapter != null) { // basically called from browse or library
+                addToListUpdate(m, adapter.fragment, adapter, position);
+            }
             button.setSelected(true);
             return true;
         } catch (SQLiteConstraintException e) {
@@ -77,7 +87,7 @@ public class UserLibraryHelper {
      * @param activity
      * @param showUndo
      */
-    public static void removeFromLibrary(final MangaEdenMangaListItem m, final View button, final Activity activity, boolean showUndo) {
+    public static void removeFromLibrary(final MangaEdenMangaListItem m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
         final List l = findMangaInLibrary(m);
         added = "\"" + m.title + "\" added to your library under \"Plan to Read\"";
         removed = "\"" + m.title + "\" removed from your library.";
@@ -103,6 +113,9 @@ public class UserLibraryHelper {
                             MangoReaderActivity.userLibraryMangaDao.insert((UserLibraryManga) l.get(0));
                             Snackbar.make(activity.findViewById(R.id.parent_layout), removed, Snackbar.LENGTH_LONG);
                             button.setSelected(true);
+                            if (adapter != null) { // basically called from browse or library
+                                addToListUpdate(m, adapter.fragment, adapter, position);
+                            }
                         }
                     })
                     .show();
@@ -111,6 +124,25 @@ public class UserLibraryHelper {
             Snackbar
                     .make(activity.findViewById(R.id.parent_layout), removed, Snackbar.LENGTH_LONG)
                     .show();
+        }
+        if (adapter != null) { // basically called from browse or library
+            removeFromListUpdate(adapter.fragment, adapter, position);
+        }
+    }
+
+    public static void removeFromListUpdate(Fragment fragment, CardLayoutAdapter adapter, int position) {
+        if (fragment instanceof LibraryPageFragment) {
+            adapter.filteredManga.remove(position);
+            adapter.notifyItemRemoved(position);
+            adapter.notifyItemRangeChanged(position, adapter.filteredManga.size());
+        }
+    }
+
+    public static void addToListUpdate(MangaEdenMangaListItem m, Fragment fragment, CardLayoutAdapter adapter, int position) {
+        if (fragment instanceof LibraryPageFragment) {
+            adapter.filteredManga.add(position, m);
+            adapter.notifyItemInserted(position);
+            adapter.notifyItemRangeChanged(position, adapter.filteredManga.size());
         }
     }
 }
