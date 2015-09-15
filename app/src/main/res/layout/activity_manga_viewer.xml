@@ -7,7 +7,7 @@
     android:id="@+id/container"
     tools:context=".MangaViewerActivity">
 
-    <com.william.mangoreader.activity.viewpager.MangaViewPager
+    <ckmah.mangoreader.activity.viewpager.MangaViewPager
         android:id="@+id/manga_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
