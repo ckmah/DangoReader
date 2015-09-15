@@ -26,7 +26,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:collapsedTitleTextAppearance="@style/MangaItemCollapsedTitle"
-            app:contentScrim="?android:attr/colorPrimary"
             app:expandedTitleMarginBottom="44dp"
             app:expandedTitleMarginEnd="48dp"
             app:expandedTitleMarginStart="56dp"

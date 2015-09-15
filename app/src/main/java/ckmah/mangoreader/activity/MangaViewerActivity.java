@@ -2,6 +2,7 @@ package ckmah.mangoreader.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -42,7 +43,9 @@ public class MangaViewerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_viewer);
 
-        getWindow().setStatusBarColor(getResources().getColor(R.color.translucent_black));
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.translucent_black));
+        }
         STATUS_BAR_HEIGHT = (float) Math.ceil(25 * getResources().getDisplayMetrics().density);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_viewer);

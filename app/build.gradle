@@ -4,17 +4,16 @@ android {
     signingConfigs {
         config {
             keyAlias 'MangoReaderKey'
-            keyPassword '6bWSjDDjvTKf'
-            storeFile file('C:/Users/Clarence/Documents/mangoreader.release.jks')
-            storePassword '6bWSjDDjvTKf'
+            keyPassword 'uC7t2zNQySAC'
+            storeFile file('C:/Users/Clarence/Documents/MangoReader.alpha.release.jks')
+            storePassword 'uC7t2zNQySAC'
         }
     }
     compileSdkVersion 21
     buildToolsVersion "22.0.1"
     defaultConfig {
-        applicationId 'ckmah.mangoreader'
-        minSdkVersion 21
-        //noinspection OldTargetApi
+        applicationId "ckmah.mangoreader"
+        minSdkVersion 16
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -46,7 +45,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.mcxiaoke.volley:library:1.0.17'
-    compile 'it.sephiroth.android.library.imagezoom:imagezoom:+'
+    compile 'it.sephiroth.android.library.imagezoom:imagezoom:2.2.2'
     compile 'de.greenrobot:greendao:2.0.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
