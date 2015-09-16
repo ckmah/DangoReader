@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/parent_layout"
     android:theme="@style/MangaItemActivityTheme"
-    tools:context="com.william.mangoreader.activity.MangaItemActivity">
+    tools:context="ckmah.mangoreader.activity.MangaItemActivity">
 
     <include layout="@layout/manga_item_header_placeholder" />
 
