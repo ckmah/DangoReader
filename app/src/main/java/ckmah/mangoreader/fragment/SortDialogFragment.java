@@ -1,4 +1,4 @@
-package com.william.mangoreader.fragment;
+package ckmah.mangoreader.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -19,11 +19,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.william.mangoreader.R;
-import com.william.mangoreader.adapter.CardLayoutAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import ckmah.mangoreader.adapter.CardLayoutAdapter;
 
 public class SortDialogFragment extends DialogFragment {
 

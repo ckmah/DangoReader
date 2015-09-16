@@ -1,4 +1,4 @@
-package com.william.mangoreader.adapter;
+package ckmah.mangoreader.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,11 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.william.mangoreader.R;
-import com.william.mangoreader.UserLibraryHelper;
-import com.william.mangoreader.activity.MangaItemActivity;
-import com.william.mangoreader.adapter.helper.ItemTouchHelperAdapter;
-import com.william.mangoreader.model.MangaEdenMangaListItem;
-import com.william.mangoreader.parse.MangaEden;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,6 +26,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
+
+import ckmah.mangoreader.UserLibraryHelper;
+import ckmah.mangoreader.activity.MangaItemActivity;
+import ckmah.mangoreader.adapter.helper.ItemTouchHelperAdapter;
+import ckmah.mangoreader.model.MangaEdenMangaListItem;
+import ckmah.mangoreader.parse.MangaEden;
 
 /**
  * Layout adapter for adding cards
