@@ -25,10 +25,12 @@ import com.william.mangoreader.parse.MangaEden;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Layout adapter for adding cards
@@ -49,6 +51,41 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
     public void setAllManga(List<MangaEdenMangaListItem> allManga) {
         this.allManga = allManga;
+    }
+
+    /**
+     * Takes in list of manga to filter, returns filtered list.
+     *
+     * @param mangaList
+     * @return
+     */
+    public List<MangaEdenMangaListItem> nsfwFilter(List<MangaEdenMangaListItem> mangaList) {
+        List<MangaEdenMangaListItem> mangaListCopy = new ArrayList<>();
+        mangaListCopy.addAll(mangaList);
+        mangaList.clear();
+
+        List<String> nsfwGenres = Arrays.asList(activity.getResources().getStringArray(R.array.NSFW_genres));
+
+        // for case insensitive comparison
+        ListIterator<String> iterator = nsfwGenres.listIterator();
+        while (iterator.hasNext()) {
+            iterator.set(iterator.next().toLowerCase());
+        }
+
+        // filter genres first
+        for (MangaEdenMangaListItem manga : mangaListCopy) {
+            Collection<String> genres = new ArrayList<>();
+
+            for (String genre : manga.genres)
+                genres.add(genre.toLowerCase());
+
+            genres.retainAll(nsfwGenres);
+            // only add if doesn't have any of the NSFW genres
+            if (genres.size() == 0) {
+                mangaList.add(manga);
+            }
+        }
+        return mangaList;
     }
 
     @Override
@@ -180,7 +217,9 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             Collection<String> selectedGenres = new ArrayList<>();
 
             // filter by genre, skip if none selected
-            if (selectedGenresIndices.size() > 0) {
+            if (selectedGenresIndices.size() == 0) {
+                filteredManga.addAll(allManga);
+            } else {
                 // retrieve genre names
                 for (Integer index : selectedGenresIndices) {
                     selectedGenres.add(allGenres[index].toLowerCase());
