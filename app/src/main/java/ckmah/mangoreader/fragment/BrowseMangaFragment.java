@@ -149,7 +149,8 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
             protected void onPostExecute(List<MangaEdenMangaListItem> results) {
                 // On UI thread, update list of all manga and display them
                 allManga.clear();
-                allManga.addAll(results);
+                allManga = cardAdapter.nsfwFilter(results);
+                cardAdapter.setAllManga(allManga);
                 cardAdapter.getFilter().filter("");
 
 

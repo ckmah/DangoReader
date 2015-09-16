@@ -90,6 +90,16 @@
         <item>@string/genre_yuri</item>
     </string-array>
 
+    <string-array name="NSFW_genres">
+        <item>@string/genre_adult</item>
+        <item>@string/genre_doujinshi</item>
+        <item>@string/genre_ecchi</item>
+        <item>@string/genre_mature</item>
+        <item>@string/genre_smut</item>
+        <item>@string/genre_yaoi</item>
+        <item>@string/genre_yuri</item>
+    </string-array>
+
     <string name="genre_action">Action</string>
     <string name="genre_adult">Adult</string>
     <string name="genre_adventure">Adventure</string>
