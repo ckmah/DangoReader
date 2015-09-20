@@ -41,16 +41,18 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         data.add(manga);
     }
 
-    // In-memory list of chapterIds so we can go onto next/prev chapters
-    private ArrayList<String> chapterIds = new ArrayList<>();
+    // In-memory list of ids and titles so we can go onto next/prev chapters
+    private ArrayList<String> chapterIds = new ArrayList<>(), chapterTitles = new ArrayList<>();
 
     public void loadMangaInfo(MangaEdenMangaDetailItem manga) {
         List<MangaEdenMangaChapterItem> chaptersCopy = new ArrayList<>(manga.getChapters());
         Collections.reverse(chaptersCopy);
 
         chapterIds.clear();
+        chapterTitles.clear();
         for (MangaEdenMangaChapterItem item : chaptersCopy) {
             chapterIds.add(item.getId());
+            chapterTitles.add(item.getTitle());
         }
 
         data.clear();
@@ -88,9 +90,8 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     public void onClick(View v) {
                         Intent intent = new Intent(activity, MangaViewerActivity.class);
                         intent.putExtra("chapterIds", chapterIds);
+                        intent.putExtra("chapterTitles", chapterTitles);
                         intent.putExtra("chapterIndex", chapterIds.indexOf(chapterHolder.mangaEdenChapterId));
-//                        intent.putExtra("chapterId", chapterHolder.mangaEdenChapterId);
-                        intent.putExtra("chapterTitle", chapterHolder.titleView.getText().toString());
                         activity.startActivity(intent);
                     }
                 });

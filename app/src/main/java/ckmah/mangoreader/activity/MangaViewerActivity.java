@@ -26,12 +26,14 @@ import retrofit.RetrofitError;
 public class MangaViewerActivity extends AppCompatActivity {
 
     private static float STATUS_BAR_HEIGHT;
+    private Toolbar mToolbar;
+    private MangaViewPager mangaViewPager;
 
     private List<MangaEdenImageItem> images;
-    private MangaViewPager mangaViewPager;
     private MangaImagePagerAdapter imageAdapter;
 
-    private Toolbar mToolbar;
+    private int chapterIndex;
+    private ArrayList<String> chapterIds, chapterTitles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +56,6 @@ public class MangaViewerActivity extends AppCompatActivity {
         });
 
         mToolbar.setVisibility(View.GONE);
-        String chapterTitle = (String) getIntent().getExtras().get("chapterTitle");
-        getSupportActionBar().setTitle(chapterTitle);
 
         images = new ArrayList<>();
 
@@ -101,10 +101,18 @@ public class MangaViewerActivity extends AppCompatActivity {
 
         chapterIndex = getIntent().getExtras().getInt("chapterIndex");
         chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
-        fetchMangaImagesFromMangaEden();
+        chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
+        displayChapter();
     }
 
-    private void fetchMangaImagesFromMangaEden() {
+    private void displayChapter() {
+        // Set the chapter title accordingly
+        String chapterTitle = chapterTitles.get(chapterIndex);
+        getSupportActionBar().setTitle(chapterTitle);
+
+        // TODO show progressbar or loading indicator
+
+        // Fetch the chapter images in the background
         String chapterId = chapterIds.get(chapterIndex);
         MangaEden.getMangaEdenService(this).getMangaImages(chapterId, new Callback<MangaEden.MangaEdenChapter>() {
             @Override
@@ -112,7 +120,9 @@ public class MangaViewerActivity extends AppCompatActivity {
                 images = chapter.images;
                 imageAdapter = new MangaImagePagerAdapter(getSupportFragmentManager(), images.size());
                 mangaViewPager.setAdapter(imageAdapter);
-                loadContent();
+
+                // Show the very first page
+                mangaViewPager.setCurrentItem(images.size() - 1);
             }
 
             @Override
@@ -122,16 +132,9 @@ public class MangaViewerActivity extends AppCompatActivity {
         });
     }
 
-    private void loadContent() {
-        mangaViewPager.setCurrentItem(images.size() - 1);
-        // TODO: update other stuff
-    }
-
-    int chapterIndex;
-    ArrayList<String> chapterIds;
     public void nextChapter() {
         chapterIndex++;
-        fetchMangaImagesFromMangaEden();
+        displayChapter();
     }
 
     @Override

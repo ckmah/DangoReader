@@ -56,10 +56,13 @@ public class MangaViewPager extends ViewPager {
     }
 
     // Callback, for viewpager to advance either the page or the chapter
+    // TODO trigger this on swipe in addition to touch
     public void onNext() {
         if (getCurrentItem() == 0) {
             // Currently on the last page, time for next chapter
             activity.nextChapter();
+
+            // TODO show system chrome to remind user of next chapter
         } else {
             // Move on to the next page
             setCurrentItem(getCurrentItem() - 1);
