@@ -37,7 +37,7 @@ public class MVPGestureListener implements GestureDetector.OnGestureListener, Ge
         float screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
         if (xPos < LEFT_SIDE * screenWidth) {
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+            viewPager.onNext();
 
             // TODO go back one page/chapter
         } else if (xPos > RIGHT_SIDE * screenWidth) {

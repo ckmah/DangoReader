@@ -10,11 +10,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
+import ckmah.mangoreader.activity.MangaViewerActivity;
 import ckmah.mangoreader.listener.MVPGestureListener;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 public class MangaViewPager extends ViewPager {
 
+    public MangaViewerActivity activity; // THESE CIRCULAR DEPENDENCIES THO
     private GestureDetector gestureDetector;
     private Context context;
 
@@ -50,6 +52,17 @@ public class MangaViewPager extends ViewPager {
             boolean scroll = super.canScroll(v, checkV, dx, x, y);
             Log.d("ViewPager", "ViewPager canScroll: " + scroll);
             return scroll;
+        }
+    }
+
+    // Callback, for viewpager to advance either the page or the chapter
+    public void onNext() {
+        if (getCurrentItem() == 0) {
+            // Currently on the last page, time for next chapter
+            activity.nextChapter();
+        } else {
+            // Move on to the next page
+            setCurrentItem(getCurrentItem() - 1);
         }
     }
 

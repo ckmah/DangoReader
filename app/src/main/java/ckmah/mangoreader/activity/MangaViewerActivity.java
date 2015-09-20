@@ -60,6 +60,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         images = new ArrayList<>();
 
         mangaViewPager = (MangaViewPager) findViewById(R.id.manga_view_pager);
+        mangaViewPager.activity = this;
         mangaViewPager.setMVPGestureListener(new MVPGestureListener(this, mangaViewPager) {
             @Override
             public void hideSystemUI() {
@@ -98,12 +99,13 @@ public class MangaViewerActivity extends AppCompatActivity {
             }
         });
 
-        String chapterId = (String) getIntent().getExtras().get("chapterId");
-        fetchMangaImagesFromMangaEden(chapterId);
+        chapterIndex = getIntent().getExtras().getInt("chapterIndex");
+        chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
+        fetchMangaImagesFromMangaEden();
     }
 
-    private void fetchMangaImagesFromMangaEden(String chapterId) {
-
+    private void fetchMangaImagesFromMangaEden() {
+        String chapterId = chapterIds.get(chapterIndex);
         MangaEden.getMangaEdenService(this).getMangaImages(chapterId, new Callback<MangaEden.MangaEdenChapter>() {
             @Override
             public void success(MangaEden.MangaEdenChapter chapter, retrofit.client.Response response) {
@@ -123,6 +125,13 @@ public class MangaViewerActivity extends AppCompatActivity {
     private void loadContent() {
         mangaViewPager.setCurrentItem(images.size() - 1);
         // TODO: update other stuff
+    }
+
+    int chapterIndex;
+    ArrayList<String> chapterIds;
+    public void nextChapter() {
+        chapterIndex++;
+        fetchMangaImagesFromMangaEden();
     }
 
     @Override
