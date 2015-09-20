@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.Window;
 
 import ckmah.mangoreader.listener.MVPGestureListener;
@@ -17,15 +16,7 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 public class MangaViewPager extends ViewPager {
 
     private GestureDetector gestureDetector;
-    private ViewConfiguration vc;
     private Context context;
-
-    private static final float SCROLL_TOLERANCE = 50f;
-
-    private float startX;
-    private float startY;
-    private boolean isScrolling;
-    private MVPGestureListener MVPGestureListener;
 
     public MangaViewPager(Context context) {
         super(context);
@@ -40,7 +31,6 @@ public class MangaViewPager extends ViewPager {
     private void init(Context context) {
         this.context = context;
         Window window = ((AppCompatActivity) context).getWindow();
-        vc = ViewConfiguration.get(context);
 //        gestureDetector = new GestureDetector(context, new MVPGestureListener(context, this));
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION

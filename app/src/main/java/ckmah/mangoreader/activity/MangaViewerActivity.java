@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
-import com.android.volley.RequestQueue;
 import com.william.mangoreader.R;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import ckmah.mangoreader.adapter.MangaImagePagerAdapter;
 import ckmah.mangoreader.listener.MVPGestureListener;
 import ckmah.mangoreader.model.MangaEdenImageItem;
 import ckmah.mangoreader.parse.MangaEden;
-import ckmah.mangoreader.volley.VolleySingleton;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 
@@ -33,9 +31,6 @@ public class MangaViewerActivity extends AppCompatActivity {
     private MangaViewPager mangaViewPager;
     private MangaImagePagerAdapter imageAdapter;
 
-    private String chapterId;
-
-    private RequestQueue queue;
     private Toolbar mToolbar;
 
     @Override
@@ -63,8 +58,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(chapterTitle);
 
         images = new ArrayList<>();
-        chapterId = (String) getIntent().getExtras().get("chapterId");
-        queue = VolleySingleton.getInstance(this).getRequestQueue();
+
         mangaViewPager = (MangaViewPager) findViewById(R.id.manga_view_pager);
         mangaViewPager.setMVPGestureListener(new MVPGestureListener(this, mangaViewPager) {
             @Override
@@ -104,10 +98,11 @@ public class MangaViewerActivity extends AppCompatActivity {
             }
         });
 
-        fetchMangaImagesFromMangaEden();
+        String chapterId = (String) getIntent().getExtras().get("chapterId");
+        fetchMangaImagesFromMangaEden(chapterId);
     }
 
-    private void fetchMangaImagesFromMangaEden() {
+    private void fetchMangaImagesFromMangaEden(String chapterId) {
 
         MangaEden.getMangaEdenService(this).getMangaImages(chapterId, new Callback<MangaEden.MangaEdenChapter>() {
             @Override
