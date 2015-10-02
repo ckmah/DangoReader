@@ -45,8 +45,8 @@
 
     <!-- sort order in browse -->
     <string-array name="sort_items">
-        <item>@string/recently_updated</item>
         <item>@string/popular</item>
+        <item>@string/recently_updated</item>
         <item>@string/a_to_z</item>
     </string-array>
 

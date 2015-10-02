@@ -234,7 +234,12 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="sort_dialog" parent="AlertDialog.AppCompat"></style>
+    <style name="sort_dialog" parent="AlertDialog.AppCompat">
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
 
     <style name="genre_checkbox"></style>
 

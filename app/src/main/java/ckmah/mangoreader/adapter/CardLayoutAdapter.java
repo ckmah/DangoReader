@@ -204,19 +204,19 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
             // sort by specified order
             switch (sortOptionIndex) {
-                case 0: // sort by recently updated
-                    Collections.sort(allManga, new Comparator<MangaEdenMangaListItem>() {
-                        @Override
-                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
-                            return ((Long) rhs.lastChapterDate).compareTo(lhs.lastChapterDate);
-                        }
-                    });
-                    break;
-                case 1: // sort by popularity
+                case 0: // sort by popularity
                     Collections.sort(allManga, new Comparator<MangaEdenMangaListItem>() {
                         @Override
                         public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
                             return ((Integer) rhs.hits).compareTo(lhs.hits);
+                        }
+                    });
+                    break;
+                case 1: // sort by recently updated
+                    Collections.sort(allManga, new Comparator<MangaEdenMangaListItem>() {
+                        @Override
+                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                            return ((Long) rhs.lastChapterDate).compareTo(lhs.lastChapterDate);
                         }
                     });
                     break;
