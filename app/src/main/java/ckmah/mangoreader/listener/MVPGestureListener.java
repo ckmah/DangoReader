@@ -41,7 +41,7 @@ public class MVPGestureListener implements GestureDetector.OnGestureListener, Ge
 
             // TODO go back one page/chapter
         } else if (xPos > RIGHT_SIDE * screenWidth) {
-            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+            viewPager.onPrevious();
 
             // TODO go forward one page/chapter
         } else {

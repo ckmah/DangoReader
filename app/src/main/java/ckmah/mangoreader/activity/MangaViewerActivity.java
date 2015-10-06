@@ -33,6 +33,7 @@ public class MangaViewerActivity extends AppCompatActivity {
     private MangaImagePagerAdapter imageAdapter;
 
     private int chapterIndex;
+    private int chapterTotalSize;
     private ArrayList<String> chapterIds, chapterTitles;
 
     @Override
@@ -102,6 +103,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         chapterIndex = getIntent().getExtras().getInt("chapterIndex");
         chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
         chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
+        chapterTotalSize = chapterIds.size();
         displayChapter();
     }
 
@@ -132,9 +134,35 @@ public class MangaViewerActivity extends AppCompatActivity {
         });
     }
 
-    public void nextChapter() {
-        chapterIndex++;
-        displayChapter();
+    /**
+     * Navigates to next available chapter.
+     * @return Returns chapter number. Returns -1 if no next chapter.
+     */
+    public int nextChapter() {
+        if (chapterIndex == chapterTotalSize - 1) {
+            // handle last chapter
+            return -1;
+        } else {
+            chapterIndex++;
+            displayChapter();
+            return chapterIndex;
+        }
+    }
+
+    /**
+     * Navigates to previous chapter if available.
+     * @return Returns chapter number. Returns -1 if no previous chapter.
+     */
+    public int prevChapter() {
+        if (chapterIndex == 0) {
+            // handle first chapter
+            return -1;
+        } else {
+            Log.d("MVACTIVITY","PREVIOUS CHAPTER");
+            chapterIndex--;
+            displayChapter();
+            return chapterIndex;
+        }
     }
 
     @Override
