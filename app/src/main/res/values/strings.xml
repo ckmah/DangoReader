@@ -137,21 +137,19 @@
     <string name="my_library_fragment_2">Why don\'t you go add some?</string>
 
     <!--  preference items  -->
-    <string name="pref_data">Only preload chapter over Wi-Fi</string>
-    <string name="pref_data_summary">Wi-Fi toggle summary</string>
-    <string name="pref_awake">Wakelock</string>
-    <string name="pref_awake_summary">Keep display awake while reading</string>
+    <string name="pref_read_direction">Read left to right</string>
+    <string name="pref_read_direction_summary">Default reading direction is right to left</string>
     <string name="pref_pagenum">Page numbers</string>
     <string name="pref_pagenum_summary">Show page numbers while reading</string>
+
     <string name="title_activity_manga_item">MangaItemActivity</string>
-    <string name="hello_world">Hello world!</string>
 
     <!-- manga item activity intent keyValues -->
-    <string name="manga_title">Manga Title</string>
-
     <string name="title_activity_manga_viewer">MangaViewer</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="action_refresh">Refresh</string>
+    <string name="PREF_KEY_READ_DIRECTION">read_direction</string>
+    <string name="PREF_KEY_PAGE_NUMBERS">pagenum</string>
 
 </resources>

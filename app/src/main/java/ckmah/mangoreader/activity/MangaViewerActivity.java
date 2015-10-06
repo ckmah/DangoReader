@@ -2,8 +2,10 @@ package ckmah.mangoreader.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -35,6 +37,10 @@ public class MangaViewerActivity extends AppCompatActivity {
     private int chapterIndex;
     private int chapterTotalSize;
     private ArrayList<String> chapterIds, chapterTitles;
+
+    // shared preferences
+    private boolean readLeftToRight;
+    private boolean showPageNumbers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +110,11 @@ public class MangaViewerActivity extends AppCompatActivity {
         chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
         chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
         chapterTotalSize = chapterIds.size();
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        readLeftToRight = sharedPref.getBoolean(getString(R.string.PREF_KEY_READ_DIRECTION), false);
+        showPageNumbers = sharedPref.getBoolean(getString(R.string.PREF_KEY_PAGE_NUMBERS), false);
+        Log.d("MVACTIVITY", "read left to right?" + readLeftToRight);
         displayChapter();
     }
 
