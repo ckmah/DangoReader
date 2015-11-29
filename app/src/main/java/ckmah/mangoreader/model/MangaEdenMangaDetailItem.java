@@ -15,7 +15,7 @@ public class MangaEdenMangaDetailItem implements Serializable {
     private List<String> categories;
 
     @SerializedName("chapters")
-    private List<MangaEdenMangaChapterItem> chapters; //TODO make chapter object
+    private List<MangaEdenMangaChapterItem> chapters;
 
     @SerializedName("chapters_len")
     private int numChapters;

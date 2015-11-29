@@ -33,7 +33,7 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Activity activity;
     private List<Object> data;
 
-    private static final String CHAPTER_PREFIX = "Chapter ";
+    private static final String CHAPTER_PREFIX = "Ch. ";
 
     public MangaItemAdapter(Activity activity, MangaEdenMangaDetailItem manga) {
         this.activity = activity;
