@@ -7,15 +7,14 @@
     <PreferenceCategory android:title="General">
 
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_data"
-            android:summary="@string/pref_data_summary"
-            android:title="@string/pref_data" />
-
+            android:defaultValue="false"
+            android:key="@string/PREF_KEY_READ_DIRECTION"
+            android:title="@string/pref_read_direction"
+            android:summary="@string/pref_read_direction_summary" />
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="pref_awake"
-            android:summary="@string/pref_awake_summary"
-            android:title="@string/pref_awake" />
+            android:key="@string/PREF_KEY_PAGE_NUMBERS"
+            android:title="@string/pref_pagenum"
+            android:summary="@string/pref_pagenum_summary" />
     </PreferenceCategory>
 </PreferenceScreen>

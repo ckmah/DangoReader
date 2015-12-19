@@ -9,6 +9,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import ckmah.mangoreader.activity.MangaViewerActivity;
 import ckmah.mangoreader.listener.MVPGestureListener;
@@ -60,12 +61,41 @@ public class MangaViewPager extends ViewPager {
     public void onNext() {
         if (getCurrentItem() == 0) {
             // Currently on the last page, time for next chapter
-            activity.nextChapter();
+            Toast toast;
+            int chapter = activity.nextChapter();
 
-            // TODO show system chrome to remind user of next chapter
+            // reached last chapter
+            if (chapter == -1) {
+                toast = Toast.makeText(activity, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
+                toast.show();
+                return;
+            }
+            toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
+            toast.show();
         } else {
             // Move on to the next page
             setCurrentItem(getCurrentItem() - 1);
+        }
+    }
+
+    public void onPrevious() {
+        Log.d("MVPAGER", "currentItemIndex" + getCurrentItem());
+        Log.d("MVPAGER", "childCount" + getAdapter().getCount());
+        if (getCurrentItem() == getAdapter().getCount() - 1) {
+            // Currently on first page, time for previous chapter
+            Toast toast;
+            int chapter = activity.prevChapter();
+
+            if (chapter == -1) {
+                // reached first chapter
+                toast = Toast.makeText(activity, "No more previous chapters.", Toast.LENGTH_LONG);
+                toast.show();
+                return;
+            }
+            toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            setCurrentItem(getCurrentItem() + 1);
         }
     }
 

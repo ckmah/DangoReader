@@ -2,8 +2,10 @@ package ckmah.mangoreader.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,7 +35,12 @@ public class MangaViewerActivity extends AppCompatActivity {
     private MangaImagePagerAdapter imageAdapter;
 
     private int chapterIndex;
+    private int chapterTotalSize;
     private ArrayList<String> chapterIds, chapterTitles;
+
+    // shared preferences
+    private boolean readLeftToRight;
+    private boolean showPageNumbers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +109,12 @@ public class MangaViewerActivity extends AppCompatActivity {
         chapterIndex = getIntent().getExtras().getInt("chapterIndex");
         chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
         chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
+        chapterTotalSize = chapterIds.size();
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        readLeftToRight = sharedPref.getBoolean(getString(R.string.PREF_KEY_READ_DIRECTION), false);
+        showPageNumbers = sharedPref.getBoolean(getString(R.string.PREF_KEY_PAGE_NUMBERS), false);
+        Log.d("MVACTIVITY", "read left to right?" + readLeftToRight);
         displayChapter();
     }
 
@@ -132,9 +145,35 @@ public class MangaViewerActivity extends AppCompatActivity {
         });
     }
 
-    public void nextChapter() {
-        chapterIndex++;
-        displayChapter();
+    /**
+     * Navigates to next available chapter.
+     * @return Returns chapter number. Returns -1 if no next chapter.
+     */
+    public int nextChapter() {
+        if (chapterIndex == chapterTotalSize - 1) {
+            // handle last chapter
+            return -1;
+        } else {
+            chapterIndex++;
+            displayChapter();
+            return chapterIndex;
+        }
+    }
+
+    /**
+     * Navigates to previous chapter if available.
+     * @return Returns chapter number. Returns -1 if no previous chapter.
+     */
+    public int prevChapter() {
+        if (chapterIndex == 0) {
+            // handle first chapter
+            return -1;
+        } else {
+            Log.d("MVACTIVITY","PREVIOUS CHAPTER");
+            chapterIndex--;
+            displayChapter();
+            return chapterIndex;
+        }
     }
 
     @Override

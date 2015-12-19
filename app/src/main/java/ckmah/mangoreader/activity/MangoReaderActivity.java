@@ -1,5 +1,6 @@
 package ckmah.mangoreader.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -120,10 +121,10 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
                 fragment = new BrowseMangaFragment();
                 title = getString(R.string.title_browse);
                 break;
-//            case R.id.navigation_item_3: // settings
-//                Intent settingsIntent = new Intent(MangoReaderActivity.this, SettingsActivity.class);
-//                startActivity(settingsIntent);
-//                return;
+            case R.id.settings_nav_item: // settings
+                Intent settingsIntent = new Intent(MangoReaderActivity.this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                return;
             default:
                 break;
         }
@@ -136,7 +137,6 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
             getSupportActionBar().setTitle(title);
         }
     }
-
 
 
 }
