@@ -28,7 +28,7 @@
   background-color: white !important;
 }
 #home-wrapper {
-  background-color: white;
+  background-color: #FF9800;
 }
 p {
   color: #212121;
@@ -109,8 +109,12 @@ p {
   height: 100px;
 }
 #video-container {
+  position: relative;
   max-height: 100%;
   overflow: hidden;
+}
+#video-container:hover > .js-play-button {
+  opacity: 0.8;
 }
 #video-container .video-active {
   display: block !important;
@@ -122,6 +126,22 @@ p {
 #video-container video {
   display: none;
   visibility: hidden;
+}
+.js-play-button {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+  margin: 50% auto;
+  left: 0;
+  right: 0;
+  border: 0;
+  background-color: black;
+  outline: none;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease-out;
 }
 #team-wrapper {
   background-color: white;

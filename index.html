@@ -5,6 +5,7 @@
     <title>MangoReader</title>
     <!-- Importing Bootstrap Elements -->
     <script src="libs/jquery-2.1.4.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <link rel="stylesheet" type="text/css" href="libs/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="libs/material.min.css">
     <link rel="stylesheet" type="text/css" href="libs/ripples.min.css">
@@ -62,12 +63,22 @@
                     <a href="" class="btn btn-primary">Library</a>
                 </div>
                 <a id="download-container" class="btn" href="https://github.com/williamxu/MangoReader/releases/download/v1.0/app-release.apk"><img src="assets/download_white.svg" class="img-responsive">
-                    <div id="dl-text">Get the app!</div>
+                    <div id="dl-text">download</div>
                 </a>
             </div>
             <!-- Screenshots -->
             <div id="video-container" class="col-md-6">
-                <video data-feature-type="browse">
+            <!-- play/pause button -->
+                <button class="button js-play-button">
+                    <svg width="100%" height="100%" viewBox="0 0 36 36" style="fill: white" >
+                        <defs>
+                            <path id="pause-icon" d="M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26" fill="white" />
+                            <path id="play-icon" d="M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28" fill="white"/>
+                        </defs>
+                        <use xlink:href="#play-icon" />
+                    </svg>
+                </button>
+                <video class="video-active" data-feature-type="browse">
                     <source src="assets/browse.mp4" type="video/mp4">Your browser does not support the video tag.
                 </video>
                 <video data-feature-type="filter">
