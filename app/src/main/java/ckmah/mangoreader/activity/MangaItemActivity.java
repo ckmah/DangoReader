@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
 import com.william.mangoreader.R;
 
 import ckmah.mangoreader.DividerItemDecoration;
@@ -23,7 +22,6 @@ import ckmah.mangoreader.adapter.MangaItemAdapter;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
-import ckmah.mangoreader.volley.VolleySingleton;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 
@@ -33,7 +31,6 @@ import retrofit.RetrofitError;
 public class MangaItemActivity extends AppCompatActivity {
 
     private MangaEdenMangaListItem mangaListItem;
-    private RequestQueue queue;
     private MangaEdenMangaDetailItem manga;
 
     private RecyclerView mRecyclerView;
@@ -61,8 +58,6 @@ public class MangaItemActivity extends AppCompatActivity {
         });
 
         initRecyclerView();
-
-        queue = VolleySingleton.getInstance(this).getRequestQueue();
 
         mangaListItem = (MangaEdenMangaListItem) getIntent().getSerializableExtra("mangaListItem");
         fetchMangaDetailFromMangaEden();

@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.RequestQueue;
 import com.william.mangoreader.R;
 
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
-import ckmah.mangoreader.volley.VolleySingleton;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 
@@ -41,8 +39,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     private GridLayoutManager gridLayoutManager;
     private CardLayoutAdapter cardAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-
-    private RequestQueue queue;
 
     // In-memory list of all manga, period
     private List<MangaEdenMangaListItem> allManga = new ArrayList<>();
@@ -63,10 +59,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
         initRecycler(rootView);
         initSwipeRefresh(rootView);
-
-        // Volley request queue
-        queue = VolleySingleton.getInstance(getActivity().getApplicationContext()).
-                getRequestQueue();
 
         fetchMangaListFromMangaEden();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Browse");
