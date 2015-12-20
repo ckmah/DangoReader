@@ -10,11 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.william.mangoreader.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ckmah.mangoreader.activity.viewpager.MangaViewPager;
@@ -38,9 +41,10 @@ public class MangaViewerActivity extends AppCompatActivity {
     private int chapterTotalSize;
     private ArrayList<String> chapterIds, chapterTitles;
 
-    // shared preferences
     private boolean readLeftToRight;
-    private boolean showPageNumbers;
+
+    private MVPGestureListener gestureListener;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +72,17 @@ public class MangaViewerActivity extends AppCompatActivity {
 
         mangaViewPager = (MangaViewPager) findViewById(R.id.manga_view_pager);
         mangaViewPager.activity = this;
-        mangaViewPager.setMVPGestureListener(new MVPGestureListener(this, mangaViewPager) {
+
+        chapterIndex = getIntent().getExtras().getInt("chapterIndex");
+        chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
+        chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
+        chapterTotalSize = chapterIds.size();
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        readLeftToRight = sharedPref.getBoolean(getString(R.string.PREF_KEY_READ_DIRECTION), false);
+        boolean showPageNumbers = sharedPref.getBoolean(getString(R.string.PREF_KEY_PAGE_NUMBERS), false);
+        Log.d("MVACTIVITY", "read left to right?" + readLeftToRight);
+        gestureListener = new MVPGestureListener(this, mangaViewPager) {
             @Override
             public void hideSystemUI() {
                 mToolbar.animate()
@@ -104,17 +118,11 @@ public class MangaViewerActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             }
-        });
+        };
+        mangaViewPager.setLeftToRight(readLeftToRight);
+        gestureListener.setLeftToRight(readLeftToRight);
 
-        chapterIndex = getIntent().getExtras().getInt("chapterIndex");
-        chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
-        chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
-        chapterTotalSize = chapterIds.size();
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        readLeftToRight = sharedPref.getBoolean(getString(R.string.PREF_KEY_READ_DIRECTION), false);
-        showPageNumbers = sharedPref.getBoolean(getString(R.string.PREF_KEY_PAGE_NUMBERS), false);
-        Log.d("MVACTIVITY", "read left to right?" + readLeftToRight);
+        mangaViewPager.setMVPGestureListener(gestureListener);
         displayChapter();
     }
 
@@ -131,11 +139,18 @@ public class MangaViewerActivity extends AppCompatActivity {
             @Override
             public void success(MangaEden.MangaEdenChapter chapter, retrofit.client.Response response) {
                 images = chapter.images;
+                if (readLeftToRight) {
+                    Collections.reverse(images);
+                }
                 imageAdapter = new MangaImagePagerAdapter(getSupportFragmentManager(), images.size());
                 mangaViewPager.setAdapter(imageAdapter);
+                if (readLeftToRight) {
+                    mangaViewPager.setCurrentItem(0, false);
+                } else {
+                    mangaViewPager.setCurrentItem(images.size() - 1, false);
+                }
 
-                // Show the very first page
-                mangaViewPager.setCurrentItem(images.size() - 1);
+
             }
 
             @Override
@@ -143,10 +158,12 @@ public class MangaViewerActivity extends AppCompatActivity {
                 Log.e("ERROR", error.getMessage());
             }
         });
+
     }
 
     /**
      * Navigates to next available chapter.
+     *
      * @return Returns chapter number. Returns -1 if no next chapter.
      */
     public int nextChapter() {
@@ -154,6 +171,7 @@ public class MangaViewerActivity extends AppCompatActivity {
             // handle last chapter
             return -1;
         } else {
+            Log.d("MVACTIVITY", "NEXT CHAPTER");
             chapterIndex++;
             displayChapter();
             return chapterIndex;
@@ -162,6 +180,7 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     /**
      * Navigates to previous chapter if available.
+     *
      * @return Returns chapter number. Returns -1 if no previous chapter.
      */
     public int prevChapter() {
@@ -169,16 +188,46 @@ public class MangaViewerActivity extends AppCompatActivity {
             // handle first chapter
             return -1;
         } else {
-            Log.d("MVACTIVITY","PREVIOUS CHAPTER");
+            Log.d("MVACTIVITY", "PREVIOUS CHAPTER");
             chapterIndex--;
             displayChapter();
             return chapterIndex;
         }
     }
 
+    public void reverseReadingDirection() {
+        mangaViewPager.setLeftToRight(readLeftToRight);
+        gestureListener.setLeftToRight(readLeftToRight);
+        Collections.reverse(images);
+        mangaViewPager.setCurrentItem(images.size() - 1 - mangaViewPager.getCurrentItem(), false);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_manga_viewer, menu);
+        MenuItem toggleLeftRight = menu.findItem(R.id.toggle_left_right);
+        toggleLeftRight.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                readLeftToRight = !readLeftToRight;
+                Log.d("MVActivity", String.valueOf(readLeftToRight));
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean(getString(R.string.PREF_KEY_READ_DIRECTION), readLeftToRight);
+                editor.apply();
+                reverseReadingDirection();
+                String toast = "";
+                if (readLeftToRight) {
+                    toast = "Reading left to right";
+                }
+                else {
+                    toast = "Reading right to left";
+                }
+                Toast.makeText(MangaViewerActivity.this, toast, Toast.LENGTH_SHORT);
+
+                return true;
+            }
+        });
+
         return true;
     }
 

@@ -12,6 +12,8 @@ public class MVPGestureListener implements GestureDetector.OnGestureListener, Ge
     private Context context;
     private MangaViewPager viewPager;
 
+    private boolean leftToRight;
+
     private boolean systemUIVisible;
 
     private static final float LEFT_SIDE = 0.33f;
@@ -24,11 +26,9 @@ public class MVPGestureListener implements GestureDetector.OnGestureListener, Ge
     }
 
     public void showSystemUI() {
-
     }
 
     public void hideSystemUI() {
-
     }
 
     @Override
@@ -37,12 +37,18 @@ public class MVPGestureListener implements GestureDetector.OnGestureListener, Ge
         float screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
         if (xPos < LEFT_SIDE * screenWidth) {
-            viewPager.onNext();
-
+            if (leftToRight) {
+                viewPager.previousPage();
+            } else {
+                viewPager.nextPage();
+            }
             // TODO go back one page/chapter
         } else if (xPos > RIGHT_SIDE * screenWidth) {
-            viewPager.onPrevious();
-
+            if (leftToRight) {
+                viewPager.nextPage();
+            } else {
+                viewPager.previousPage();
+            }
             // TODO go forward one page/chapter
         } else {
             if (systemUIVisible) {
@@ -65,6 +71,7 @@ public class MVPGestureListener implements GestureDetector.OnGestureListener, Ge
     public boolean onDoubleTapEvent(MotionEvent e) {
         return false;
     }
+
 
     @Override
     public boolean onDown(MotionEvent e) {
@@ -96,5 +103,11 @@ public class MVPGestureListener implements GestureDetector.OnGestureListener, Ge
         return false;
     }
 
+    public boolean isLeftToRight() {
+        return leftToRight;
+    }
 
+    public void setLeftToRight(boolean leftToRight) {
+        this.leftToRight = leftToRight;
+    }
 }
