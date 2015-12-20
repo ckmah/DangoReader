@@ -22,4 +22,9 @@
         android:title=""
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <ckmah.mangoreader.activity.seekbar.ReversibleSeekBar
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_gravity="bottom"
+        android:id="@+id/seekBar" />
 </FrameLayout>

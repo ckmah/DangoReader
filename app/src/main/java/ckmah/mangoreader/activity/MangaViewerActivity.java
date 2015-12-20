@@ -11,12 +11,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.SeekBar;
 
 import com.william.mangoreader.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ckmah.mangoreader.activity.seekbar.MangaViewerSeekBarChangeListener;
+import ckmah.mangoreader.activity.seekbar.ReversibleSeekBar;
 import ckmah.mangoreader.activity.viewpager.MangaViewPager;
 import ckmah.mangoreader.adapter.MangaImagePagerAdapter;
 import ckmah.mangoreader.listener.MVPGestureListener;
@@ -41,6 +44,8 @@ public class MangaViewerActivity extends AppCompatActivity {
     // shared preferences
     private boolean readLeftToRight;
     private boolean showPageNumbers;
+
+    private ReversibleSeekBar seekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +73,7 @@ public class MangaViewerActivity extends AppCompatActivity {
 
         mangaViewPager = (MangaViewPager) findViewById(R.id.manga_view_pager);
         mangaViewPager.activity = this;
-        mangaViewPager.setMVPGestureListener(new MVPGestureListener(this, mangaViewPager) {
+        MVPGestureListener gestureListener = new MVPGestureListener(this, mangaViewPager) {
             @Override
             public void hideSystemUI() {
                 mToolbar.animate()
@@ -104,7 +109,8 @@ public class MangaViewerActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             }
-        });
+        };
+        mangaViewPager.setMVPGestureListener(gestureListener);
 
         chapterIndex = getIntent().getExtras().getInt("chapterIndex");
         chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
@@ -116,6 +122,11 @@ public class MangaViewerActivity extends AppCompatActivity {
         showPageNumbers = sharedPref.getBoolean(getString(R.string.PREF_KEY_PAGE_NUMBERS), false);
         Log.d("MVACTIVITY", "read left to right?" + readLeftToRight);
         displayChapter();
+
+        seekBar = (ReversibleSeekBar) findViewById(R.id.seekBar);
+        seekBar.setisLeftToRight(readLeftToRight);
+        SeekBar.OnSeekBarChangeListener mangaViewerSeekBarChangeListener = new MangaViewerSeekBarChangeListener(mangaViewPager);
+        seekBar.setOnSeekBarChangeListener(mangaViewerSeekBarChangeListener);
     }
 
     private void displayChapter() {
@@ -134,6 +145,8 @@ public class MangaViewerActivity extends AppCompatActivity {
                 imageAdapter = new MangaImagePagerAdapter(getSupportFragmentManager(), images.size());
                 mangaViewPager.setAdapter(imageAdapter);
 
+                seekBar.setMax(imageAdapter.getCount() - 1);
+
                 // Show the very first page
                 mangaViewPager.setCurrentItem(images.size() - 1);
             }
@@ -147,6 +160,7 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     /**
      * Navigates to next available chapter.
+     *
      * @return Returns chapter number. Returns -1 if no next chapter.
      */
     public int nextChapter() {
@@ -162,6 +176,7 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     /**
      * Navigates to previous chapter if available.
+     *
      * @return Returns chapter number. Returns -1 if no previous chapter.
      */
     public int prevChapter() {
@@ -169,7 +184,7 @@ public class MangaViewerActivity extends AppCompatActivity {
             // handle first chapter
             return -1;
         } else {
-            Log.d("MVACTIVITY","PREVIOUS CHAPTER");
+            Log.d("MVACTIVITY", "PREVIOUS CHAPTER");
             chapterIndex--;
             displayChapter();
             return chapterIndex;
