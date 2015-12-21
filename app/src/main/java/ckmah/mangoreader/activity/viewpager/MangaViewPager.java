@@ -34,7 +34,6 @@ public class MangaViewPager extends ViewPager {
     private void init(Context context) {
         this.context = context;
         Window window = ((AppCompatActivity) context).getWindow();
-//        gestureDetector = new GestureDetector(context, new MVPGestureListener(context, this));
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -60,11 +59,11 @@ public class MangaViewPager extends ViewPager {
     // TODO trigger this on swipe in addition to touch
     public void onNext() {
         if (getCurrentItem() == 0) {
-            // Currently on the last page, time for next chapter
+            // Currently on the last page, move to next chapter
             Toast toast;
             int chapter = activity.nextChapter();
 
-            // reached last chapter
+            // reached last chapter, do nothing
             if (chapter == -1) {
                 toast = Toast.makeText(activity, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
                 toast.show();
@@ -82,7 +81,7 @@ public class MangaViewPager extends ViewPager {
         Log.d("MVPAGER", "currentItemIndex" + getCurrentItem());
         Log.d("MVPAGER", "childCount" + getAdapter().getCount());
         if (getCurrentItem() == getAdapter().getCount() - 1) {
-            // Currently on first page, time for previous chapter
+            // Currently on first page, move to previous chapter
             Toast toast;
             int chapter = activity.prevChapter();
 
@@ -95,6 +94,7 @@ public class MangaViewPager extends ViewPager {
             toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
             toast.show();
         } else {
+            // Move on to previous page
             setCurrentItem(getCurrentItem() + 1);
         }
     }

@@ -27,9 +27,9 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_gravity="bottom"
-        android:title=""
         android:layout_marginBottom="50dp"
-        android:background="@color/translucent_black">
+        android:background="@color/translucent_black"
+        android:title="">
 
         <ckmah.mangoreader.activity.seekbar.ReversibleSeekBar
             android:id="@+id/seekBar"

@@ -40,6 +40,7 @@ public class MangaViewerActivity extends AppCompatActivity {
     private List<MangaEdenImageItem> images;
     private MangaImagePagerAdapter imageAdapter;
 
+    private String mangaTitle;
     private int chapterIndex;
     private int chapterTotalSize;
     private ArrayList<String> chapterIds, chapterTitles;
@@ -56,9 +57,9 @@ public class MangaViewerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_viewer);
 
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            getWindow().setStatusBarColor(getResources().getColor(R.color.translucent_black));
-//        }
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+        }
         LAYOUT_HEIGHT = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
         STATUS_BAR_YPOS = (float) Math.ceil(25 * getResources().getDisplayMetrics().density);
         SEEKBAR_YPOS = (float) Math.ceil(LAYOUT_HEIGHT - (30 * getResources().getDisplayMetrics().density));
@@ -86,7 +87,7 @@ public class MangaViewerActivity extends AppCompatActivity {
             public void hideSystemUI() {
 
                 mToolbar.animate()
-                        .y(STATUS_BAR_YPOS) // moves to absolute position
+                        .y(STATUS_BAR_YPOS) // start position
                         .translationY(-1 * mToolbar.getHeight()) // animate this distance
                         .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
                         .setListener(new AnimatorListenerAdapter() {
@@ -96,8 +97,8 @@ public class MangaViewerActivity extends AppCompatActivity {
                             }
                         });
                 seekBarToolBar.animate()
-                        .y(SEEKBAR_YPOS)
-                        .translationY(seekBarToolBar.getHeight())
+                        .y(SEEKBAR_YPOS) // start position
+                        .translationY(seekBarToolBar.getHeight()) // animate this distance
                         .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
                         .setListener(new AnimatorListenerAdapter() {
                             @Override
@@ -105,7 +106,7 @@ public class MangaViewerActivity extends AppCompatActivity {
                                 seekBarToolBar.setVisibility(View.INVISIBLE);
                             }
                         });
-                getWindow().getDecorView().setSystemUiVisibility(
+                getWindow().getDecorView().setSystemUiVisibility( // hide system UI
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -119,26 +120,24 @@ public class MangaViewerActivity extends AppCompatActivity {
                 mToolbar.setVisibility(View.VISIBLE);
                 seekBarToolBar.setVisibility(View.VISIBLE);
                 mToolbar.animate()
-                        .translationY(mToolbar.getHeight())
-                        .y(STATUS_BAR_YPOS)
+                        .translationY(mToolbar.getHeight()) // animate this distance
+                        .y(STATUS_BAR_YPOS) // animation end position
                         .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
                         .setListener(null);
                 seekBarToolBar.animate()
-                        .translationY(-1 * seekBarToolBar.getHeight())
-                        .y(SEEKBAR_YPOS)
+                        .translationY(-1 * seekBarToolBar.getHeight()) // animate this distance
+                        .y(SEEKBAR_YPOS) // animation end position
                         .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
                         .setListener(null);
-
-                getWindow().getDecorView().setSystemUiVisibility(
+                getWindow().getDecorView().setSystemUiVisibility( // show system UI
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             }
         };
-        gestureListener.hideSystemUI();
         mangaViewPager.setMVPGestureListener(gestureListener);
 
-
+        mangaTitle = getIntent().getExtras().getString("mangaTitle");
         chapterIndex = getIntent().getExtras().getInt("chapterIndex");
         chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
         chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
@@ -159,8 +158,8 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     private void displayChapter() {
         // Set the chapter title accordingly
-        String chapterTitle = chapterTitles.get(chapterIndex);
-        getSupportActionBar().setTitle(chapterTitle);
+//        String chapterTitle = chapterTitles.get(chapterIndex);
+        getSupportActionBar().setTitle(mangaTitle + " - Ch. " + chapterIndex);
 
         // TODO show progressbar or loading indicator
 

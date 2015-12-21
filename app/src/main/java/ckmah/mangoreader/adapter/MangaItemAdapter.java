@@ -89,6 +89,7 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(activity, MangaViewerActivity.class);
+                        intent.putExtra("mangaTitle", ((MangaEdenMangaDetailItem) data.get(0)).getTitle());
                         intent.putExtra("chapterIds", chapterIds);
                         intent.putExtra("chapterTitles", chapterTitles);
                         intent.putExtra("chapterIndex", chapterIds.indexOf(chapterHolder.mangaEdenChapterId));
@@ -107,8 +108,6 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 DetailsViewHolder detailsHolder = (DetailsViewHolder) holder;
                 MangaEdenMangaDetailItem detailsItem = (MangaEdenMangaDetailItem) data.get(position);
                 MangaEden.setMangaArt(detailsItem.getImageUrl(), detailsHolder.imageView, (MangaItemActivity) activity);
-//                detailsHolder.titleView.setText(detailsItem.getTitle());
-//                detailsHolder.authorView.setText(detailsItem.getAuthor());
 
                 String categories = "";
                 for (String c : detailsItem.getCategories())
