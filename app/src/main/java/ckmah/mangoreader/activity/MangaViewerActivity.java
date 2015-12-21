@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,7 +31,9 @@ import retrofit.RetrofitError;
 
 public class MangaViewerActivity extends AppCompatActivity {
 
-    private static float STATUS_BAR_HEIGHT;
+    private static float LAYOUT_HEIGHT;
+    private static float SEEKBAR_YPOS;
+    private static float STATUS_BAR_YPOS;
     private Toolbar mToolbar;
     private MangaViewPager mangaViewPager;
 
@@ -46,17 +49,21 @@ public class MangaViewerActivity extends AppCompatActivity {
     private boolean showPageNumbers;
 
     private ReversibleSeekBar seekBar;
+    private Toolbar seekBarToolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_viewer);
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.translucent_black));
-        }
-        STATUS_BAR_HEIGHT = (float) Math.ceil(25 * getResources().getDisplayMetrics().density);
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            getWindow().setStatusBarColor(getResources().getColor(R.color.translucent_black));
+//        }
+        LAYOUT_HEIGHT = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
+        STATUS_BAR_YPOS = (float) Math.ceil(25 * getResources().getDisplayMetrics().density);
+        SEEKBAR_YPOS = (float) Math.ceil(LAYOUT_HEIGHT - (30 * getResources().getDisplayMetrics().density));
 
+        // Activity Toolbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_viewer);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -66,9 +73,10 @@ public class MangaViewerActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
-        mToolbar.setVisibility(View.GONE);
-
+        mToolbar.setVisibility(View.INVISIBLE);
+        // ToolBar containing SeekBar
+        seekBarToolBar = (Toolbar) findViewById(R.id.toolbar_seekbar);
+        seekBarToolBar.setVisibility(View.INVISIBLE);
         images = new ArrayList<>();
 
         mangaViewPager = (MangaViewPager) findViewById(R.id.manga_view_pager);
@@ -76,14 +84,25 @@ public class MangaViewerActivity extends AppCompatActivity {
         MVPGestureListener gestureListener = new MVPGestureListener(this, mangaViewPager) {
             @Override
             public void hideSystemUI() {
+
                 mToolbar.animate()
-                        .y(STATUS_BAR_HEIGHT)
-                        .translationY(-1 * mToolbar.getHeight())
+                        .y(STATUS_BAR_YPOS) // moves to absolute position
+                        .translationY(-1 * mToolbar.getHeight()) // animate this distance
                         .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
                         .setListener(new AnimatorListenerAdapter() {
                             @Override
                             public void onAnimationEnd(Animator animation) {
-                                mToolbar.setVisibility(View.GONE);
+                                mToolbar.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                seekBarToolBar.animate()
+                        .y(SEEKBAR_YPOS)
+                        .translationY(seekBarToolBar.getHeight())
+                        .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                seekBarToolBar.setVisibility(View.INVISIBLE);
                             }
                         });
                 getWindow().getDecorView().setSystemUiVisibility(
@@ -98,9 +117,15 @@ public class MangaViewerActivity extends AppCompatActivity {
             @Override
             public void showSystemUI() {
                 mToolbar.setVisibility(View.VISIBLE);
+                seekBarToolBar.setVisibility(View.VISIBLE);
                 mToolbar.animate()
                         .translationY(mToolbar.getHeight())
-                        .y(STATUS_BAR_HEIGHT)
+                        .y(STATUS_BAR_YPOS)
+                        .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                        .setListener(null);
+                seekBarToolBar.animate()
+                        .translationY(-1 * seekBarToolBar.getHeight())
+                        .y(SEEKBAR_YPOS)
                         .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
                         .setListener(null);
 
@@ -110,7 +135,9 @@ public class MangaViewerActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             }
         };
+        gestureListener.hideSystemUI();
         mangaViewPager.setMVPGestureListener(gestureListener);
+
 
         chapterIndex = getIntent().getExtras().getInt("chapterIndex");
         chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
@@ -125,8 +152,9 @@ public class MangaViewerActivity extends AppCompatActivity {
 
         seekBar = (ReversibleSeekBar) findViewById(R.id.seekBar);
         seekBar.setisLeftToRight(readLeftToRight);
-        SeekBar.OnSeekBarChangeListener mangaViewerSeekBarChangeListener = new MangaViewerSeekBarChangeListener(mangaViewPager);
+        SeekBar.OnSeekBarChangeListener mangaViewerSeekBarChangeListener = new MangaViewerSeekBarChangeListener(mangaViewPager, seekBar);
         seekBar.setOnSeekBarChangeListener(mangaViewerSeekBarChangeListener);
+        mangaViewPager.addOnPageChangeListener((ViewPager.OnPageChangeListener) mangaViewerSeekBarChangeListener);
     }
 
     private void displayChapter() {

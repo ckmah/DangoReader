@@ -2,9 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/container"
     tools:context=".MangaViewerActivity">
 
     <ckmah.mangoreader.activity.viewpager.MangaViewPager
@@ -17,14 +17,23 @@
         android:id="@+id/toolbar_manga_viewer"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/translucent_black"
         android:layout_marginTop="25dp"
+        android:background="@color/translucent_black"
         android:title=""
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <ckmah.mangoreader.activity.seekbar.ReversibleSeekBar
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_seekbar"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_gravity="bottom"
-        android:id="@+id/seekBar" />
+        android:title=""
+        android:layout_marginBottom="50dp"
+        android:background="@color/translucent_black">
+
+        <ckmah.mangoreader.activity.seekbar.ReversibleSeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v7.widget.Toolbar>
 </FrameLayout>

@@ -54,6 +54,9 @@ public class ReversibleSeekBar extends SeekBar {
         return super.onTouchEvent(event);
     }
 
+    public void updateProgress() {
+    }
+
     public void setisLeftToRight(boolean leftToRight) {
         this.isLeftToRight = leftToRight;
     }
