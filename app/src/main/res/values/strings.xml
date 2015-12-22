@@ -151,6 +151,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="PREF_KEY_READ_DIRECTION">read_direction</string>
     <string name="PREF_KEY_PAGE_NUMBERS">pagenum</string>
+    <string name="left_to_right">Toggle reading direction</string>
 
     <!-- manga viewer activity intent key -->
     <string name="rotation_lock">Rotation Lock</string>

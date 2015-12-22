@@ -20,6 +20,7 @@ public class MangaViewPager extends ViewPager {
     public MangaViewerActivity activity; // THESE CIRCULAR DEPENDENCIES THO
     private GestureDetector gestureDetector;
     private Context context;
+    private boolean leftToRight;
 
     public MangaViewPager(Context context) {
         super(context);
@@ -57,45 +58,85 @@ public class MangaViewPager extends ViewPager {
 
     // Callback, for viewpager to advance either the page or the chapter
     // TODO trigger this on swipe in addition to touch
-    public void onNext() {
-        if (getCurrentItem() == 0) {
-            // Currently on the last page, move to next chapter
-            Toast toast;
-            int chapter = activity.nextChapter();
+    public void nextPage() {
+        if (leftToRight){
+            if (getCurrentItem() == getAdapter().getCount() - 1) {
+                // Currently on the last page, time for next chapter
+                Toast toast;
+                int chapter = activity.nextChapter();
 
-            // reached last chapter, do nothing
-            if (chapter == -1) {
-                toast = Toast.makeText(activity, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
+                // reached last chapter
+                if (chapter == -1) {
+                    toast = Toast.makeText(activity, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
+                    toast.show();
+                    return;
+                }
+                toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
                 toast.show();
-                return;
+            } else {
+                // Move on to the next page
+                setCurrentItem(getCurrentItem() + 1);
             }
-            toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
-            toast.show();
-        } else {
-            // Move on to the next page
-            setCurrentItem(getCurrentItem() - 1);
+        }
+        else{
+            if (getCurrentItem() == 0) {
+                // Currently on the last page, time for next chapter
+                Toast toast;
+                int chapter = activity.nextChapter();
+
+                // reached last chapter
+                if (chapter == -1) {
+                    toast = Toast.makeText(activity, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
+                    toast.show();
+                    return;
+                }
+                toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
+                toast.show();
+            } else {
+                // Move on to the next page
+                setCurrentItem(getCurrentItem() - 1);
+            }
         }
     }
 
-    public void onPrevious() {
-        Log.d("MVPAGER", "currentItemIndex" + getCurrentItem());
-        Log.d("MVPAGER", "childCount" + getAdapter().getCount());
-        if (getCurrentItem() == getAdapter().getCount() - 1) {
-            // Currently on first page, move to previous chapter
-            Toast toast;
-            int chapter = activity.prevChapter();
+    public void previousPage() {
+        if (leftToRight){
+            if (getCurrentItem() == 0) {
+                // Currently on first page, time for previous chapter
+                Toast toast;
+                int chapter = activity.prevChapter();
 
-            if (chapter == -1) {
-                // reached first chapter
-                toast = Toast.makeText(activity, "No more previous chapters.", Toast.LENGTH_LONG);
+                if (chapter == -1) {
+                    // reached first chapter
+                    toast = Toast.makeText(activity, "No more previous chapters.", Toast.LENGTH_LONG);
+                    toast.show();
+                    return;
+                }
+                toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
                 toast.show();
-                return;
+            } else {
+                setCurrentItem(getCurrentItem() - 1);
             }
-            toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
-            toast.show();
-        } else {
-            // Move on to previous page
-            setCurrentItem(getCurrentItem() + 1);
+
+        }
+        else{
+            if (getCurrentItem() == getAdapter().getCount() - 1) {
+                // Currently on first page, time for previous chapter
+                Toast toast;
+                int chapter = activity.prevChapter();
+
+                if (chapter == -1) {
+                    // reached first chapter
+                    toast = Toast.makeText(activity, "No more previous chapters.", Toast.LENGTH_LONG);
+                    toast.show();
+                    return;
+                }
+                toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
+                toast.show();
+            } else {
+                setCurrentItem(getCurrentItem() + 1);
+            }
+
         }
     }
 
@@ -112,5 +153,13 @@ public class MangaViewPager extends ViewPager {
 
     public void setMVPGestureListener(MVPGestureListener MVPGestureListener) {
         gestureDetector = new GestureDetector(context, MVPGestureListener);
+    }
+
+    public boolean isLeftToRight() {
+        return leftToRight;
+    }
+
+    public void setLeftToRight(boolean leftToRight) {
+        this.leftToRight = leftToRight;
     }
 }
