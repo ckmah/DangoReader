@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/rotation_lock"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        android:foreground="?attr/selectableItemBackground"
-        app:showAsAction="never" />
+        android:id="@+id/toggle_left_right"
+        android:title="@string/left_to_right"
+        android:icon="@drawable/ic_swap_horiz_24dp"
+        app:showAsAction="always" />
 </menu>
