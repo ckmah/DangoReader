@@ -77,6 +77,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         mToolbar.setVisibility(View.INVISIBLE);
         // ToolBar containing SeekBar
         seekBarToolBar = (Toolbar) findViewById(R.id.toolbar_seekbar);
+        seekBarToolBar.setContentInsetsAbsolute(0, 0);
         seekBarToolBar.setVisibility(View.INVISIBLE);
         images = new ArrayList<>();
 
