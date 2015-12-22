@@ -34,24 +34,25 @@ import retrofit.RetrofitError;
 
 public class MangaViewerActivity extends AppCompatActivity {
 
+    // Constants for animating toolbar positions.
     private static float LAYOUT_HEIGHT;
     private static float SEEKBAR_YPOS;
     private static float STATUS_BAR_YPOS;
-    private Toolbar mToolbar;
-    private MangaViewPager mangaViewPager;
 
-    private List<MangaEdenImageItem> images;
+    private Toolbar mToolbar;
+    private Toolbar seekBarToolBar;
+    private ReversibleSeekBar seekBar;
+
+    private MangaViewPager mangaViewPager;
     private MangaImagePagerAdapter imageAdapter;
 
+    private List<MangaEdenImageItem> images; // holds requested images for single chapter
     private String mangaTitle;
     private int chapterIndex;
     private int chapterTotalSize;
-    private ArrayList<String> chapterIds, chapterTitles;
+    private ArrayList<String> chapterIds;
 
     private boolean readLeftToRight;
-
-    private ReversibleSeekBar seekBar;
-    private Toolbar seekBarToolBar;
 
     private MVPGestureListener gestureListener;
     private SharedPreferences sharedPref;
@@ -88,9 +89,9 @@ public class MangaViewerActivity extends AppCompatActivity {
         mangaViewPager = (MangaViewPager) findViewById(R.id.manga_view_pager);
         mangaViewPager.activity = this;
 
+        mangaTitle = getIntent().getExtras().getString("mangaTitle");
         chapterIndex = getIntent().getExtras().getInt("chapterIndex");
         chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
-        chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
         chapterTotalSize = chapterIds.size();
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -157,15 +158,14 @@ public class MangaViewerActivity extends AppCompatActivity {
         displayChapter();
 
         seekBar = (ReversibleSeekBar) findViewById(R.id.seekBar);
-        seekBar.setisLeftToRight(readLeftToRight);
+        seekBar.setLeftToRight(readLeftToRight);
         SeekBar.OnSeekBarChangeListener mangaViewerSeekBarChangeListener = new MangaViewerSeekBarChangeListener(mangaViewPager, seekBar);
         seekBar.setOnSeekBarChangeListener(mangaViewerSeekBarChangeListener);
         mangaViewPager.addOnPageChangeListener((ViewPager.OnPageChangeListener) mangaViewerSeekBarChangeListener);
     }
 
     private void displayChapter() {
-        // Set the chapter title accordingly
-//        String chapterTitle = chapterTitles.get(chapterIndex);
+        // chapter title set to manga name and chapter #
         getSupportActionBar().setTitle(mangaTitle + " - Ch. " + chapterIndex);
 
         // TODO show progressbar or loading indicator
@@ -187,11 +187,9 @@ public class MangaViewerActivity extends AppCompatActivity {
                     mangaViewPager.setCurrentItem(images.size() - 1, false);
                 }
 
-                seekBar.setMax(imageAdapter.getCount() - 1);
-
                 // Show the very first page
                 mangaViewPager.setCurrentItem(images.size() - 1);
-
+                seekBar.setMax(imageAdapter.getCount() - 1);
             }
 
             @Override
@@ -238,6 +236,7 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     public void reverseReadingDirection() {
         mangaViewPager.setLeftToRight(readLeftToRight);
+        seekBar.setLeftToRight(readLeftToRight);
         gestureListener.setLeftToRight(readLeftToRight);
         Collections.reverse(images);
         mangaViewPager.setCurrentItem(images.size() - 1 - mangaViewPager.getCurrentItem(), false);
@@ -259,11 +258,10 @@ public class MangaViewerActivity extends AppCompatActivity {
                 String toast = "";
                 if (readLeftToRight) {
                     toast = "Reading left to right";
-                }
-                else {
+                } else {
                     toast = "Reading right to left";
                 }
-                Toast.makeText(MangaViewerActivity.this, toast, Toast.LENGTH_SHORT);
+                Toast.makeText(MangaViewerActivity.this, toast, Toast.LENGTH_SHORT).show();
 
                 return true;
             }

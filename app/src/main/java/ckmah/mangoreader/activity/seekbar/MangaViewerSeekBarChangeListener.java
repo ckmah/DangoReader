@@ -4,15 +4,12 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.SeekBar;
 
-/**
- * Created by Clarence on 12/19/2015.
- */
+
 public class MangaViewerSeekBarChangeListener extends ViewPager.SimpleOnPageChangeListener implements SeekBar.OnSeekBarChangeListener {
 
     private final ReversibleSeekBar seekBar;
     private ViewPager viewPager;
     private int progress = 0;
-    private boolean isLeftToRight;
 
     /**
      * Constructor
@@ -37,7 +34,7 @@ public class MangaViewerSeekBarChangeListener extends ViewPager.SimpleOnPageChan
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        if (this.seekBar.getisLeftToRight()) {
+        if (this.seekBar.isLeftToRight()) {
             viewPager.setCurrentItem(progress, false);
         } else {
             viewPager.setCurrentItem(this.seekBar.getMax() - progress, false);
@@ -48,7 +45,7 @@ public class MangaViewerSeekBarChangeListener extends ViewPager.SimpleOnPageChan
     public void onPageSelected(int position) {
         progress = position;
         Log.d("SeekBarChangeListener", "onPageSelected " + position);
-        if (this.seekBar.getisLeftToRight()) {
+        if (this.seekBar.isLeftToRight()) {
             seekBar.setProgress(progress);
         } else {
             seekBar.setProgress(seekBar.getMax() - progress);

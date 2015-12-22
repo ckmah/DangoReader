@@ -47,11 +47,11 @@ public class MangaViewPager extends ViewPager {
     protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
         if (v instanceof ImageViewTouch) {
             boolean scroll = ((ImageViewTouch) v).canScroll(dx);
-            Log.d("ViewPager", "ImageViewTouch canScroll: " + scroll);
+//            Log.d("ViewPager", "ImageViewTouch canScroll: " + scroll);
             return scroll;
         } else {
             boolean scroll = super.canScroll(v, checkV, dx, x, y);
-            Log.d("ViewPager", "ViewPager canScroll: " + scroll);
+//            Log.d("ViewPager", "ViewPager canScroll: " + scroll);
             return scroll;
         }
     }
