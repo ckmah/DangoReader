@@ -1,8 +1,10 @@
-package ckmah.mangoreader.activity.seekbar;
+package ckmah.mangoreader.listener;
 
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.SeekBar;
+
+import ckmah.mangoreader.seekbar.ReversibleSeekBar;
 
 
 public class MangaViewPagerSeekBarChangeListener extends ViewPager.SimpleOnPageChangeListener implements SeekBar.OnSeekBarChangeListener {

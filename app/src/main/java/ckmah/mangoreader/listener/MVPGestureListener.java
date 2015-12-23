@@ -5,7 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import ckmah.mangoreader.activity.viewpager.MangaViewPager;
+import ckmah.mangoreader.viewpager.MangaViewPager;
 
 public class MVPGestureListener implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 

@@ -1,4 +1,4 @@
-package ckmah.mangoreader.activity.seekbar;
+package ckmah.mangoreader.seekbar;
 
 import android.annotation.TargetApi;
 import android.content.Context;

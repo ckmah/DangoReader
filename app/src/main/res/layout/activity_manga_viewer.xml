@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MangaViewerActivity">
 
-    <ckmah.mangoreader.activity.viewpager.MangaViewPager
+    <ckmah.mangoreader.viewpager.MangaViewPager
         android:id="@+id/manga_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_manga_viewer"
@@ -20,8 +18,8 @@
         android:layout_marginTop="25dp"
 
         android:background="@color/translucent_black"
-        android:title=""
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:title="" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_seekbar"
@@ -41,29 +39,18 @@
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="start" />
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_alignParentStart="true" />-->
 
-
-            <ckmah.mangoreader.activity.seekbar.ReversibleSeekBar
+            <ckmah.mangoreader.seekbar.ReversibleSeekBar
                 android:id="@+id/seekBar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
-            <!--android:layout_toEndOf="@id/right_chapter"-->
-            <!--android:layout_toLeftOf="@id/left_chapter"-->
-            <!--android:layout_toRightOf="@id/right_chapter"-->
-            <!--android:layout_toStartOf="@id/left_chapter" />-->
-
 
             <ImageButton
                 android:id="@+id/right_chapter"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="end" />
-            <!--android:layout_alignParentEnd="true"-->
-            <!--android:layout_alignParentRight="true" />-->
-
 
         </LinearLayout>
     </android.support.v7.widget.Toolbar>

@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SeekBar;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.william.mangoreader.R;
@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ckmah.mangoreader.activity.seekbar.MangaViewPagerSeekBarChangeListener;
-import ckmah.mangoreader.activity.seekbar.ReversibleSeekBar;
-import ckmah.mangoreader.activity.viewpager.MangaViewPager;
 import ckmah.mangoreader.adapter.MangaImagePagerAdapter;
 import ckmah.mangoreader.listener.MVPGestureListener;
+import ckmah.mangoreader.listener.MangaViewPagerSeekBarChangeListener;
 import ckmah.mangoreader.model.MangaEdenImageItem;
 import ckmah.mangoreader.parse.MangaEden;
+import ckmah.mangoreader.seekbar.ReversibleSeekBar;
+import ckmah.mangoreader.viewpager.MangaViewPager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 
@@ -76,8 +76,36 @@ public class MangaViewerActivity extends AppCompatActivity {
 
         images = new ArrayList<>();
 
-        // initialize main toolbar
+        // initialize views
         mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_viewer);
+        seekBarToolBar = (Toolbar) findViewById(R.id.toolbar_seekbar);
+        seekBar = (ReversibleSeekBar) findViewById(R.id.seekBar);
+        mangaViewPager = (MangaViewPager) findViewById(R.id.manga_view_pager);
+        ImageButton leftChapterButton = (ImageButton) findViewById(R.id.left_chapter);
+        ImageButton rightChapterButton = (ImageButton) findViewById(R.id.right_chapter);
+
+        // buttons change chapters according to read direction
+        leftChapterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (readLeftToRight) {
+                    prevChapter();
+                } else {
+                    nextChapter();
+                }
+            }
+        });
+        rightChapterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (readLeftToRight) {
+                    nextChapter();
+                } else {
+                    prevChapter();
+                }
+            }
+        });
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -87,13 +115,8 @@ public class MangaViewerActivity extends AppCompatActivity {
             }
         });
         mToolbar.setVisibility(View.INVISIBLE);
-
-        // initialize seekbar toolbar
-        seekBarToolBar = (Toolbar) findViewById(R.id.toolbar_seekbar);
         seekBarToolBar.setContentInsetsAbsolute(0, 0);
         seekBarToolBar.setVisibility(View.INVISIBLE);
-        seekBar = (ReversibleSeekBar) findViewById(R.id.seekBar);
-        mangaViewPager = (MangaViewPager) findViewById(R.id.manga_view_pager);
         mangaViewPager.activity = this;
 
         mangaViewPagerSeekBarChangeListener = new MangaViewPagerSeekBarChangeListener(mangaViewPager, seekBar);
@@ -182,7 +205,6 @@ public class MangaViewerActivity extends AppCompatActivity {
 
         // TODO show progressbar or loading indicator
 
-
         // Fetch the chapter images in the background
         MangaEden.getMangaEdenService(this).getMangaImages(chapterIds.get(chapterIndex), new Callback<MangaEden.MangaEdenChapter>() {
             @Override
@@ -191,7 +213,7 @@ public class MangaViewerActivity extends AppCompatActivity {
                 imageAdapter = new MangaImagePagerAdapter(getSupportFragmentManager(), images.size());
                 mangaViewPager.setAdapter(imageAdapter);
 
-                seekBar.setMax(imageAdapter.getCount() - 1);
+                seekBar.setMax(imageAdapter.getCount());
                 mangaViewPagerSeekBarChangeListener.updateMax();
 
                 Log.d("DisplayChapter", "total pages: " + (imageAdapter.getCount() - 1));
@@ -205,6 +227,8 @@ public class MangaViewerActivity extends AppCompatActivity {
                     mangaViewPager.setCurrentItem(images.size() - 1, false);
                     Log.d("DisplayChapter", "showing fragment " + (images.size() - 1));
                 }
+
+                seekBar.refresh();
             }
 
             @Override
@@ -221,12 +245,17 @@ public class MangaViewerActivity extends AppCompatActivity {
      * @return Returns chapter number. Returns -1 if no next chapter.
      */
     public int nextChapter() {
+        Toast toast;
         if (chapterIndex == chapterTotalSize - 1) {
             // handle last chapter
+            toast = Toast.makeText(this, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
+            toast.show();
+
             return -1;
         } else {
-            Log.d("MVACTIVITY", "NEXT CHAPTER");
             chapterIndex++;
+            toast = Toast.makeText(this, "Chapter " + chapterIndex, Toast.LENGTH_SHORT);
+            toast.show();
             displayChapter();
             return chapterIndex;
         }
@@ -238,12 +267,16 @@ public class MangaViewerActivity extends AppCompatActivity {
      * @return Returns chapter number. Returns -1 if no previous chapter.
      */
     public int prevChapter() {
+        Toast toast;
         if (chapterIndex == 0) {
             // handle first chapter
+            toast = Toast.makeText(this, "No more previous chapters.", Toast.LENGTH_LONG);
+            toast.show();
             return -1;
         } else {
-            Log.d("MVACTIVITY", "PREVIOUS CHAPTER");
             chapterIndex--;
+            toast = Toast.makeText(this, "Chapter " + chapterIndex, Toast.LENGTH_SHORT);
+            toast.show();
             displayChapter();
             return chapterIndex;
         }
@@ -251,9 +284,8 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     public void reverseReadingDirection() {
         mangaViewPager.setLeftToRight(readLeftToRight);
-        seekBar.setLeftToRight(readLeftToRight);
         gestureListener.setLeftToRight(readLeftToRight);
-        // set mangaviewpagerseekbarchangelistener to readleftoright direction
+        seekBar.setLeftToRight(readLeftToRight);
         Collections.reverse(images);
         imageAdapter.notifyDataSetChanged();
         mangaViewPager.setCurrentItem(images.size() - 1 - mangaViewPager.getCurrentItem(), false);
