@@ -7,6 +7,9 @@ import android.view.MotionEvent;
 
 import ckmah.mangoreader.activity.viewpager.MangaViewPager;
 
+/*
+ * Manga view pager gesture listener class.
+ */
 public class MVPGestureListener implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     private Context context;
