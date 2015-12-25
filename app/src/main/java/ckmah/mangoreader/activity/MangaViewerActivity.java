@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -269,6 +270,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         mangaViewPagerSeekBarChangeListener.onPageSelected(mangaViewPager.getCurrentItem());
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_manga_viewer, menu);
@@ -294,6 +296,32 @@ public class MangaViewerActivity extends AppCompatActivity {
         });
 
         return true;
+    }
+
+    /**
+     * Changes pages from the volume buttons
+     * TODO make optional, perhaps reverse direction based on read direction
+     *
+     * From http://stackoverflow.com/a/2875006/1222351
+     */
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    mangaViewPager.previousPage();
+                }
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    mangaViewPager.nextPage();
+                }
+                return true;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
     }
 
     public List<MangaEdenImageItem> getImages() {
