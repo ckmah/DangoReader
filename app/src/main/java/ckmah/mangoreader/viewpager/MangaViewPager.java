@@ -7,8 +7,6 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.widget.Toast;
 
 import ckmah.mangoreader.activity.MangaViewerActivity;
 import ckmah.mangoreader.listener.MVPGestureListener;
@@ -33,24 +31,21 @@ public class MangaViewPager extends ViewPager {
 
     private void init(Context context) {
         this.context = context;
-        Window window = ((AppCompatActivity) context).getWindow();
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        ((AppCompatActivity) context).getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                | View.SYSTEM_UI_FLAG_IMMERSIVE);
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+//                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+//                | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
     @Override
     protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
         if (v instanceof ImageViewTouch) {
             boolean scroll = ((ImageViewTouch) v).canScroll(dx);
-//            Log.d("ViewPager", "ImageViewTouch canScroll: " + scroll);
             return scroll;
         } else {
             boolean scroll = super.canScroll(v, checkV, dx, x, y);
-//            Log.d("ViewPager", "ViewPager canScroll: " + scroll);
             return scroll;
         }
     }
@@ -58,84 +53,43 @@ public class MangaViewPager extends ViewPager {
     // Callback, for viewpager to advance either the page or the chapter
     // TODO trigger this on swipe in addition to touch
     public void nextPage() {
-        if (leftToRight){
-            if (getCurrentItem() == getAdapter().getCount() - 1) {
-                // Currently on the last page, time for next chapter
-                Toast toast;
-                int chapter = activity.nextChapter();
-
-                // reached last chapter
-                if (chapter == -1) {
-                    toast = Toast.makeText(activity, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
-                    toast.show();
-                    return;
-                }
-                toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
-                toast.show();
-            } else {
-                // Move on to the next page
+        if (leftToRight) {
+            if (getCurrentItem() < getAdapter().getCount() - 1) {
+                // go to next page
                 setCurrentItem(getCurrentItem() + 1);
-            }
-        }
-        else{
-            if (getCurrentItem() == 0) {
-                // Currently on the last page, time for next chapter
-                Toast toast;
-                int chapter = activity.nextChapter();
-
-                // reached last chapter
-                if (chapter == -1) {
-                    toast = Toast.makeText(activity, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
-                    toast.show();
-                    return;
-                }
-                toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
-                toast.show();
             } else {
-                // Move on to the next page
+                // next chapter
+                activity.nextChapter();
+            }
+        } else {
+            if (getCurrentItem() > 0) {
+                // go to next page
                 setCurrentItem(getCurrentItem() - 1);
+            } else {
+                // next chapter
+                activity.nextChapter();
             }
         }
     }
 
     public void previousPage() {
-        if (leftToRight){
-            if (getCurrentItem() == 0) {
-                // Currently on first page, time for previous chapter
-                Toast toast;
-                int chapter = activity.prevChapter();
-
-                if (chapter == -1) {
-                    // reached first chapter
-                    toast = Toast.makeText(activity, "No more previous chapters.", Toast.LENGTH_LONG);
-                    toast.show();
-                    return;
-                }
-                toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
-                toast.show();
-            } else {
+        if (leftToRight) {
+            if (getCurrentItem() > 0) {
+                // previous page
                 setCurrentItem(getCurrentItem() - 1);
-            }
-
-        }
-        else{
-            if (getCurrentItem() == getAdapter().getCount() - 1) {
-                // Currently on first page, time for previous chapter
-                Toast toast;
-                int chapter = activity.prevChapter();
-
-                if (chapter == -1) {
-                    // reached first chapter
-                    toast = Toast.makeText(activity, "No more previous chapters.", Toast.LENGTH_LONG);
-                    toast.show();
-                    return;
-                }
-                toast = Toast.makeText(activity, "Chapter " + chapter, Toast.LENGTH_SHORT);
-                toast.show();
             } else {
-                setCurrentItem(getCurrentItem() + 1);
+                // previous chapter
+                activity.prevChapter();
             }
 
+        } else {
+            if (getCurrentItem() < getAdapter().getCount() - 1) {
+//                previous page
+                setCurrentItem(getCurrentItem() + 1);
+            } else {
+                // previous chapter
+                activity.prevChapter();
+            }
         }
     }
 

@@ -1,19 +1,18 @@
 package ckmah.mangoreader.activity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.william.mangoreader.R;
@@ -23,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ckmah.mangoreader.adapter.MangaImagePagerAdapter;
+import ckmah.mangoreader.animation.AnimationHelper;
 import ckmah.mangoreader.listener.MVPGestureListener;
 import ckmah.mangoreader.listener.MangaViewPagerSeekBarChangeListener;
 import ckmah.mangoreader.model.MangaEdenImageItem;
@@ -38,6 +38,8 @@ public class MangaViewerActivity extends AppCompatActivity {
     private static float LAYOUT_HEIGHT;
     private static float SEEKBAR_YPOS;
     private static float STATUS_BAR_YPOS;
+
+    private AnimationHelper animationHelper = new AnimationHelper();
 
     private Toolbar mToolbar;
     private Toolbar seekBarToolBar;
@@ -72,7 +74,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         // set position constants for toolbar animation
         LAYOUT_HEIGHT = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
         STATUS_BAR_YPOS = (float) Math.ceil(25 * getResources().getDisplayMetrics().density);
-        SEEKBAR_YPOS = (float) Math.ceil(LAYOUT_HEIGHT - (30 * getResources().getDisplayMetrics().density));
+        SEEKBAR_YPOS = (float) Math.ceil(LAYOUT_HEIGHT - (32 * getResources().getDisplayMetrics().density));
 
         images = new ArrayList<>();
 
@@ -106,6 +108,9 @@ public class MangaViewerActivity extends AppCompatActivity {
             }
         });
 
+        TextView pageNumberView = (TextView) findViewById(R.id.page_number);
+        final FrameLayout uiLayout = (FrameLayout) findViewById(R.id.ui_layout);
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -114,37 +119,17 @@ public class MangaViewerActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        mToolbar.setVisibility(View.INVISIBLE);
         seekBarToolBar.setContentInsetsAbsolute(0, 0);
-        seekBarToolBar.setVisibility(View.INVISIBLE);
         mangaViewPager.activity = this;
 
-        mangaViewPagerSeekBarChangeListener = new MangaViewPagerSeekBarChangeListener(mangaViewPager, seekBar);
+        mangaViewPagerSeekBarChangeListener = new MangaViewPagerSeekBarChangeListener(mangaViewPager, seekBar, pageNumberView);
 
         // assign gestureListener to handle showing/hiding UI along with other gesture actions
-        gestureListener = new MVPGestureListener(this, mangaViewPager) {
+        gestureListener = new MVPGestureListener(this, mangaViewPager, true) {
+
             @Override
             public void hideSystemUI() {
-                mToolbar.animate()
-                        .y(STATUS_BAR_YPOS) // start position
-                        .translationY(-1 * mToolbar.getHeight()) // animate this distance
-                        .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                mToolbar.setVisibility(View.INVISIBLE);
-                            }
-                        });
-                seekBarToolBar.animate()
-                        .y(SEEKBAR_YPOS) // start position
-                        .translationY(seekBarToolBar.getHeight()) // animate this distance
-                        .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                seekBarToolBar.setVisibility(View.INVISIBLE);
-                            }
-                        });
+                animationHelper.fadeOut(uiLayout);
                 getWindow().getDecorView().setSystemUiVisibility( // hide system UI
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -156,18 +141,7 @@ public class MangaViewerActivity extends AppCompatActivity {
 
             @Override
             public void showSystemUI() {
-                mToolbar.setVisibility(View.VISIBLE);
-                seekBarToolBar.setVisibility(View.VISIBLE);
-                mToolbar.animate()
-                        .translationY(mToolbar.getHeight()) // animate this distance
-                        .y(STATUS_BAR_YPOS) // animation end position
-                        .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-                        .setListener(null);
-                seekBarToolBar.animate()
-                        .translationY(-1 * seekBarToolBar.getHeight()) // animate this distance
-                        .y(SEEKBAR_YPOS) // animation end position
-                        .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-                        .setListener(null);
+                animationHelper.fadeIn(uiLayout);
                 getWindow().getDecorView().setSystemUiVisibility( // show system UI
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -177,13 +151,12 @@ public class MangaViewerActivity extends AppCompatActivity {
 
         // set all listeners
         seekBar.setOnSeekBarChangeListener(mangaViewPagerSeekBarChangeListener);
-        mangaViewPager.addOnPageChangeListener((ViewPager.OnPageChangeListener) mangaViewPagerSeekBarChangeListener);
+        mangaViewPager.addOnPageChangeListener(mangaViewPagerSeekBarChangeListener);
         mangaViewPager.setMVPGestureListener(gestureListener);
 
         // pass in reading direction
         gestureListener.setLeftToRight(readLeftToRight);
         mangaViewPager.setLeftToRight(readLeftToRight);
-        seekBar.setLeftToRight(readLeftToRight);
 
         // read in manga and chapter data
         mangaTitle = getIntent().getExtras().getString("mangaTitle");
@@ -213,8 +186,8 @@ public class MangaViewerActivity extends AppCompatActivity {
                 imageAdapter = new MangaImagePagerAdapter(getSupportFragmentManager(), images.size());
                 mangaViewPager.setAdapter(imageAdapter);
 
-                seekBar.setMax(imageAdapter.getCount());
-                mangaViewPagerSeekBarChangeListener.updateMax();
+                seekBar.setMax(imageAdapter.getCount() - 1);
+                seekBar.setLeftToRight(readLeftToRight);
 
                 Log.d("DisplayChapter", "total pages: " + (imageAdapter.getCount() - 1));
 
@@ -229,6 +202,8 @@ public class MangaViewerActivity extends AppCompatActivity {
                 }
 
                 seekBar.refresh();
+                mangaViewPagerSeekBarChangeListener.onPageSelected(mangaViewPager.getCurrentItem());
+                mangaViewPagerSeekBarChangeListener.setTotalPages(images.size());
             }
 
             @Override
@@ -289,6 +264,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         Collections.reverse(images);
         imageAdapter.notifyDataSetChanged();
         mangaViewPager.setCurrentItem(images.size() - 1 - mangaViewPager.getCurrentItem(), false);
+        mangaViewPagerSeekBarChangeListener.onPageSelected(mangaViewPager.getCurrentItem());
     }
 
     @Override

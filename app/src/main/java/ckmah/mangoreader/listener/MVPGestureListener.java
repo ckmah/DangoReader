@@ -14,13 +14,13 @@ public class MVPGestureListener implements GestureDetector.OnGestureListener, Ge
 
     private boolean leftToRight;
 
-    private boolean systemUIVisible;
+    private boolean isUIVisible;
 
     private static final float LEFT_SIDE = 0.33f;
     private static final float RIGHT_SIDE = 0.66f;
 
-    public MVPGestureListener(Context context, ViewPager viewPager) {
-        systemUIVisible = false;
+    public MVPGestureListener(Context context, ViewPager viewPager, boolean isUIVisible) {
+        this.isUIVisible = isUIVisible;
         this.context = context;
         this.viewPager = (MangaViewPager) viewPager;
     }
@@ -42,21 +42,19 @@ public class MVPGestureListener implements GestureDetector.OnGestureListener, Ge
             } else {
                 viewPager.nextPage();
             }
-            // TODO go back one page/chapter
         } else if (xPos > RIGHT_SIDE * screenWidth) {
             if (leftToRight) {
                 viewPager.nextPage();
             } else {
                 viewPager.previousPage();
             }
-            // TODO go forward one page/chapter
         } else {
-            if (systemUIVisible) {
+            if (isUIVisible) {
                 hideSystemUI();
-                systemUIVisible = false;
+                isUIVisible = false;
             } else {
                 showSystemUI();
-                systemUIVisible = true;
+                isUIVisible = true;
             }
         }
         return true;
