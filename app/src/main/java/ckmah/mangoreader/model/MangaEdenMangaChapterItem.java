@@ -16,8 +16,12 @@ public class MangaEdenMangaChapterItem implements Serializable {
     private String title;
     private String id;
 
-    public double getNumber() {
-        return number;
+    public String getNumber() {
+        // Prevent trailing zeros in chapter number; see http://stackoverflow.com/a/14126736
+        if (number == (long) number)
+            return String.format("%d", (long)number);
+        else
+            return String.format("%s", number);
     }
 
     public void setNumber(double number) {

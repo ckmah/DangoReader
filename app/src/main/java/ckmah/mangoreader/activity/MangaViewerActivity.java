@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +31,8 @@ import ckmah.mangoreader.parse.MangaEden;
 import ckmah.mangoreader.seekbar.ReversibleSeekBar;
 import ckmah.mangoreader.viewpager.MangaViewPager;
 import retrofit.Callback;
-import retrofit.RetrofitError;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class MangaViewerActivity extends AppCompatActivity {
 
@@ -57,7 +59,7 @@ public class MangaViewerActivity extends AppCompatActivity {
     private String mangaTitle;
     private int chapterIndex;
     private int chapterTotalSize;
-    private ArrayList<String> chapterIds;
+    private ArrayList<String> chapterIds, chapterTitles;
 
     private boolean readLeftToRight; // true - left to right; false - right to left
     private TextView leftBubble;
@@ -166,6 +168,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         mangaTitle = getIntent().getExtras().getString("mangaTitle");
         chapterIndex = getIntent().getExtras().getInt("chapterIndex");
         chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
+        chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
         chapterTotalSize = chapterIds != null ? chapterIds.size() : 0;
 
         // read in global settings
@@ -178,15 +181,16 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     private void displayChapter() {
         // chapter title set to manga name and chapter #
-        getSupportActionBar().setTitle(mangaTitle + " - Ch. " + chapterIndex);
+        getSupportActionBar().setTitle(mangaTitle + " - Ch. " + getChapterTitle());
 
         // TODO show progressbar or loading indicator
 
         // Fetch the chapter images in the background
-        MangaEden.getMangaEdenService(this).getMangaImages(chapterIds.get(chapterIndex), new Callback<MangaEden.MangaEdenChapter>() {
+        String chapterId = chapterIds.get(chapterIndex);
+        MangaEden.getMangaEdenService(this).getMangaImages(chapterId).enqueue(new Callback<MangaEden.MangaEdenChapter>() {
             @Override
-            public void success(MangaEden.MangaEdenChapter chapter, retrofit.client.Response response) {
-                images = chapter.images;
+            public void onResponse(Response<MangaEden.MangaEdenChapter> response, Retrofit retrofit) {
+                images = response.body().images;
                 imageAdapter = new MangaImagePagerAdapter(getSupportFragmentManager(), images.size());
                 mangaViewPager.setAdapter(imageAdapter);
 
@@ -211,8 +215,8 @@ public class MangaViewerActivity extends AppCompatActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                Log.e("ERROR", error.getMessage());
+            public void onFailure(Throwable t) {
+
             }
         });
 
@@ -233,7 +237,7 @@ public class MangaViewerActivity extends AppCompatActivity {
             return -1;
         } else {
             chapterIndex++;
-            toast = Toast.makeText(this, "Chapter " + chapterIndex, Toast.LENGTH_SHORT);
+            toast = Toast.makeText(this, "Chapter " + getChapterTitle(), Toast.LENGTH_SHORT);
             toast.show();
             displayChapter();
             return chapterIndex;
@@ -254,7 +258,7 @@ public class MangaViewerActivity extends AppCompatActivity {
             return -1;
         } else {
             chapterIndex--;
-            toast = Toast.makeText(this, "Chapter " + chapterIndex, Toast.LENGTH_SHORT);
+            toast = Toast.makeText(this, "Chapter " + getChapterTitle(), Toast.LENGTH_SHORT);
             toast.show();
             displayChapter();
             return chapterIndex;
@@ -278,6 +282,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         mangaViewPager.setCurrentItem(images.size() - 1 - mangaViewPager.getCurrentItem(), false);
         mangaViewPagerSeekBarChangeListener.onPageSelected(mangaViewPager.getCurrentItem());
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -304,6 +309,36 @@ public class MangaViewerActivity extends AppCompatActivity {
         });
 
         return true;
+    }
+
+    /**
+     * Changes pages from the volume buttons
+     * TODO make optional, perhaps reverse direction based on read direction
+     *
+     * From http://stackoverflow.com/a/2875006/1222351
+     */
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    mangaViewPager.previousPage();
+                }
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    mangaViewPager.nextPage();
+                }
+                return true;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
+    }
+
+    private String getChapterTitle() {
+        return chapterTitles.get(chapterIndex);
     }
 
     public List<MangaEdenImageItem> getImages() {

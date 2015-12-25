@@ -33,7 +33,7 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Activity activity;
     private List<Object> data;
 
-    private static final String CHAPTER_PREFIX = "Chapter ";
+    private static final String CHAPTER_PREFIX = "Ch. ";
 
     public MangaItemAdapter(Activity activity, MangaEdenMangaDetailItem manga) {
         this.activity = activity;
@@ -52,7 +52,7 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         chapterTitles.clear();
         for (MangaEdenMangaChapterItem item : chaptersCopy) {
             chapterIds.add(item.getId());
-            chapterTitles.add(item.getTitle());
+            chapterTitles.add(item.getNumber());
         }
 
         data.clear();
@@ -92,6 +92,7 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         intent.putExtra("mangaTitle", ((MangaEdenMangaDetailItem) data.get(0)).getTitle());
                         intent.putExtra("chapterIds", chapterIds);
                         intent.putExtra("chapterIndex", chapterIds.indexOf(chapterHolder.mangaEdenChapterId));
+                        intent.putExtra("chapterTitles", chapterTitles);
                         activity.startActivity(intent);
                     }
                 });
