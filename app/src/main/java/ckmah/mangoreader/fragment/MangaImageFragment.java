@@ -15,7 +15,7 @@ import ckmah.mangoreader.parse.MangaEden;
 
 public class MangaImageFragment extends Fragment {
     private static final String IMAGE_DATA_EXTRA = "item_index";
-    private static int itemIndex;
+    private int itemIndex;
 
     public MangaImageFragment() {
         // required empty constructor
