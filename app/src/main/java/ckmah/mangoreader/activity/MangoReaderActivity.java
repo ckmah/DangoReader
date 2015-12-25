@@ -2,7 +2,6 @@ package ckmah.mangoreader.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -29,25 +28,25 @@ import ckmah.mangoreader.fragment.MyLibraryFragment;
  */
 public class MangoReaderActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Toolbar toolbar;
     private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
 
     public SQLiteDatabase userLibraryDb;
     public DaoMaster daoMaster;
     public DaoSession daoSession;
     public static UserLibraryMangaDao userLibraryMangaDao;
 
-    private Cursor cursor;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mango_reader);
 
+        // init layout
         initToolbar();
         initNavigation();
 //        initSpinner();
 
+        // load user library
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "user-library-db", null);
         userLibraryDb = helper.getWritableDatabase();
 //        helper.onUpgrade(userLibraryDb, userLibraryDb.getVersion(), 1000); // DEBUG PURPOSES ONLY
@@ -55,8 +54,8 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         daoSession = daoMaster.newSession();
         userLibraryMangaDao = daoSession.getUserLibraryMangaDao();
 
-
-        displayView(R.id.browse_nav_item);
+        // display library by default
+        displayView(R.id.library_nav_item);
     }
 
     private void initToolbar() {
@@ -91,9 +90,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         menuItem.setChecked(true);
-
         drawerLayout.closeDrawers();
-
         displayView(menuItem.getItemId());
         return true;
     }

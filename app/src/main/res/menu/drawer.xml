@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/browse_nav_item"
-            android:checked="true"
-            android:title="@string/title_browse" />
-        <item
             android:id="@+id/library_nav_item"
+            android:checked="true"
             android:title="@string/title_my_library" />
+        <item
+            android:id="@+id/browse_nav_item"
+            android:title="@string/title_browse" />
         <item
             android:id="@+id/settings_nav_item"
             android:title="@string/title_settings" />
