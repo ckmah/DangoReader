@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,12 +43,9 @@ public class MangaViewPager extends ViewPager {
     protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
         if (v instanceof ImageViewTouch) {
             boolean scroll = ((ImageViewTouch) v).canScroll(dx);
-            Log.d("SCROLLING", "pan: " + scroll);
             return scroll;
         } else {
             boolean scroll = super.canScroll(v, checkV, dx, x, y);
-            Log.d("SCROLLING", "scroll: " + scroll);
-
             return scroll;
         }
     }

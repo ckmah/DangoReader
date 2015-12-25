@@ -202,8 +202,8 @@ public class MangaViewerActivity extends AppCompatActivity {
                 }
 
                 seekBar.refresh();
-                mangaViewPagerSeekBarChangeListener.setTotalPages(images.size());
                 mangaViewPagerSeekBarChangeListener.onPageSelected(mangaViewPager.getCurrentItem());
+                mangaViewPagerSeekBarChangeListener.setTotalPages(images.size());
             }
 
             @Override
