@@ -155,4 +155,6 @@
 
     <!-- manga viewer activity intent key -->
     <string name="rotation_lock">Rotation Lock</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
 </resources>

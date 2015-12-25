@@ -60,6 +60,8 @@ public class MangaViewerActivity extends AppCompatActivity {
     private ArrayList<String> chapterIds;
 
     private boolean readLeftToRight; // true - left to right; false - right to left
+    private TextView leftBubble;
+    private TextView rightBubble;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,8 @@ public class MangaViewerActivity extends AppCompatActivity {
         seekBarToolBar = (Toolbar) findViewById(R.id.toolbar_seekbar);
         seekBar = (ReversibleSeekBar) findViewById(R.id.seekBar);
         mangaViewPager = (MangaViewPager) findViewById(R.id.manga_view_pager);
+        leftBubble = (TextView) findViewById(R.id.left_bubble);
+        rightBubble = (TextView) findViewById(R.id.right_bubble);
         ImageButton leftChapterButton = (ImageButton) findViewById(R.id.left_chapter);
         ImageButton rightChapterButton = (ImageButton) findViewById(R.id.right_chapter);
 
@@ -261,6 +265,14 @@ public class MangaViewerActivity extends AppCompatActivity {
         mangaViewPager.setLeftToRight(readLeftToRight);
         gestureListener.setLeftToRight(readLeftToRight);
         seekBar.setLeftToRight(readLeftToRight);
+        if (readLeftToRight) {
+            leftBubble.setText(R.string.back);
+            rightBubble.setText(R.string.next);
+        }
+        else {
+            leftBubble.setText(R.string.next);
+            rightBubble.setText(R.string.back);
+        }
         Collections.reverse(images);
         imageAdapter.notifyDataSetChanged();
         mangaViewPager.setCurrentItem(images.size() - 1 - mangaViewPager.getCurrentItem(), false);
