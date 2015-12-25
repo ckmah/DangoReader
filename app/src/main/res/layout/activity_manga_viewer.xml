@@ -1,57 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MangaViewerActivity">
+    android:layout_height="match_parent">
 
     <ckmah.mangoreader.viewpager.MangaViewPager
         android:id="@+id/manga_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_manga_viewer"
+    <FrameLayout
+        android:id="@+id/ui_layout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginTop="25dp"
+        android:layout_height="match_parent">
 
-        android:background="@color/translucent_black"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:title="" />
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="50dp"
-        android:background="@color/translucent_black">
-
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_manga_viewer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginTop="25dp"
 
-            <ImageButton
-                android:id="@+id/left_chapter"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="start" />
+            android:background="@color/translucent_black"
+            android:elevation="1dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:title="" />
 
-            <ckmah.mangoreader.seekbar.ReversibleSeekBar
-                android:id="@+id/seekBar"
+        <TextView
+            android:id="@+id/left_bubble"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_margin="16dp"
+            android:background="@drawable/rounded_corner"
+            android:elevation="1dp"
+            android:gravity="center"
+            android:text="Next"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/right_bubble"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_margin="16dp"
+            android:background="@drawable/rounded_corner"
+            android:elevation="1dp"
+            android:gravity="center"
+            android:text="Back"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/page_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="90dp"
+            android:background="@drawable/card_rounded_corner"
+            android:elevation="1dp"
+            android:gravity="center"
+            android:padding="4dp"
+            android:textColor="@color/white" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="48dp"
+            android:background="@color/translucent_black"
+            android:elevation="1dp">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/right_chapter"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="end" />
+                <ImageButton
+                    android:id="@+id/left_chapter"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:background="@color/transparent"
+                    android:src="@drawable/left_page_arrow_white" />
 
-        </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+                <ckmah.mangoreader.seekbar.ReversibleSeekBar
+                    android:id="@+id/seekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/right_chapter"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:background="@color/transparent"
+                    android:src="@drawable/right_page_arrow_white" />
+
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+
+    </FrameLayout>
+
 </FrameLayout>

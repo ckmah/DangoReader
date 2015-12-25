@@ -37,6 +37,7 @@ public class ReversibleSeekBar extends SeekBar {
         float px = this.getWidth() / 2.0f;
         float py = this.getHeight() / 2.0f;
 
+
         if (isLeftToRight) {
             canvas.scale(1, -1, px, py);
         } else {
@@ -57,6 +58,11 @@ public class ReversibleSeekBar extends SeekBar {
 
     public void setLeftToRight(boolean leftToRight) {
         this.isLeftToRight = leftToRight;
+        refresh();
+    }
+
+    public void refresh() {
+        refreshDrawableState();
     }
 
     public boolean isLeftToRight() {
