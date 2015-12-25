@@ -31,7 +31,8 @@ import ckmah.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
 import retrofit.Callback;
-import retrofit.RetrofitError;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -97,16 +98,17 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
             }
         });
 
-        MangaEden.getMangaEdenService(getActivity()).listAllManga(new Callback<MangaEden.MangaEdenList>() {
+        MangaEden.getMangaEdenService(getActivity()).listAllManga().enqueue(new Callback<MangaEden.MangaEdenList>() {
             @Override
-            public void success(MangaEden.MangaEdenList mangaEdenList, retrofit.client.Response response) {
-                sortMangaInBackground(mangaEdenList);
+            public void onResponse(Response<MangaEden.MangaEdenList> response, Retrofit retrofit) {
+                response.body();
+                sortMangaInBackground(response.body());
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void onFailure(Throwable t) {
                 Log.d("SORTING", "FAILED");
-                Log.d("SORTING", error.getMessage());
+                Log.d("SORTING", t.getMessage());
 
                 // Hide the refresh layout
                 swipeRefreshLayout.post(new Runnable() {

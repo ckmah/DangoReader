@@ -30,7 +30,8 @@ import ckmah.mangoreader.parse.MangaEden;
 import ckmah.mangoreader.seekbar.ReversibleSeekBar;
 import ckmah.mangoreader.viewpager.MangaViewPager;
 import retrofit.Callback;
-import retrofit.RetrofitError;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class MangaViewerActivity extends AppCompatActivity {
 
@@ -179,10 +180,11 @@ public class MangaViewerActivity extends AppCompatActivity {
         // TODO show progressbar or loading indicator
 
         // Fetch the chapter images in the background
-        MangaEden.getMangaEdenService(this).getMangaImages(chapterIds.get(chapterIndex), new Callback<MangaEden.MangaEdenChapter>() {
+        String chapterId = chapterIds.get(chapterIndex);
+        MangaEden.getMangaEdenService(this).getMangaImages(chapterId).enqueue(new Callback<MangaEden.MangaEdenChapter>() {
             @Override
-            public void success(MangaEden.MangaEdenChapter chapter, retrofit.client.Response response) {
-                images = chapter.images;
+            public void onResponse(Response<MangaEden.MangaEdenChapter> response, Retrofit retrofit) {
+                images = response.body().images;
                 imageAdapter = new MangaImagePagerAdapter(getSupportFragmentManager(), images.size());
                 mangaViewPager.setAdapter(imageAdapter);
 
@@ -207,8 +209,8 @@ public class MangaViewerActivity extends AppCompatActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                Log.e("ERROR", error.getMessage());
+            public void onFailure(Throwable t) {
+
             }
         });
 

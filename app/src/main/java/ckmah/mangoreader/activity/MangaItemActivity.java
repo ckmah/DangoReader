@@ -23,7 +23,8 @@ import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
 import retrofit.Callback;
-import retrofit.RetrofitError;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Activity that displays a single manga, and shows manga info and chapters
@@ -95,16 +96,19 @@ public class MangaItemActivity extends AppCompatActivity {
     }
 
     private void fetchMangaDetailFromMangaEden() {
-        MangaEden.getMangaEdenService(this).getMangaDetails(mangaListItem.id, new Callback<MangaEdenMangaDetailItem>() {
+        Log.d("SORTING", "FETCHING");
+        MangaEden.getMangaEdenService(this)
+                .getMangaDetails(mangaListItem.id)
+                .enqueue(new Callback<MangaEdenMangaDetailItem>() {
             @Override
-            public void success(MangaEdenMangaDetailItem item, retrofit.client.Response response) {
-                manga = item;
+            public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
+                manga = response.body();
                 loadContent();
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                Log.d("ERROR", error.getMessage());
+            public void onFailure(Throwable t) {
+
             }
         });
     }
