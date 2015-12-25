@@ -47,6 +47,7 @@
     <dimen name="chapters_padding_bottom">80dp</dimen>
 
     <dimen name="manga_image_margin">50px</dimen>
+    <dimen name="seekbar_height">48dp</dimen>
 
 
 </resources>

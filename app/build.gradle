@@ -10,7 +10,7 @@ android {
         }
     }
     compileSdkVersion 21
-    buildToolsVersion "22.0.1"
+    buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "ckmah.mangoreader"
         minSdkVersion 16

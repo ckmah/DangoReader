@@ -56,7 +56,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         userLibraryMangaDao = daoSession.getUserLibraryMangaDao();
 
 
-        displayView(R.id.browse_nav_item);
+        displayView(R.id.library_nav_item);
     }
 
     private void initToolbar() {
