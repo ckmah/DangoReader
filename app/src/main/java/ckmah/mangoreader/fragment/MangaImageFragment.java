@@ -1,6 +1,5 @@
 package ckmah.mangoreader.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -39,28 +38,11 @@ public class MangaImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.manga_image_fragment, container, false);
-        ImageView imageViewTouch = (ImageView) root.findViewById(R.id.image_view_touch);
+        ImageView imageView = (ImageView) root.findViewById(R.id.manga_image_view);
         MangaViewerActivity activity = (MangaViewerActivity) getActivity();
         String imageUrl = activity.getImages().get(itemIndex).getUrl();
 
-        MangaEden.setMangaImage(imageUrl, activity, imageViewTouch);
+        MangaEden.setMangaImage(imageUrl, activity, imageView);
         return root;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-//        setListAdapter(new ArrayAdapter<String>(getActivity(),
-//                android.R.layout.simple_list_item_1, Cheeses.sCheeseStrings));
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 }

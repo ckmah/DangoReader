@@ -10,7 +10,6 @@ import android.view.View;
 
 import ckmah.mangoreader.activity.MangaViewerActivity;
 import ckmah.mangoreader.listener.MVPGestureListener;
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 public class MangaViewPager extends ViewPager {
 
@@ -39,16 +38,6 @@ public class MangaViewPager extends ViewPager {
 //                | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
-    @Override
-    protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
-        if (v instanceof ImageViewTouch) {
-            boolean scroll = ((ImageViewTouch) v).canScroll(dx);
-            return scroll;
-        } else {
-            boolean scroll = super.canScroll(v, checkV, dx, x, y);
-            return scroll;
-        }
-    }
 
     // Callback, for viewpager to advance either the page or the chapter
     // TODO trigger this on swipe in addition to touch
@@ -95,12 +84,12 @@ public class MangaViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        gestureDetector.onTouchEvent(event);
         return super.onInterceptTouchEvent(event);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
