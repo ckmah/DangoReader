@@ -181,7 +181,8 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     private void displayChapter() {
         // chapter title set to manga name and chapter #
-        getSupportActionBar().setTitle(mangaTitle + " - Ch. " + getChapterTitle());
+        String title = "Ch. " + getChapterTitle() + " - " + mangaTitle;
+        ((TextView) findViewById(R.id.chapter_title)).setText(title);
 
         // TODO show progressbar or loading indicator
 
@@ -272,8 +273,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         if (readLeftToRight) {
             leftBubble.setText(R.string.back);
             rightBubble.setText(R.string.next);
-        }
-        else {
+        } else {
             leftBubble.setText(R.string.next);
             rightBubble.setText(R.string.back);
         }
@@ -314,7 +314,7 @@ public class MangaViewerActivity extends AppCompatActivity {
     /**
      * Changes pages from the volume buttons
      * TODO make optional, perhaps reverse direction based on read direction
-     *
+     * <p/>
      * From http://stackoverflow.com/a/2875006/1222351
      */
     @Override

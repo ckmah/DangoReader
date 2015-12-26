@@ -19,10 +19,22 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginTop="25dp"
-
             android:background="@color/translucent_black"
+            android:ellipsize="middle"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:title="" />
+            android:title="">
+
+            <TextView
+                android:id="@+id/chapter_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </android.support.v7.widget.Toolbar>
 
         <TextView
             android:id="@+id/left_bubble"
@@ -86,8 +98,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:minHeight="@dimen/seekbar_height"
-                    android:maxHeight="@dimen/seekbar_height"/>
+                    android:maxHeight="@dimen/seekbar_height"
+                    android:minHeight="@dimen/seekbar_height" />
 
                 <ImageButton
                     android:id="@+id/right_chapter"

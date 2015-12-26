@@ -100,23 +100,25 @@ public class MangaItemActivity extends AppCompatActivity {
         MangaEden.getMangaEdenService(this)
                 .getMangaDetails(mangaListItem.id)
                 .enqueue(new Callback<MangaEdenMangaDetailItem>() {
-            @Override
-            public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
-                manga = response.body();
-                loadContent();
-            }
+                    @Override
+                    public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
+                        manga = response.body();
+                        loadContent();
+                    }
 
-            @Override
-            public void onFailure(Throwable t) {
+                    @Override
+                    public void onFailure(Throwable t) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void loadContent() {
         ((TextView) findViewById(R.id.subtitle_author)).setText(manga.getAuthor());
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.manga_item_collapsing_toolbar);
         collapsingToolbarLayout.setTitle(manga.getTitle());
+//        ((TextView) findViewById(R.id.chapter_title)).setText(manga.getTitle());
+//        Log.d("uhh", (String) ((TextView) findViewById(R.id.chapter_title)).getText());
         updateRecyclerView();
     }
 
