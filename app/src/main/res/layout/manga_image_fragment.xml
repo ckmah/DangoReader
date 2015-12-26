@@ -6,8 +6,8 @@
     android:background="@android:color/black"
     android:orientation="vertical">
 
-    <it.sephiroth.android.library.imagezoom.ImageViewTouch
-        android:id="@+id/image_view_touch"
+    <uk.co.senab.photoview.PhotoView
+        android:id="@+id/manga_image_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scaleType="fitCenter" />

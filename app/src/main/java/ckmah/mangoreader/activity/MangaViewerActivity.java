@@ -1,6 +1,7 @@
 package ckmah.mangoreader.activity;
 
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -24,7 +25,6 @@ import java.util.List;
 
 import ckmah.mangoreader.adapter.MangaImagePagerAdapter;
 import ckmah.mangoreader.animation.AnimationHelper;
-import ckmah.mangoreader.listener.MVPGestureListener;
 import ckmah.mangoreader.listener.MangaViewPagerSeekBarChangeListener;
 import ckmah.mangoreader.model.MangaEdenImageItem;
 import ckmah.mangoreader.parse.MangaEden;
@@ -43,12 +43,19 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     private AnimationHelper animationHelper = new AnimationHelper();
 
+
+    private boolean isUIVisible;
+
+    private static final float LEFT_SIDE = 0.33f;
+    private static final float RIGHT_SIDE = 0.66f;
+
+
     private Toolbar mToolbar;
     private Toolbar seekBarToolBar;
 
     private MangaViewPager mangaViewPager;
     private MangaImagePagerAdapter imageAdapter;
-    private MVPGestureListener gestureListener;
+
 
     private ReversibleSeekBar seekBar;
     private MangaViewPagerSeekBarChangeListener mangaViewPagerSeekBarChangeListener;
@@ -115,7 +122,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         });
 
         TextView pageNumberView = (TextView) findViewById(R.id.page_number);
-        final FrameLayout uiLayout = (FrameLayout) findViewById(R.id.ui_layout);
+
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -128,40 +135,21 @@ public class MangaViewerActivity extends AppCompatActivity {
         seekBarToolBar.setContentInsetsAbsolute(0, 0);
         mangaViewPager.activity = this;
 
+        // read in global settings
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        readLeftToRight = sharedPref.getBoolean(getString(R.string.PREF_KEY_READ_DIRECTION), false);
+        boolean showPageNumbers = sharedPref.getBoolean(getString(R.string.PREF_KEY_PAGE_NUMBERS), false);
+
+
         mangaViewPagerSeekBarChangeListener = new MangaViewPagerSeekBarChangeListener(mangaViewPager, seekBar, pageNumberView);
 
-        // assign gestureListener to handle showing/hiding UI along with other gesture actions
-        gestureListener = new MVPGestureListener(this, mangaViewPager, true) {
 
-            @Override
-            public void hideSystemUI() {
-                animationHelper.fadeOut(uiLayout);
-                getWindow().getDecorView().setSystemUiVisibility( // hide system UI
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                                | View.SYSTEM_UI_FLAG_IMMERSIVE);
-            }
-
-            @Override
-            public void showSystemUI() {
-                animationHelper.fadeIn(uiLayout);
-                getWindow().getDecorView().setSystemUiVisibility( // show system UI
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            }
-        };
 
         // set all listeners
         seekBar.setOnSeekBarChangeListener(mangaViewPagerSeekBarChangeListener);
         mangaViewPager.addOnPageChangeListener(mangaViewPagerSeekBarChangeListener);
-        mangaViewPager.setMVPGestureListener(gestureListener);
 
         // pass in reading direction
-        gestureListener.setLeftToRight(readLeftToRight);
         mangaViewPager.setLeftToRight(readLeftToRight);
 
         // read in manga and chapter data
@@ -171,10 +159,6 @@ public class MangaViewerActivity extends AppCompatActivity {
         chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
         chapterTotalSize = chapterIds != null ? chapterIds.size() : 0;
 
-        // read in global settings
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        readLeftToRight = sharedPref.getBoolean(getString(R.string.PREF_KEY_READ_DIRECTION), false);
-        boolean showPageNumbers = sharedPref.getBoolean(getString(R.string.PREF_KEY_PAGE_NUMBERS), false);
 
         displayChapter();
     }
@@ -202,10 +186,14 @@ public class MangaViewerActivity extends AppCompatActivity {
 
                 if (readLeftToRight) {
                     Collections.reverse(images);
+                    leftBubble.setText(R.string.back);
+                    rightBubble.setText(R.string.next);
                     imageAdapter.notifyDataSetChanged();
                     mangaViewPager.setCurrentItem(0, false);
                     Log.d("DisplayChapter", "showing fragment " + 0);
                 } else {
+                    leftBubble.setText(R.string.next);
+                    rightBubble.setText(R.string.back);
                     mangaViewPager.setCurrentItem(images.size() - 1, false);
                     Log.d("DisplayChapter", "showing fragment " + (images.size() - 1));
                 }
@@ -268,7 +256,7 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     public void reverseReadingDirection() {
         mangaViewPager.setLeftToRight(readLeftToRight);
-        gestureListener.setLeftToRight(readLeftToRight);
+//        gestureListener.setLeftToRight(readLeftToRight);
         seekBar.setLeftToRight(readLeftToRight);
         if (readLeftToRight) {
             leftBubble.setText(R.string.back);
@@ -345,4 +333,52 @@ public class MangaViewerActivity extends AppCompatActivity {
         return images;
     }
 
+    public void hideSystemUI() {
+        final FrameLayout uiLayout = (FrameLayout) findViewById(R.id.ui_layout);
+        animationHelper.fadeOut(uiLayout);
+        getWindow().getDecorView().setSystemUiVisibility( // hide system UI
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+    }
+
+    public void showSystemUI() {
+        final FrameLayout uiLayout = (FrameLayout) findViewById(R.id.ui_layout);
+        animationHelper.fadeIn(uiLayout);
+        getWindow().getDecorView().setSystemUiVisibility( // show system UI
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
+
+
+    public void handleTap(View view, float x, float y) {
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        float screenWidth = size.x;
+        if (x < LEFT_SIDE * screenWidth) {
+            if (readLeftToRight) {
+                mangaViewPager.previousPage();
+            } else {
+                mangaViewPager.nextPage();
+            }
+        } else if (x > RIGHT_SIDE * screenWidth) {
+            if (readLeftToRight) {
+                mangaViewPager.nextPage();
+            } else {
+                mangaViewPager.previousPage();
+            }
+        } else {
+            if (isUIVisible) {
+                hideSystemUI();
+                isUIVisible = false;
+            } else {
+                showSystemUI();
+                isUIVisible = true;
+            }
+        }
+    }
 }
