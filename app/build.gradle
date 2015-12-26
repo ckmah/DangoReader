@@ -44,10 +44,11 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc3'
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'it.sephiroth.android.library.imagezoom:imagezoom:2.2.2'
     compile 'de.greenrobot:greendao:2.0.0'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
+
+    compile 'com.commit451:PhotoView:1.2.4'
 }
