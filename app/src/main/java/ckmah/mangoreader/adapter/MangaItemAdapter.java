@@ -198,7 +198,7 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public ChapterViewHolder(View chapterView) {
             super(chapterView);
             numberView = (TextView) chapterView.findViewById(R.id.chapter_number);
-            titleView = (TextView) chapterView.findViewById(R.id.chapter_title);
+            titleView = (TextView) chapterView.findViewById(R.id.toolbar_chapter_title);
         }
     }
 }

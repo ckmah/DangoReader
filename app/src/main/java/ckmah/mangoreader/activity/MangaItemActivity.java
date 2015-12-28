@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.william.mangoreader.R;
 
@@ -113,12 +114,16 @@ public class MangaItemActivity extends AppCompatActivity {
                 });
     }
 
+    // issue #62
     private void loadContent() {
         ((TextView) findViewById(R.id.subtitle_author)).setText(manga.getAuthor());
+        TextView mangaTitleView = (TextView) findViewById(R.id.toolbar_chapter_title);
+        mangaTitleView.setSelected(true);
+        mangaTitleView.setText(manga.getTitle());
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.manga_item_collapsing_toolbar);
-        collapsingToolbarLayout.setTitle(manga.getTitle());
-//        ((TextView) findViewById(R.id.chapter_title)).setText(manga.getTitle());
-//        Log.d("uhh", (String) ((TextView) findViewById(R.id.chapter_title)).getText());
+//        collapsingToolbarLayout.setTitle(manga.getTitle());
+        Log.d("uhh", (String) mangaTitleView.getText());
+        Toast.makeText(MangaItemActivity.this, manga.getTitle(), Toast.LENGTH_SHORT).show();
         updateRecyclerView();
     }
 
