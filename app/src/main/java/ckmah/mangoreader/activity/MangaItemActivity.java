@@ -1,7 +1,6 @@
 package ckmah.mangoreader.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.william.mangoreader.R;
 
@@ -51,6 +49,7 @@ public class MangaItemActivity extends AppCompatActivity {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_item);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,16 +113,11 @@ public class MangaItemActivity extends AppCompatActivity {
                 });
     }
 
-    // issue #62
     private void loadContent() {
-        ((TextView) findViewById(R.id.subtitle_author)).setText(manga.getAuthor());
-        TextView mangaTitleView = (TextView) findViewById(R.id.toolbar_chapter_title);
-        mangaTitleView.setSelected(true);
+        TextView mangaTitleView = (TextView) findViewById(R.id.manga_item_chapter_title);
         mangaTitleView.setText(manga.getTitle());
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.manga_item_collapsing_toolbar);
-//        collapsingToolbarLayout.setTitle(manga.getTitle());
-        Log.d("uhh", (String) mangaTitleView.getText());
-        Toast.makeText(MangaItemActivity.this, manga.getTitle(), Toast.LENGTH_SHORT).show();
+        mangaTitleView.setSelected(true); // for marquee to scroll
+        ((TextView) findViewById(R.id.subtitle_author)).setText(manga.getAuthor());
         updateRecyclerView();
     }
 
