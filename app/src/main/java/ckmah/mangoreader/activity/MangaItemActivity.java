@@ -1,7 +1,6 @@
 package ckmah.mangoreader.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,6 +49,7 @@ public class MangaItemActivity extends AppCompatActivity {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_item);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,23 +100,24 @@ public class MangaItemActivity extends AppCompatActivity {
         MangaEden.getMangaEdenService(this)
                 .getMangaDetails(mangaListItem.id)
                 .enqueue(new Callback<MangaEdenMangaDetailItem>() {
-            @Override
-            public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
-                manga = response.body();
-                loadContent();
-            }
+                    @Override
+                    public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
+                        manga = response.body();
+                        loadContent();
+                    }
 
-            @Override
-            public void onFailure(Throwable t) {
+                    @Override
+                    public void onFailure(Throwable t) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void loadContent() {
+        TextView mangaTitleView = (TextView) findViewById(R.id.manga_item_chapter_title);
+        mangaTitleView.setText(manga.getTitle());
+        mangaTitleView.setSelected(true); // for marquee to scroll
         ((TextView) findViewById(R.id.subtitle_author)).setText(manga.getAuthor());
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.manga_item_collapsing_toolbar);
-        collapsingToolbarLayout.setTitle(manga.getTitle());
         updateRecyclerView();
     }
 

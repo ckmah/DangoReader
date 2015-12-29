@@ -1,6 +1,7 @@
 package ckmah.mangoreader.activity;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -40,9 +42,9 @@ public class MangaViewerActivity extends AppCompatActivity {
     private static float LAYOUT_HEIGHT;
     private static float SEEKBAR_YPOS;
     private static float STATUS_BAR_YPOS;
+    private static float SCALE;
 
     private AnimationHelper animationHelper = new AnimationHelper();
-
 
     private boolean isUIVisible;
 
@@ -68,6 +70,8 @@ public class MangaViewerActivity extends AppCompatActivity {
     private int chapterTotalSize;
     private ArrayList<String> chapterIds, chapterTitles;
 
+    FrameLayout uiLayout;
+
     private boolean readLeftToRight; // true - left to right; false - right to left
     private TextView leftBubble;
     private TextView rightBubble;
@@ -86,6 +90,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         LAYOUT_HEIGHT = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
         STATUS_BAR_YPOS = (float) Math.ceil(25 * getResources().getDisplayMetrics().density);
         SEEKBAR_YPOS = (float) Math.ceil(LAYOUT_HEIGHT - (32 * getResources().getDisplayMetrics().density));
+        SCALE = getResources().getDisplayMetrics().density;
 
         images = new ArrayList<>();
 
@@ -93,6 +98,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_viewer);
         seekBarToolBar = (Toolbar) findViewById(R.id.toolbar_seekbar);
         seekBar = (ReversibleSeekBar) findViewById(R.id.seekBar);
+        uiLayout = (FrameLayout) findViewById(R.id.ui_layout);
         mangaViewPager = (MangaViewPager) findViewById(R.id.manga_view_pager);
         leftBubble = (TextView) findViewById(R.id.left_bubble);
         rightBubble = (TextView) findViewById(R.id.right_bubble);
@@ -123,7 +129,6 @@ public class MangaViewerActivity extends AppCompatActivity {
 
         TextView pageNumberView = (TextView) findViewById(R.id.page_number);
 
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -132,6 +137,7 @@ public class MangaViewerActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        mToolbar.setTitle("");
         seekBarToolBar.setContentInsetsAbsolute(0, 0);
         mangaViewPager.activity = this;
 
@@ -140,10 +146,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         readLeftToRight = sharedPref.getBoolean(getString(R.string.PREF_KEY_READ_DIRECTION), false);
         boolean showPageNumbers = sharedPref.getBoolean(getString(R.string.PREF_KEY_PAGE_NUMBERS), false);
 
-
         mangaViewPagerSeekBarChangeListener = new MangaViewPagerSeekBarChangeListener(mangaViewPager, seekBar, pageNumberView);
-
-
 
         // set all listeners
         seekBar.setOnSeekBarChangeListener(mangaViewPagerSeekBarChangeListener);
@@ -159,13 +162,28 @@ public class MangaViewerActivity extends AppCompatActivity {
         chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
         chapterTotalSize = chapterIds != null ? chapterIds.size() : 0;
 
-
+        isUIVisible = true;
         displayChapter();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) seekBarToolBar.getLayoutParams();
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            p.setMargins(0, (int) (25 * SCALE), 0, 0);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            p.setMargins(0, (int) (25 * SCALE), 0, (int) (48 * SCALE));
+
+        }
+    }
+
+
     private void displayChapter() {
-        // chapter title set to manga name and chapter #
-        getSupportActionBar().setTitle(mangaTitle + " - Ch. " + getChapterTitle());
+        // chapter title set to manga name and chapter #. Example: "Ch. 1 - Naruto"
+        String title = "Ch. " + getChapterTitle() + " - " + mangaTitle;
+        ((TextView) findViewById(R.id.toolbar_chapter_title)).setText(title);
 
         // TODO show progressbar or loading indicator
 
@@ -333,7 +351,6 @@ public class MangaViewerActivity extends AppCompatActivity {
     }
 
     public void hideSystemUI() {
-        final FrameLayout uiLayout = (FrameLayout) findViewById(R.id.ui_layout);
         animationHelper.fadeOut(uiLayout);
         getWindow().getDecorView().setSystemUiVisibility( // hide system UI
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -345,7 +362,6 @@ public class MangaViewerActivity extends AppCompatActivity {
     }
 
     public void showSystemUI() {
-        final FrameLayout uiLayout = (FrameLayout) findViewById(R.id.ui_layout);
         animationHelper.fadeIn(uiLayout);
         getWindow().getDecorView().setSystemUiVisibility( // show system UI
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
