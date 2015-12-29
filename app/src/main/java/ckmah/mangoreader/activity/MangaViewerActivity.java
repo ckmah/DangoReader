@@ -164,8 +164,9 @@ public class MangaViewerActivity extends AppCompatActivity {
     }
 
     private void displayChapter() {
-        // chapter title set to manga name and chapter #
-        getSupportActionBar().setTitle(mangaTitle + " - Ch. " + getChapterTitle());
+        // chapter title set to manga name and chapter #. Example: "Ch. 1 - Naruto"
+        String title = "Ch. " + getChapterTitle() + " - " + mangaTitle;
+        ((TextView) findViewById(R.id.toolbar_chapter_title)).setText(title);
 
         // TODO show progressbar or loading indicator
 
