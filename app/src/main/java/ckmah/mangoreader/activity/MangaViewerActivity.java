@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.william.mangoreader.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +30,7 @@ import ckmah.mangoreader.adapter.MangaImagePagerAdapter;
 import ckmah.mangoreader.animation.AnimationHelper;
 import ckmah.mangoreader.listener.MangaViewPagerSeekBarChangeListener;
 import ckmah.mangoreader.model.MangaEdenImageItem;
+import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
 import ckmah.mangoreader.seekbar.ReversibleSeekBar;
 import ckmah.mangoreader.viewpager.MangaViewPager;
@@ -50,6 +52,7 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     private static final float LEFT_SIDE = 0.33f;
     private static final float RIGHT_SIDE = 0.66f;
+    private static final String IMAGES_KEY = "images";
 
 
     private Toolbar mToolbar;
@@ -92,7 +95,15 @@ public class MangaViewerActivity extends AppCompatActivity {
         SEEKBAR_YPOS = (float) Math.ceil(LAYOUT_HEIGHT - (32 * getResources().getDisplayMetrics().density));
         SCALE = getResources().getDisplayMetrics().density;
 
-        images = new ArrayList<>();
+        // Check whether we're recreating a previously destroyed instance
+        if (savedInstanceState != null) {
+            // Restore image list from saved state
+            images = (ArrayList<MangaEdenImageItem>) savedInstanceState.getSerializable(IMAGES_KEY);
+        } else {
+            // Otherwise initialize empty list of images
+            images = new ArrayList<>();
+        }
+
 
         // initialize views
         mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_viewer);
@@ -399,5 +410,14 @@ public class MangaViewerActivity extends AppCompatActivity {
                 isUIVisible = true;
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the list of images, if activity is being destroyed due to lack of resources
+        savedInstanceState.putSerializable(IMAGES_KEY, (Serializable) images);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 }
