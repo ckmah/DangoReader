@@ -1,5 +1,6 @@
 package ckmah.mangoreader.activity;
 
+import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -43,8 +44,16 @@ public class SettingsActivity extends PreferenceActivity {
             }
         });
 
-        // TODO: crashes on rotate - Fragment SettingsActivity$SettingsFragment did not create a view.
-        getFragmentManager().beginTransaction().replace(R.id.preference_fragment, new SettingsFragment()).commit();
+        FragmentManager fm = getFragmentManager();
+        SettingsFragment preferenceFragment = (SettingsFragment) fm.findFragmentById(R.id.preference_fragment);
+
+        // If the Fragment is non-null, then it is currently being
+        // retained across a configuration change.
+        if (preferenceFragment == null) {
+            preferenceFragment = new SettingsFragment();
+            getFragmentManager().beginTransaction().replace(R.id.preference_fragment, new SettingsFragment()).commit();
+            fm.executePendingTransactions();
+        }
     }
 
     @Override

@@ -104,6 +104,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         rightBubble = (TextView) findViewById(R.id.right_bubble);
         ImageButton leftChapterButton = (ImageButton) findViewById(R.id.left_chapter);
         ImageButton rightChapterButton = (ImageButton) findViewById(R.id.right_chapter);
+        TextView pageNumberView = (TextView) findViewById(R.id.page_number);
 
         // buttons change chapters according to read direction
         leftChapterButton.setOnClickListener(new View.OnClickListener() {
@@ -127,7 +128,6 @@ public class MangaViewerActivity extends AppCompatActivity {
             }
         });
 
-        TextView pageNumberView = (TextView) findViewById(R.id.page_number);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -168,6 +168,9 @@ public class MangaViewerActivity extends AppCompatActivity {
     }
 
     @Override
+    /**
+     * Change layout responding to orientation change.
+     */
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
