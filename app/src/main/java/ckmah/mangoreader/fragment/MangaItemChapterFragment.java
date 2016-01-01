@@ -13,7 +13,6 @@ import com.william.mangoreader.R;
 import ckmah.mangoreader.adapter.MangaItemAdapter;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 
-@Deprecated
 public class MangaItemChapterFragment extends Fragment {
     private static final String CHAPTER_FRAGMENT_KEY = "chapter_fragment_key";
     private MangaEdenMangaDetailItem mangaDetailItem;

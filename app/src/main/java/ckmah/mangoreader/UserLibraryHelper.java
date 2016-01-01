@@ -54,18 +54,18 @@ public class UserLibraryHelper {
         try { // insert and show snackbar with undo, return true if successful, false otherwise
             MangoReaderActivity.userLibraryMangaDao.insert(mangaItem);
             Snackbar
-                    .make(activity.findViewById(R.id.parent_layout), added, Snackbar.LENGTH_LONG)
-                    .setAction("UNDO", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            removeFromLibrary(m, button, activity, false, adapter, position);
-                            button.setSelected(false);
-                            if (adapter != null) { // basically called from browse or library
-                                removeFromListUpdate(adapter.fragment, adapter, position);
-                            }
+                .make(activity.findViewById(R.id.parent_layout), added, Snackbar.LENGTH_LONG)
+                .setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        removeFromLibrary(m, button, activity, false, adapter, position);
+                        button.setSelected(false);
+                        if (adapter != null) { // basically called from browse or library
+                            removeFromListUpdate(adapter.fragment, adapter, position);
                         }
-                    })
-                    .show();
+                    }
+                })
+                .show();
 
             if (adapter != null) { // basically called from browse or library
                 addToListUpdate(m, adapter.fragment, adapter, position);
@@ -107,19 +107,19 @@ public class UserLibraryHelper {
         if (showUndo) {
             button.setSelected(false);
             Snackbar
-                    .make(activity.findViewById(R.id.parent_layout), removed, Snackbar.LENGTH_LONG)
-                    .setAction("UNDO", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            MangoReaderActivity.userLibraryMangaDao.insert((UserLibraryManga) l.get(0));
-                            Snackbar.make(activity.findViewById(R.id.parent_layout), removed, Snackbar.LENGTH_LONG);
-                            button.setSelected(true);
-                            if (adapter != null) { // basically called from browse or library
-                                addToListUpdate(m, adapter.fragment, adapter, position);
-                            }
+                .make(activity.findViewById(R.id.parent_layout), removed, Snackbar.LENGTH_LONG)
+                .setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MangoReaderActivity.userLibraryMangaDao.insert((UserLibraryManga) l.get(0));
+                        Snackbar.make(activity.findViewById(R.id.parent_layout), removed, Snackbar.LENGTH_LONG);
+                        button.setSelected(true);
+                        if (adapter != null) { // basically called from browse or library
+                            addToListUpdate(m, adapter.fragment, adapter, position);
                         }
-                    })
-                    .show();
+                    }
+                })
+                .show();
         } else {
             button.setSelected(false);
             Snackbar

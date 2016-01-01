@@ -42,7 +42,7 @@ public class MangaEden {
     }
 
     public interface MangaEdenService {
-        @GET("/list/0")
+        @GET("/list/0/")
         void listAllManga(retrofit.Callback<MangaEdenList> callback);
 
         @GET("/manga/{id}")

@@ -37,8 +37,6 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
     public DaoSession daoSession;
     public static UserLibraryMangaDao userLibraryMangaDao;
 
-    private Cursor cursor;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
