@@ -63,13 +63,13 @@ public class MangaItemDetailFragment extends Fragment {
 
         categories = (TextView) rootView.findViewById(R.id.manga_item_categories);
         String categoryListString = mangaDetailItem.getCategories().toString();
-        categories.setText(categoryListString.substring(1,categoryListString.length()));
+        categories.setText(categoryListString.substring(1,categoryListString.length()-1));
 
         hits = (TextView) rootView.findViewById(R.id.manga_item_hits);
         hits.setText("" + mangaDetailItem.getHits());
 
         language = (TextView) rootView.findViewById(R.id.manga_item_language);
-        language.setText(mangaDetailItem.getLanguage());
+        language.setText((mangaDetailItem.getLanguage() == 0) ? "English" : "Italian");
 
         lastUpdated = (TextView) rootView.findViewById(R.id.manga_item_last_chapter_date);
         Date lastChapterDate = new Date(mangaDetailItem.getLastChapterDate() * 1000L);
