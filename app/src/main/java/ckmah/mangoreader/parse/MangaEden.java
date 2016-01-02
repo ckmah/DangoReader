@@ -6,6 +6,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
@@ -26,7 +28,7 @@ import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import retrofit.Call;
-import retrofit.GsonConverterFactory;
+import retrofit.JacksonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -34,11 +36,12 @@ import retrofit.http.Path;
 public class MangaEden {
     public static final String MANGAEDEN_IMAGE_CDN = "https://cdn.mangaeden.com/mangasimg/";
 
-    public class MangaEdenList {
+    @JsonIgnoreProperties({"end", "page", "start", "total"})
+    public static class MangaEdenList {
         public List<MangaEdenMangaListItem> manga;
     }
 
-    public class MangaEdenChapter {
+    public static class MangaEdenChapter {
         public List<MangaEdenImageItem> images;
     }
 
@@ -79,10 +82,14 @@ public class MangaEden {
                     .registerTypeAdapter(MangaEdenImageItem.class, new MangaEdenImageItem.ImageDeserializer())
                     .create();
 
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.canDeserialize(mapper.constructType(MangaEdenChapter.class));
+
             service = new Retrofit.Builder()
                     .baseUrl("https://www.mangaeden.com/")
                     .client(okHttpClient)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
+//                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addConverterFactory(JacksonConverterFactory.create(mapper))
 //                    .setRequestInterceptor(new RequestInterceptor() {
 //                        @Override
 //                        public void intercept(RequestFacade request) {
