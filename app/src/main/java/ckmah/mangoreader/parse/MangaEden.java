@@ -68,8 +68,10 @@ public class MangaEden {
             okHttpClient.interceptors().add(new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
+                    int maxStale = 60 * 60 * 24; // tolerate 1 day stale
+
                     Response response = chain.proceed(chain.request());
-//                    response.cacheControl().
+                    response.newBuilder().addHeader("Cache-Control", "public, max-age=" + maxStale);
                     return response;
                 }
             });
@@ -83,26 +85,6 @@ public class MangaEden {
                     .baseUrl("https://www.mangaeden.com/")
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
-//                    .setRequestInterceptor(new RequestInterceptor() {
-//                        @Override
-//                        public void intercept(RequestFacade request) {
-//                            // TODO test to make sure it does get cached i.e. doesn't use internet for the next day
-//                            int maxStale = 60 * 60 * 24; // tolerate 1 day stale
-//                            request.addHeader("Cache-Control", "public, max-age=" + maxStale);
-//                        }
-//                    })
-//                    .setProfiler(new Profiler() {
-//                        @Override
-//                        public Object beforeCall() {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public void afterCall(RequestInformation requestInfo, long elapsedTime, int statusCode, Object beforeCallData) {
-//                            Log.d("Retrofit Profiler", String.format("HTTP %d %s %s (%dms)",
-//                                    statusCode, requestInfo.getMethod(), requestInfo.getRelativePath(), elapsedTime));
-//                        }
-//                    })
                     .build()
                     .create(MangaEdenService.class);
         }
