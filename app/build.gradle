@@ -51,7 +51,8 @@ dependencies {
 
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc3'
     compile 'com.google.code.gson:gson:2.3'
-    compile 'de.greenrobot:greendao:2.0.0'
 
+    compile 'de.greenrobot:greendao:2.0.0'
     compile 'com.commit451:PhotoView:1.2.4'
+    compile 'joda-time:joda-time:2.9.1'
 }

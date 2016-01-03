@@ -58,6 +58,9 @@
             </intent-filter>
 
         </activity>
+        <service
+            android:name="ckmah.mangoreader.UpdateService"
+            android:exported="false" />
 
     </application>
 

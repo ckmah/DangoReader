@@ -119,7 +119,7 @@ public class MangaItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 detailsHolder.hitsView.setText("" + detailsItem.getHits());
                 detailsHolder.languageView.setText((detailsItem.getLanguage() == 0) ? "English" : "Italian");
 
-                Date lastChapterDate = new Date(detailsItem.getLastChapterDate() * 1000L);
+                Date lastChapterDate = new Date(detailsItem.getLastChapterDate() * 1000L); // Convert ms to sec
                 DateFormat sdf = SimpleDateFormat.getDateInstance();
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT-8"));
                 detailsHolder.lastChapterDateView.setText(sdf.format(lastChapterDate));
