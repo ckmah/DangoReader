@@ -29,13 +29,27 @@
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/gradient" />
 
-            <ImageButton
-                android:id="@+id/card_bookmark_toggle"
+            <FrameLayout
                 style="@style/CardBookmarkToggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentRight="true">
+
+                <ImageButton
+                    android:id="@+id/card_bookmark_toggle"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/card_recently_updated"
+                style="@style/CardUpdatedIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bookmark_long"
+                android:tint="@color/md_red_700" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

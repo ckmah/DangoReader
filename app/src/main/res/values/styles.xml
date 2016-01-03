@@ -75,9 +75,17 @@
     <!-- This style also cloned in v21 -->
     <style name="CardBookmarkToggle">
         <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-        <item name="android:padding">@dimen/card_bookmark_padding</item>
+        <item name="android:layout_margin">@dimen/card_bookmark_padding</item>
     </style>
+
+    <style name="CardUpdatedIndicator">
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
 
     <style name="CardTitle">
         <item name="android:ellipsize">end</item>
