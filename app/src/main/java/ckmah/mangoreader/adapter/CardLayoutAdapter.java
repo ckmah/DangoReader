@@ -58,7 +58,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         viewHolder.subtitle.setText("Placeholder");
         MangaEden.setThumbnail(filteredManga.get(position).imageUrl, activity.getApplicationContext(), viewHolder.thumbnail);
         viewHolder.manga = filteredManga.get(position);
-        viewHolder.bookmarkToggle.setSelected(UserLibraryHelper.findMangaInLibrary(viewHolder.manga).size() > 0);
+        viewHolder.bookmarkToggle.setSelected(UserLibraryHelper.isInLibrary(viewHolder.manga));
         viewHolder.bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
 
         final CardLayoutAdapter adapter = this;

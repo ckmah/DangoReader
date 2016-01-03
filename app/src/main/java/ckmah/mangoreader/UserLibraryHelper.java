@@ -25,11 +25,11 @@ public class UserLibraryHelper {
     private static String added;
     private static String removed;
 
-
-    public static List findMangaInLibrary(final MangaEdenMangaListItem m) {
+    public static boolean isInLibrary(final MangaEdenMangaListItem item) {
+        // If any manga ids are matched, then manga must be in library.
         QueryBuilder qb = MangoReaderActivity.userLibraryMangaDao.queryBuilder();
-        qb.where(UserLibraryMangaDao.Properties.MangaEdenId.eq(m.id));
-        return qb.list();
+        qb.where(UserLibraryMangaDao.Properties.MangaEdenId.eq(item.id));
+        return qb.list().size() > 0;
     }
 
     /**
@@ -89,17 +89,20 @@ public class UserLibraryHelper {
      * @param showUndo
      */
     public static void removeFromLibrary(final MangaEdenMangaListItem m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
-        final List l = findMangaInLibrary(m);
-        added = "\"" + m.title + "\" added to your library under \"Plan to Read\"";
-        removed = "\"" + m.title + "\" removed from your library.";
-
         // don't do anything if not found in library
-        if (l.size() == 0) {
+        if(!isInLibrary(m)) {
             Log.e("MangoReader", "No manga found in user library.");
             return;
         }
 
-        UserLibraryManga mangaItem = (UserLibraryManga) l.get(0);
+        added = "\"" + m.title + "\" added to your library under \"Plan to Read\"";
+        removed = "\"" + m.title + "\" removed from your library.";
+
+        QueryBuilder qb = MangoReaderActivity.userLibraryMangaDao.queryBuilder();
+        qb.where(UserLibraryMangaDao.Properties.MangaEdenId.eq(m.id));
+        List<UserLibraryManga> matches = qb.list();
+
+        final UserLibraryManga mangaItem = matches.get(0);
         MangoReaderActivity.userLibraryMangaDao.delete(mangaItem);
         removed = "\"" + m.title + "\" removed from your library.";
 
@@ -111,7 +114,7 @@ public class UserLibraryHelper {
                     .setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            MangoReaderActivity.userLibraryMangaDao.insert((UserLibraryManga) l.get(0));
+                            MangoReaderActivity.userLibraryMangaDao.insert(mangaItem);
                             Snackbar.make(activity.findViewById(R.id.parent_layout), removed, Snackbar.LENGTH_LONG);
                             button.setSelected(true);
                             if (adapter != null) { // basically called from browse or library
