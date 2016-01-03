@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:exitFadeDuration="@android:integer/config_mediumAnimTime">
 
-    <item android:drawable="@drawable/bookmark" android:state_selected="true" />
-    <item android:drawable="@drawable/bookmark_outline" />
+    <item android:drawable="@drawable/heart" android:state_selected="true" />
+    <item android:drawable="@drawable/heart_outline" />
 
 </selector>
