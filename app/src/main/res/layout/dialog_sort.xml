@@ -5,37 +5,51 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RadioGroup
-        android:id="@+id/sort_radiogroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/reverse_switch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Reverse Order" />
-
-    <android.support.v7.widget.AppCompatCheckBox
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/genre_toggle"
-        android:text="Select All"/>
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="400dp">
 
-        <GridLayout
-            android:id="@+id/genre_options"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:columnCount="2"
-            android:orientation="vertical"
-            android:rowCount="17">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        </GridLayout>
+            <RadioGroup
+                android:id="@+id/sort_radiogroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/reverse_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="Reverse Order" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/genre_toggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+                android:text="Select All" />
+
+            <!--<ScrollView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="200dp">-->
+
+            <GridLayout
+                android:id="@+id/genre_options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:columnCount="2"
+                android:orientation="vertical"
+                android:rowCount="17">
+
+            </GridLayout>
+        </LinearLayout>
     </ScrollView>
+    <!--</ScrollView>-->
 
 </LinearLayout>

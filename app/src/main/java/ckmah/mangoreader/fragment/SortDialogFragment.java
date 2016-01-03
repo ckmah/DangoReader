@@ -39,7 +39,6 @@ public class SortDialogFragment extends DialogFragment {
 
     public static SortDialogFragment newInstance(CardLayoutAdapter cardAdapter) {
 
-
         Bundle args = new Bundle();
         args.putSerializable(CARD_ADAPTER, cardAdapter);
         SortDialogFragment fragment = new SortDialogFragment();
