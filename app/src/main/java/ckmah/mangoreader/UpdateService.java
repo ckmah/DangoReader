@@ -13,8 +13,6 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import ckmah.mangoreader.activity.MangoReaderActivity;
@@ -51,7 +49,6 @@ public class UpdateService extends IntentService {
 
                     // Check whether manga is in library
                     if (UserLibraryHelper.isInLibrary(item)) {
-                        Log.d("UpdateService", lastChapterDate.toString() + " -- " + item.title);
                         updated.add(item);
                     }
                 }
@@ -63,49 +60,55 @@ public class UpdateService extends IntentService {
         }
     }
 
+    /**
+     * Builds a notification from a list of updated manga
+     */
     private void notify(List<MangaEdenMangaListItem> updated) {
-        String message;
+        // Create the notification title
+        String title;
         switch (updated.size()) {
             case 0:
                 // Nothing updated, exit without notification
                 return;
             case 1:
                 // Only 1 item updated
-                message = String.format("%s was updated");
+                title = "New chapter available";
                 break;
             default:
-                // Multiple updated, find newest one
-                MangaEdenMangaListItem newest = Collections.min(updated, new Comparator<MangaEdenMangaListItem>() {
-                    @Override
-                    public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
-                        return (int) (lhs.lastChapterDate - rhs.lastChapterDate);
-                    }
-                });
-                message = String.format("%s (+%d) were updated", newest.title, updated.size() - 1);
+                // Multiple updated
+                title = "New chapters available";
+                break;
         }
 
+        // Create a comma-separated string of manga titles
+        String message = "";
+        for (MangaEdenMangaListItem item : updated) {
+            message += ", " + item.title;
+        }
+        message = message.substring(2);
 
         // Sets up the notification
         android.support.v4.app.NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(message)
-                        .setContentText("Touch to read.");
+                        .setContentTitle(title)
+                        .setContentText(message);
 
+        // Sets up the larger notification aka expanded layout
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        inboxStyle.setBigContentTitle(title);
+        for (MangaEdenMangaListItem item : updated) {
+            inboxStyle.addLine(newestChapter(item));
+        }
+        mBuilder.setStyle(inboxStyle);
 
         // Launch MangoReaderActivity when notification is clicked
         Intent resultIntent = new Intent(this, MangoReaderActivity.class);
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
         PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+                PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
-
 
         // Sets an ID for the notification
         int mNotificationId = 001;
@@ -114,5 +117,26 @@ public class UpdateService extends IntentService {
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
+
+    /**
+     * Returns the title & newest chapter number
+     */
+    private String newestChapter(MangaEdenMangaListItem item) {
+        String result = item.title;
+        try {
+            String number = MangaEden
+                    .getMangaEdenService(this)
+                    .getMangaDetails(item.id)
+                    .execute()
+                    .body()
+                    .getChapters()
+                    .get(0)
+                    .getNumber();
+            result = String.format("Ch. %s — ", number) + result;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
