@@ -130,6 +130,12 @@
         </LinearLayout>
 
         <TextView
+            style="@style/MangaItemTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About" />
+
+        <TextView
             android:id="@+id/manga_item_description"
             style="@style/MangaItemDescription"
             android:layout_width="wrap_content"
