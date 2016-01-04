@@ -22,7 +22,6 @@ import com.william.mangoreader.R;
 
 import ckmah.mangoreader.DividerItemDecoration;
 import ckmah.mangoreader.UserLibraryHelper;
-import ckmah.mangoreader.adapter.MangaItemAdapter;
 import ckmah.mangoreader.adapter.MangaItemTabbedAdapter;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
@@ -44,8 +43,6 @@ public class MangaItemActivity extends AppCompatActivity {
     private MangaEdenMangaListItem mangaListItem;
     private RequestQueue queue;
     private MangaEdenMangaDetailItem manga;
-
-    private MangaItemAdapter mangaItemAdapter;
 
     private Palette.Swatch primaryColor;
     private Palette.Swatch secondaryColor;
@@ -80,12 +77,9 @@ public class MangaItemActivity extends AppCompatActivity {
         });
 
         initRecyclerView();
-
         queue = VolleySingleton.getInstance(this).getRequestQueue();
-
         mangaListItem = (MangaEdenMangaListItem) getIntent().getSerializableExtra("mangaListItem");
         fetchMangaDetailFromMangaEden();
-
     }
     */
 

@@ -4,22 +4,29 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.william.mangoreader.R;
 
-import ckmah.mangoreader.adapter.MangaItemAdapter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import ckmah.mangoreader.adapter.MangaItemRowAdapter;
+import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 
 public class MangaItemChapterFragment extends Fragment {
     private static final String CHAPTER_FRAGMENT_KEY = "chapter_fragment_key";
-    private MangaEdenMangaDetailItem mangaDetailItem;
 
+    private List<MangaEdenMangaChapterItem> chaptersCopy;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
-    private MangaItemAdapter chapterAdapter;
+    //private MangaItemAdapter chapterAdapter;
 
     public MangaItemChapterFragment() {
         // required empty constructor
@@ -27,10 +34,13 @@ public class MangaItemChapterFragment extends Fragment {
 
     public static MangaItemChapterFragment newInstance(MangaEdenMangaDetailItem mangaDetailItem) {
         MangaItemChapterFragment fragment = new MangaItemChapterFragment();
+        fragment.chaptersCopy = new ArrayList<>(mangaDetailItem.getChapters());
+        Collections.reverse(fragment.chaptersCopy);
         Bundle bundle = new Bundle();
         bundle.putSerializable(CHAPTER_FRAGMENT_KEY, mangaDetailItem);
         fragment.setArguments(bundle);
         return fragment;
+
     }
 
     @Override
@@ -41,23 +51,31 @@ public class MangaItemChapterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
+        final View rootView = inflater.inflate(R.layout.fragment_manga_item_chapters, container, false);
+        initRecycler(rootView);
 
-        mangaDetailItem = (MangaEdenMangaDetailItem) getArguments().getSerializable(CHAPTER_FRAGMENT_KEY);
+//        mangaDetailItem = (MangaEdenMangaDetailItem) getArguments().getSerializable(CHAPTER_FRAGMENT_KEY);
 //        View rootView = inflater.inflate(R.layout.fragment_chapters, container, false);
-//
 //        initRecycler(rootView);
 //        return rootView;
-        return null;
+//
+//        numberView = (TextView) chapterView.findViewById(R.id.chapter_number);
+//        titleView = (TextView) chapterView.findViewById(R.id.chapter_title);
+        return rootView;
     }
 
     private void initRecycler(View rootView) {
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.manga_item_recycler_view);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.chapter_recycler_view);
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
+        MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(getActivity(), this);
+        itemRowAdapter.setAllChapters(chaptersCopy);
+        mRecyclerView.setAdapter(itemRowAdapter);
 
-        chapterAdapter = new MangaItemAdapter(getActivity(), mangaDetailItem);
-
-        mRecyclerView.setAdapter(chapterAdapter);
+//        ItemTouchHelper.Callback callback =
+//                new SimpleItemTouchHelperCallback(itemRowAdapter);
+//        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+//        touchHelper.attachToRecyclerView(mRecyclerView);
     }
 }
