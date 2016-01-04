@@ -43,13 +43,28 @@
                     android:background="?attr/selectableItemBackgroundBorderless" />
             </FrameLayout>
 
-            <ImageView
-                android:id="@+id/card_recently_updated"
+            <FrameLayout
                 style="@style/CardUpdatedIndicator"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/bookmark_long"
-                android:tint="@color/md_red_700" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/card_recently_updated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/bookmark_long_red" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
+
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
