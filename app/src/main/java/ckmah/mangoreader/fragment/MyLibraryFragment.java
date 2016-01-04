@@ -3,6 +3,7 @@ package ckmah.mangoreader.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -51,17 +52,18 @@ public class MyLibraryFragment extends Fragment {
 //     Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_my_library, menu);
 
-        // TODO implement fetching manga
-//        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
-//        refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                Snackbar
-//                        .make(getActivity().findViewById(R.id.parent_layout), "Fetching manga...", Snackbar.LENGTH_SHORT)
-//                        .show();
-//                return false;
-//            }
-//        });
+        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
+        refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Snackbar
+                        .make(getActivity().findViewById(R.id.parent_layout), "Fetching manga...", Snackbar.LENGTH_SHORT)
+                        .show();
+                // TODO check for recently updated
+
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
     }
 

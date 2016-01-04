@@ -106,6 +106,10 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     private void initSwipeRefresh(View rootView) {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.browse_swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.colorPrimary,
+                R.color.colorPrimaryDark,
+                R.color.textColorSecondary);
     }
 
     private void fetchMangaListFromMangaEden() {
