@@ -9,7 +9,9 @@ import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Response;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.william.mangoreader.R;
@@ -23,10 +25,9 @@ import ckmah.mangoreader.model.MangaEdenImageItem;
 import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.client.OkClient;
-import retrofit.converter.GsonConverter;
+import retrofit.Call;
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
@@ -42,14 +43,15 @@ public class MangaEden {
     }
 
     public interface MangaEdenService {
-        @GET("/list/0/")
-        void listAllManga(retrofit.Callback<MangaEdenList> callback);
+        @GET("/api/list/0")
+        Call<MangaEdenList> listAllManga();
 
-        @GET("/manga/{id}")
-        void getMangaDetails(@Path("id") String mangaId, retrofit.Callback<MangaEdenMangaDetailItem> callback);
+        @GET("/api/manga/{id}")
+        Call<MangaEdenMangaDetailItem> getMangaDetails(@Path("id") String mangaId);
 
-        @GET("/chapter/{id}")
-        void getMangaImages(@Path("id") String mangaId, retrofit.Callback<MangaEdenChapter> callback);
+
+        @GET("/api/chapter/{id}")
+        Call<MangaEdenChapter> getMangaImages(@Path("id") String mangaId);
     }
 
     private static MangaEdenService service;
@@ -59,32 +61,48 @@ public class MangaEden {
             Log.d("SORTING", "CREATING NEW CACHE");
 
             OkHttpClient okHttpClient = new OkHttpClient();
-            try {
-                // TODO try wiping cache to see what happens
-                File httpCacheDirectory = new File(context.getCacheDir(), "responses");
-                Cache cache = new Cache(httpCacheDirectory, 20 * 1024 * 1024);
-                okHttpClient.setCache(cache);
-            } catch (IOException e) {
-                Log.e("OKHttp", "Could not create http cache", e);
-            }
+            // TODO try wiping cache to see what happens
+            File httpCacheDirectory = new File(context.getCacheDir(), "responses");
+            Cache cache = new Cache(httpCacheDirectory, 20 * 1024 * 1024);
+            okHttpClient.setCache(cache);
+            okHttpClient.interceptors().add(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Response response = chain.proceed(chain.request());
+//                    response.cacheControl().
+                    return response;
+                }
+            });
 
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(MangaEdenMangaChapterItem.class, new MangaEdenMangaChapterItem.ChapterDeserializer())
                     .registerTypeAdapter(MangaEdenImageItem.class, new MangaEdenImageItem.ImageDeserializer())
                     .create();
 
-            service = new RestAdapter.Builder()
-                    .setEndpoint("https://www.mangaeden.com/api/")
-                    .setClient(new OkClient(okHttpClient))
-                    .setRequestInterceptor(new RequestInterceptor() {
-                        @Override
-                        public void intercept(RequestFacade request) {
-                            // TODO test to make sure it does get cached i.e. doesn't use internet for the next day
-                            int maxStale = 60 * 60 * 24; // tolerate 1 day stale
-                            request.addHeader("Cache-Control", "public, max-age=" + maxStale);
-                        }
-                    })
-                    .setConverter(new GsonConverter(gson))
+            service = new Retrofit.Builder()
+                    .baseUrl("https://www.mangaeden.com/")
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+//                    .setRequestInterceptor(new RequestInterceptor() {
+//                        @Override
+//                        public void intercept(RequestFacade request) {
+//                            // TODO test to make sure it does get cached i.e. doesn't use internet for the next day
+//                            int maxStale = 60 * 60 * 24; // tolerate 1 day stale
+//                            request.addHeader("Cache-Control", "public, max-age=" + maxStale);
+//                        }
+//                    })
+//                    .setProfiler(new Profiler() {
+//                        @Override
+//                        public Object beforeCall() {
+//                            return null;
+//                        }
+//
+//                        @Override
+//                        public void afterCall(RequestInformation requestInfo, long elapsedTime, int statusCode, Object beforeCallData) {
+//                            Log.d("Retrofit Profiler", String.format("HTTP %d %s %s (%dms)",
+//                                    statusCode, requestInfo.getMethod(), requestInfo.getRelativePath(), elapsedTime));
+//                        }
+//                    })
                     .build()
                     .create(MangaEdenService.class);
         }

@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.android.volley.RequestQueue;
 import com.william.mangoreader.R;
 
 import ckmah.mangoreader.UserLibraryHelper;
@@ -21,7 +20,8 @@ import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
 import retrofit.Callback;
-import retrofit.RetrofitError;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Activity that displays a single manga, and shows manga info and chapters
@@ -33,7 +33,6 @@ public class MangaItemActivity extends AppCompatActivity {
     private ViewPager viewPager;
 
     private MangaEdenMangaListItem mangaListItem;
-    private RequestQueue queue;
     private MangaEdenMangaDetailItem manga;
 
     private Palette.Swatch primaryColor;
@@ -76,7 +75,6 @@ public class MangaItemActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    //from old manga item activity.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -108,18 +106,21 @@ public class MangaItemActivity extends AppCompatActivity {
     }
 
     private void fetchMangaDetailFromMangaEden() {
-        MangaEden.getMangaEdenService(this).getMangaDetails(mangaListItem.id, new Callback<MangaEdenMangaDetailItem>() {
-            @Override
-            public void success(MangaEdenMangaDetailItem item, retrofit.client.Response response) {
-                manga = item;
-                loadContent();
-            }
+        Log.d("SORTING", "FETCHING");
+        MangaEden.getMangaEdenService(this)
+            .getMangaDetails(mangaListItem.id)
+            .enqueue(new Callback<MangaEdenMangaDetailItem>() {
+                @Override
+                public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
+                    manga = response.body();
+                    loadContent();
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d("ERROR", error.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.d("ERROR", t.getMessage());
+                }
+            });
     }
 
     @Deprecated

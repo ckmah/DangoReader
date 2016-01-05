@@ -1,21 +1,21 @@
 package ckmah.mangoreader.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.william.mangoreader.R;
 
 import ckmah.mangoreader.activity.MangaViewerActivity;
 import ckmah.mangoreader.parse.MangaEden;
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class MangaImageFragment extends Fragment {
     private static final String IMAGE_DATA_EXTRA = "item_index";
-    private static int itemIndex;
+    private int itemIndex;
 
     public MangaImageFragment() {
         // required empty constructor
@@ -39,28 +39,18 @@ public class MangaImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.manga_image_fragment, container, false);
-        ImageView imageViewTouch = (ImageView) root.findViewById(R.id.image_view_touch);
-        MangaViewerActivity activity = (MangaViewerActivity) getActivity();
+        PhotoView imageView = (PhotoView) root.findViewById(R.id.manga_image_view);
+        imageView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                ((MangaViewerActivity) getActivity()).handleTap(view, x, y);
+            }
+        });
+        final MangaViewerActivity activity = (MangaViewerActivity) getActivity();
         String imageUrl = activity.getImages().get(itemIndex).getUrl();
 
-        MangaEden.setMangaImage(imageUrl, activity, imageViewTouch);
+        MangaEden.setMangaImage(imageUrl, activity, imageView);
         return root;
     }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-//        setListAdapter(new ArrayAdapter<String>(getActivity(),
-//                android.R.layout.simple_list_item_1, Cheeses.sCheeseStrings));
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
 }
+

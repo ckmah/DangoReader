@@ -145,7 +145,7 @@
 
     <!--  preference items  -->
     <string name="pref_read_direction">Read left to right</string>
-    <string name="pref_read_direction_summary">Default reading direction is right to left</string>
+    <string name="pref_read_direction_summary">Default reading leftToRight is right to left</string>
     <string name="pref_pagenum">Page numbers</string>
     <string name="pref_pagenum_summary">Show page numbers while reading</string>
 
@@ -158,5 +158,10 @@
     <string name="action_refresh">Refresh</string>
     <string name="PREF_KEY_READ_DIRECTION">read_direction</string>
     <string name="PREF_KEY_PAGE_NUMBERS">pagenum</string>
+    <string name="left_to_right">Toggle reading direction</string>
 
+    <!-- manga viewer activity intent key -->
+    <string name="rotation_lock">Rotation Lock</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
 </resources>

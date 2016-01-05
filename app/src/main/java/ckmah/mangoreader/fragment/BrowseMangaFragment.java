@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.RequestQueue;
 import com.william.mangoreader.R;
 
 import java.util.ArrayList;
@@ -31,9 +30,9 @@ import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
-import ckmah.mangoreader.volley.VolleySingleton;
 import retrofit.Callback;
-import retrofit.RetrofitError;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -61,6 +60,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         final View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
         initRecycler(rootView);
         initSwipeRefresh(rootView);
+
         fetchMangaListFromMangaEden();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Browse");
         setHasOptionsMenu(true);
@@ -98,16 +98,17 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
             }
         });
 
-        MangaEden.getMangaEdenService(getActivity()).listAllManga(new Callback<MangaEden.MangaEdenList>() {
+        MangaEden.getMangaEdenService(getActivity()).listAllManga().enqueue(new Callback<MangaEden.MangaEdenList>() {
             @Override
-            public void success(MangaEden.MangaEdenList mangaEdenList, retrofit.client.Response response) {
-                sortMangaInBackground(mangaEdenList);
+            public void onResponse(Response<MangaEden.MangaEdenList> response, Retrofit retrofit) {
+                response.body();
+                sortMangaInBackground(response.body());
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void onFailure(Throwable t) {
                 Log.d("SORTING", "FAILED");
-                Log.d("SORTING", error.getMessage());
+                Log.d("SORTING", t.getMessage());
 
                 // Hide the refresh layout
                 swipeRefreshLayout.post(new Runnable() {
