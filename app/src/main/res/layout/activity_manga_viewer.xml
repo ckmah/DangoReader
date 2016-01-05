@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginTop="24dp"
-            android:background="@color/translucent_black"
+            android:background="@drawable/gradient_top_down"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:title="">
 
@@ -77,7 +77,7 @@
             android:layout_height="@dimen/seekbar_height"
             android:layout_gravity="bottom"
             android:layout_marginBottom="48dp"
-            android:background="@color/translucent_black">
+            android:background="@drawable/gradient_bottom_up">
 
             <LinearLayout
                 android:layout_width="match_parent"

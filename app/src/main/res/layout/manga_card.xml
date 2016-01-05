@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/gradient" />
+                android:background="@drawable/gradient_bottom_up" />
 
             <FrameLayout
                 style="@style/CardBookmarkToggle"
