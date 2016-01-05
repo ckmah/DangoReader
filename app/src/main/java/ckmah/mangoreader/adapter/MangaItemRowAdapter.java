@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ckmah.mangoreader.activity.MangaViewerActivity;
-import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
+import ckmah.mangoreader.database.Chapter;
 
 /**
  * Layout adapter for adding chapters
@@ -22,7 +22,7 @@ import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
 public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {// implements ItemTouchHelperAdapter{
 
     public Fragment fragment;
-    List<MangaEdenMangaChapterItem> chapters = null;
+    List<Chapter> chapters = null;
     private Activity activity;
     private static final String CHAPTER_PREFIX = "Chapter ";
     // In-memory list of ids and titles so we can go onto next/prev chapters
@@ -31,7 +31,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private String mangaTitle;
 
 
-    public MangaItemRowAdapter(Activity activity, Fragment fragment, List<MangaEdenMangaChapterItem> chapters, String mangaTitle) {
+    public MangaItemRowAdapter(Activity activity, Fragment fragment, ArrayList<Chapter> chapters, String mangaTitle) {
         this.activity = activity;
         this.fragment = fragment;
         this.chapters = chapters;
@@ -40,9 +40,9 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // Parse chapters to get chapterIds and chapterNumbers
         chapterIds.clear();
         chapterNumbers.clear();
-        for (MangaEdenMangaChapterItem item : chapters) {
-            chapterIds.add(item.getId());
-            chapterNumbers.add(item.getNumber());
+        for (Chapter item : chapters) {
+            chapterIds.add(item.id);
+            chapterNumbers.add(item.number);
         }
         notifyDataSetChanged();
     }
@@ -68,10 +68,10 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
             ChapterViewHolder chapterHolder = (ChapterViewHolder) holder;
-            MangaEdenMangaChapterItem chapterItem = chapters.get(position);
-            chapterHolder.titleView.setText(chapterItem.getTitle());
-            chapterHolder.numberView.setText(CHAPTER_PREFIX + chapterItem.getNumber());
-            chapterHolder.mangaEdenChapterId = chapterItem.getId();
+            Chapter chapterItem = chapters.get(position);
+            chapterHolder.titleView.setText(chapterItem.title);
+            chapterHolder.numberView.setText(CHAPTER_PREFIX + chapterItem.number);
+            chapterHolder.mangaEdenChapterId = chapterItem.id;
     }
 
     @Override

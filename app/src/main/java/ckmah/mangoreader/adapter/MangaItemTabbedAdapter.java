@@ -9,7 +9,6 @@ import com.william.mangoreader.R;
 
 import ckmah.mangoreader.fragment.MangaItemChapterFragment;
 import ckmah.mangoreader.fragment.MangaItemDetailFragment;
-import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 
 /**
  * My Library view pager tabs adapter
@@ -17,22 +16,22 @@ import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 public class MangaItemTabbedAdapter extends FragmentStatePagerAdapter {
     private Context context;
     private FragmentManager fm;
-    private MangaEdenMangaDetailItem mangaDetailItem;
+    private String mangaId;
 
-    public MangaItemTabbedAdapter(Context context, FragmentManager fm, MangaEdenMangaDetailItem mangaDetailItem) {
+    public MangaItemTabbedAdapter(Context context, FragmentManager fm, String mangaId) {
         super(fm);
         this.context = context;
         this.fm = fm;
-        this.mangaDetailItem = mangaDetailItem;
+        this.mangaId = mangaId;
     }
 
     @Override
     public Fragment getItem(int fragmentType) {
         switch (fragmentType) {
             case 0:
-                return MangaItemDetailFragment.newInstance(mangaDetailItem);
+                return MangaItemDetailFragment.newInstance(mangaId);
             case 1:
-                return MangaItemChapterFragment.newInstance(mangaDetailItem);
+                return MangaItemChapterFragment.newInstance(mangaId);
             default:
                 return null;
         }

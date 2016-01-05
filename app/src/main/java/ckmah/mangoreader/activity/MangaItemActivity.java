@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -17,9 +16,10 @@ import com.william.mangoreader.R;
 
 import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.adapter.MangaItemTabbedAdapter;
+import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
-import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
+import io.paperdb.Paper;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -28,30 +28,28 @@ import retrofit.Retrofit;
  * Activity that displays a single manga, and shows manga info and chapters
  */
 public class MangaItemActivity extends AppCompatActivity {
-
-    private Toolbar toolbar;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-
-    private MangaEdenMangaListItem mangaListItem;
-    private MangaEdenMangaDetailItem manga;
-
-    private Palette.Swatch primaryColor;
-    private Palette.Swatch secondaryColor;
-
+    private Manga manga;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_item_tabbed);
+        manga = new Manga();
+
         initToolBar();
-        mangaListItem = (MangaEdenMangaListItem) getIntent().getSerializableExtra("mangaListItem");
-        fetchMangaDetailFromMangaEden();
+
+        String mangaId = getIntent().getStringExtra("mangaId");
+        manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
+        if (manga == null || manga.chaptersList == null) {
+            fetchMangaDetailFromMangaEden(mangaId);
+        } else {
+            initViewPager();
+            initMarqueeTitle();
+        }
     }
 
-
     private void initToolBar() {
-        toolbar = (Toolbar) findViewById(R.id.item_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.item_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -63,19 +61,6 @@ public class MangaItemActivity extends AppCompatActivity {
         });
     }
 
-    private void initViewPager() {
-        ViewPager viewPager = (ViewPager) findViewById(R.id.details_and_chapter_pager);
-        MangaItemTabbedAdapter mangaItemTabbedAdapter = new MangaItemTabbedAdapter(this, this.getSupportFragmentManager(), manga);
-        viewPager.setAdapter(mangaItemTabbedAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.item_sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
-    }
-
-    private void initMarqueeTitle() {
-        TextView mangaTitleView = (TextView) findViewById(R.id.manga_item_chapter_title);
-        mangaTitleView.setText(manga.getTitle());
-        mangaTitleView.setSelected(true); // for marquee to scroll
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -87,15 +72,15 @@ public class MangaItemActivity extends AppCompatActivity {
         final ImageButton bookmarkToggle = new ImageButton(this);
 
         bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
-        bookmarkToggle.setSelected((UserLibraryHelper.isInLibrary(this, mangaListItem)));
-        bookmarkToggle.setBackgroundColor(getResources().getColor(R.color.transparent));
+        bookmarkToggle.setSelected(manga != null && manga.favorite);
+        bookmarkToggle.setBackgroundResource(R.color.transparent);
         bookmarkToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (bookmarkToggle.isSelected()) {
-                    UserLibraryHelper.removeFromLibrary(mangaListItem, bookmarkToggle, activity, true, null, -1);
+                    UserLibraryHelper.removeFromLibrary(manga, bookmarkToggle, activity, true, null, -1);
                 } else {
-                    UserLibraryHelper.addToLibrary(mangaListItem, bookmarkToggle, activity, null, -1);
+                    UserLibraryHelper.addToLibrary(manga, bookmarkToggle, activity, true, null, -1);
                 }
             }
         });
@@ -108,32 +93,51 @@ public class MangaItemActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void fetchMangaDetailFromMangaEden() {
-        Log.d("SORTING", "FETCHING");
+    private void fetchMangaDetailFromMangaEden(String mangaId) {
+        manga = new Manga();
+        Log.d("MangaItemActivity", "Fetching manga details");
         MangaEden.getMangaEdenService(this)
-                .getMangaDetails(mangaListItem.id)
+                .getMangaDetails(mangaId)
                 .enqueue(new Callback<MangaEdenMangaDetailItem>() {
                     @Override
                     public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
-                        manga = response.body();
+                        MangaEdenMangaDetailItem mangaDetailItem = response.body();
+                        manga.title = mangaDetailItem.getTitle();
+                        manga.imageSrc = mangaDetailItem.getImageUrl();
+                        manga.lastChapterDate = mangaDetailItem.getLastChapterDate();
+                        manga.genres = mangaDetailItem.getCategories();
+                        manga.hits = mangaDetailItem.getHits();
+                        manga.status = mangaDetailItem.getStatus();
+                        manga.author = mangaDetailItem.getAuthor();
+                        manga.dateCreated = mangaDetailItem.getDateCreated();
+                        manga.description = mangaDetailItem.getDescription();
+                        manga.language = mangaDetailItem.getLanguage();
+                        manga.numChapters = mangaDetailItem.getNumChapters();
+                        manga.chaptersList = MangaEden.convertChapterItemstoChapters(mangaDetailItem.getChapters());
+                        Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
+
                         initViewPager();
                         initMarqueeTitle();
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
-                        Log.d("ERROR", t.getMessage());
+                        Log.e("MangaItemActivity", "Could not fetch details from MangaEden");
                     }
-            });
+                });
     }
 
-    @Deprecated
-    public Palette.Swatch getPrimaryColor() {
-        return primaryColor;
+    private void initViewPager() {
+        ViewPager viewPager = (ViewPager) findViewById(R.id.details_and_chapter_pager);
+        MangaItemTabbedAdapter mangaItemTabbedAdapter = new MangaItemTabbedAdapter(this, this.getSupportFragmentManager(), manga.id);
+        viewPager.setAdapter(mangaItemTabbedAdapter);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.item_sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
-    @Deprecated
-    public Palette.Swatch getSecondaryColor() {
-        return secondaryColor;
+    private void initMarqueeTitle() {
+        TextView mangaTitleView = (TextView) findViewById(R.id.manga_item_chapter_title);
+        mangaTitleView.setText(manga.title);
+        mangaTitleView.setSelected(true); // for marquee to scroll
     }
 }
