@@ -42,8 +42,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     private CardLayoutAdapter cardAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private RequestQueue queue;
-
     // In-memory list of all manga, period
     private List<MangaEdenMangaListItem> allManga = new ArrayList<>();
 
@@ -59,15 +57,10 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
 
+        final View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
         initRecycler(rootView);
         initSwipeRefresh(rootView);
-
-        // Volley request queue
-        queue = VolleySingleton.getInstance(getActivity().getApplicationContext()).
-                getRequestQueue();
-
         fetchMangaListFromMangaEden();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Browse");
         setHasOptionsMenu(true);
@@ -211,8 +204,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                 return false;
             }
         });
-
-
     }
 
     @Override

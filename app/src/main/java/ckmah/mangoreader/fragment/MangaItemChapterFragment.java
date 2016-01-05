@@ -19,6 +19,7 @@ import java.util.List;
 import ckmah.mangoreader.adapter.MangaItemRowAdapter;
 import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
+import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 public class MangaItemChapterFragment extends Fragment {
     private static final String CHAPTER_FRAGMENT_KEY = "chapter_fragment_key";
@@ -53,29 +54,22 @@ public class MangaItemChapterFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_manga_item_chapters, container, false);
         initRecycler(rootView);
-
-//        mangaDetailItem = (MangaEdenMangaDetailItem) getArguments().getSerializable(CHAPTER_FRAGMENT_KEY);
-//        View rootView = inflater.inflate(R.layout.fragment_chapters, container, false);
-//        initRecycler(rootView);
-//        return rootView;
-//
-//        numberView = (TextView) chapterView.findViewById(R.id.chapter_number);
-//        titleView = (TextView) chapterView.findViewById(R.id.chapter_title);
         return rootView;
     }
 
     private void initRecycler(View rootView) {
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.chapter_recycler_view);
 
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.chapter_recycler_view);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(getActivity(), this);
         itemRowAdapter.setAllChapters(chaptersCopy);
         mRecyclerView.setAdapter(itemRowAdapter);
 
-//        ItemTouchHelper.Callback callback =
-//                new SimpleItemTouchHelperCallback(itemRowAdapter);
-//        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-//        touchHelper.attachToRecyclerView(mRecyclerView);
+        VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) rootView.findViewById(R.id.fast_scroller);
+        // Connect the recycler to the scroller (to let the scroller scroll the list)
+        fastScroller.setRecyclerView(mRecyclerView);
+        // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
+        mRecyclerView.addOnScrollListener(fastScroller.getOnScrollListener());
     }
 }
