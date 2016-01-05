@@ -34,7 +34,7 @@ public class UpdateService extends IntentService {
             Log.d("UpdateService", "starting");
             // Synchronously download list of all manga
             MangaEden.MangaEdenList list = MangaEden
-                    .getMangaEdenService(this)
+                    .getMangaEdenServiceNoCache(this)
                     .listAllManga()
                     .execute()
                     .body();

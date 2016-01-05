@@ -54,11 +54,30 @@ public class MangaEden {
         Call<MangaEdenChapter> getMangaImages(@Path("id") String mangaId);
     }
 
-    private static MangaEdenService service;
+    private static MangaEdenService service, serviceNoCache;
 
+    // Never use cache, always pull from online
+    public static MangaEdenService getMangaEdenServiceNoCache(Context context) {
+        if (serviceNoCache == null) {
+            Log.d("MANGAEDEN", "Service without cache");
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(MangaEdenMangaChapterItem.class, new MangaEdenMangaChapterItem.ChapterDeserializer())
+                    .registerTypeAdapter(MangaEdenImageItem.class, new MangaEdenImageItem.ImageDeserializer())
+                    .create();
+
+            serviceNoCache = new Retrofit.Builder()
+                    .baseUrl("https://www.mangaeden.com/")
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build()
+                    .create(MangaEdenService.class);
+        }
+        return serviceNoCache;
+    }
+
+    // Use cache when possible
     public static MangaEdenService getMangaEdenService(Context context) {
         if (service == null) {
-            Log.d("SORTING", "CREATING NEW CACHE");
+            Log.d("MANGAEDEN", "Creating MangaEdenService");
 
             OkHttpClient okHttpClient = new OkHttpClient();
             // TODO try wiping cache to see what happens
