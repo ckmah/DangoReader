@@ -16,6 +16,7 @@ import android.view.View;
 
 import com.william.mangoreader.R;
 
+import ckmah.mangoreader.BootReceiver;
 import ckmah.mangoreader.fragment.BrowseMangaFragment;
 import ckmah.mangoreader.fragment.MyLibraryFragment;
 
@@ -40,6 +41,9 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
 
         // display library by default
         displayView(R.id.library_nav_item);
+
+        // Start polling for chapter updates
+        BootReceiver.RefreshService.start(this);
     }
 
     private void initToolbar() {
