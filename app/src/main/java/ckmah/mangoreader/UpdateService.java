@@ -48,7 +48,7 @@ public class UpdateService extends IntentService {
                 if (lastChapterDate.isAfter(yesterday)) {
 
                     // Check whether manga is in library
-                    if (UserLibraryHelper.isInLibrary(item)) {
+                    if (UserLibraryHelper.isInLibrary(this, item)) {
                         updated.add(item);
                     }
                 }

@@ -2,7 +2,6 @@ package ckmah.mangoreader.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -17,9 +16,6 @@ import android.view.View;
 
 import com.william.mangoreader.R;
 
-import ckmah.mangoreader.daogen.DaoMaster;
-import ckmah.mangoreader.daogen.DaoSession;
-import ckmah.mangoreader.daogen.UserLibraryMangaDao;
 import ckmah.mangoreader.fragment.BrowseMangaFragment;
 import ckmah.mangoreader.fragment.MyLibraryFragment;
 
@@ -31,11 +27,6 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
 
-    public SQLiteDatabase userLibraryDb;
-    public DaoMaster daoMaster;
-    public DaoSession daoSession;
-    public static UserLibraryMangaDao userLibraryMangaDao;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,13 +37,6 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         initNavigation();
 //        initSpinner();
 
-        // load user library
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "user-library-db", null);
-        userLibraryDb = helper.getWritableDatabase();
-//        helper.onUpgrade(userLibraryDb, userLibraryDb.getVersion(), 1000); // DEBUG PURPOSES ONLY
-        daoMaster = new DaoMaster(userLibraryDb);
-        daoSession = daoMaster.newSession();
-        userLibraryMangaDao = daoSession.getUserLibraryMangaDao();
 
         // display library by default
         displayView(R.id.library_nav_item);
