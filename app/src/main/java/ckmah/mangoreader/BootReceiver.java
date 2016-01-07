@@ -32,7 +32,7 @@ public class BootReceiver extends BroadcastReceiver {
             super("RefreshService");
         }
 
-        private static String KEY_CYCLING = "com.akrolsmir.bakegami.cycling";
+        private static String KEY_CYCLING = "ckmah.mangoreader.cycling";
 
         public static boolean isCycling(Context context) {
             return context.getSharedPreferences(KEY_CYCLING, 0).getBoolean(KEY_CYCLING, false);
@@ -52,9 +52,9 @@ public class BootReceiver extends BroadcastReceiver {
             }
         }
 
-        private final static String TOGGLE = "com.akrolsmir.bakegami.TOGGLE";
-        private final static String BOOT = "com.akrolsmir.bakegami.BOOT";
-        private final static String UPDATE = "com.akrolsmir.bakegami.UPDATE";
+        private final static String TOGGLE = "ckmah.mangoreader.TOGGLE";
+        private final static String BOOT = "ckmah.mangoreader.BOOT";
+        private final static String UPDATE = "ckmah.mangoreader.UPDATE";
 
         @Override
         protected void onHandleIntent(Intent intent) {
@@ -68,13 +68,14 @@ public class BootReceiver extends BroadcastReceiver {
             alarmManager.cancel(pendingIntent); //Cancels any past refresh
 
             if (intent.getAction().equals(BOOT)) {
+                // Device was just started
                 if (isCycling(this)) {
-                    // Start polling now, and repeat every period
+                    // Start polling in half a period, and repeat every period
                     alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME,
                             SystemClock.elapsedRealtime() + period / 2, period, pendingIntent);
                 }
             } else if (intent.getAction().equals(TOGGLE)) {
-                // Switch the flag
+                // Toggle between polling and not polling
                 setCycling(!isCycling(this));
 
                 if (isCycling(this)) {
@@ -84,8 +85,9 @@ public class BootReceiver extends BroadcastReceiver {
                     // Stop by doing nothing
                 }
             } else if (intent.getAction().equals(UPDATE)) {
+                // Update the period between polls
                 if (isCycling(this)) {
-                    // Start polling in a period, and repeate every period
+                    // Start polling in a period, and repeat every period
                     alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME,
                             SystemClock.elapsedRealtime() + period, period, pendingIntent);
                 }
