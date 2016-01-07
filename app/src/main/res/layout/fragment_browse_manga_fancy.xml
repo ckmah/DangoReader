@@ -8,10 +8,31 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/browse_swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/recently_updated_row"
+                    layout="@layout/browse_manga_row" />
+
+                <include
+                    android:id="@+id/popular_row"
+                    layout="@layout/browse_manga_row" />
+
+                <include
+                    android:id="@+id/genre_row"
+                    layout="@layout/browse_manga_row" />
+            </LinearLayout>
+        </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
-
 
 
 </RelativeLayout>

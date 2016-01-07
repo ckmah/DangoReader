@@ -3,16 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginTop="12dp">
+    android:layout_marginTop="16dp">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="0dp"
+        android:paddingLeft="8dp"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -25,31 +22,37 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:padding="4dp">
+            android:padding="8dp">
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
 
-            <include layout="@layout/manga_card" />
+            <include layout="@layout/manga_card_mini" />
+
+            <include layout="@layout/manga_card_mini" />
+
+            <include layout="@layout/manga_card_mini" />
+
+            <include layout="@layout/manga_card_mini" />
         </LinearLayout>
     </HorizontalScrollView>
 </LinearLayout>
