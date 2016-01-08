@@ -89,6 +89,13 @@
         <item>@string/genre_yaoi</item>
         <item>@string/genre_yuri</item>
     </string-array>
+    <string-array name="items_categories">
+    <item>@string/item_category_1</item>
+    <item>@string/item_category_2</item>
+    </string-array>
+
+    <string name="item_category_1">Details</string>
+    <string name="item_category_2">Chapters</string>
 
     <string name="genre_action">Action</string>
     <string name="genre_adult">Adult</string>

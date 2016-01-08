@@ -12,6 +12,7 @@ import com.william.mangoreader.R;
 
 import java.util.List;
 
+import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.activity.MangoReaderActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.daogen.UserLibraryManga;
@@ -54,18 +55,18 @@ public class UserLibraryHelper {
         try { // insert and show snackbar with undo, return true if successful, false otherwise
             MangoReaderActivity.userLibraryMangaDao.insert(mangaItem);
             Snackbar
-                    .make(activity.findViewById(R.id.parent_layout), added, Snackbar.LENGTH_LONG)
-                    .setAction("UNDO", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            removeFromLibrary(m, button, activity, false, adapter, position);
-                            button.setSelected(false);
-                            if (adapter != null) { // basically called from browse or library
-                                removeFromListUpdate(adapter.fragment, adapter, position);
-                            }
+                .make(findMyView(activity), added, Snackbar.LENGTH_LONG)
+                .setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        removeFromLibrary(m, button, activity, false, adapter, position);
+                        button.setSelected(false);
+                        if (adapter != null) { // basically called from browse or library
+                            removeFromListUpdate(adapter.fragment, adapter, position);
                         }
-                    })
-                    .show();
+                    }
+                })
+                .show();
 
             if (adapter != null) { // basically called from browse or library
                 addToListUpdate(m, adapter.fragment, adapter, position);
@@ -75,7 +76,7 @@ public class UserLibraryHelper {
         } catch (SQLiteConstraintException e) {
             String duplicate = "\"" + m.title + "\" is already in your library.";
             Snackbar
-                    .make(activity.findViewById(R.id.parent_layout), duplicate, Snackbar.LENGTH_SHORT)
+                    .make(findMyView(activity), duplicate, Snackbar.LENGTH_SHORT)
                     .show();
             Log.d("LIBRARY", "Entry already exists");
             return false;
@@ -107,28 +108,40 @@ public class UserLibraryHelper {
         if (showUndo) {
             button.setSelected(false);
             Snackbar
-                    .make(activity.findViewById(R.id.parent_layout), removed, Snackbar.LENGTH_LONG)
-                    .setAction("UNDO", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            MangoReaderActivity.userLibraryMangaDao.insert((UserLibraryManga) l.get(0));
-                            Snackbar.make(activity.findViewById(R.id.parent_layout), removed, Snackbar.LENGTH_LONG);
-                            button.setSelected(true);
-                            if (adapter != null) { // basically called from browse or library
-                                addToListUpdate(m, adapter.fragment, adapter, position);
-                            }
+                .make(findMyView(activity), removed, Snackbar.LENGTH_LONG)
+                .setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MangoReaderActivity.userLibraryMangaDao.insert((UserLibraryManga) l.get(0));
+                        Snackbar.make(findMyView(activity), removed, Snackbar.LENGTH_LONG);
+                        button.setSelected(true);
+                        if (adapter != null) { // basically called from browse or library
+                            addToListUpdate(m, adapter.fragment, adapter, position);
                         }
-                    })
-                    .show();
+                    }
+                })
+                .show();
         } else {
+
             button.setSelected(false);
             Snackbar
-                    .make(activity.findViewById(R.id.parent_layout), removed, Snackbar.LENGTH_LONG)
+                    .make(findMyView(activity), removed, Snackbar.LENGTH_LONG)
                     .show();
         }
         if (adapter != null) { // basically called from browse or library
             removeFromListUpdate(adapter.fragment, adapter, position);
         }
+    }
+
+    private static View findMyView(Activity activity) {
+        View mView;
+        if (activity instanceof MangaItemActivity) {
+            mView = activity.findViewById(R.id.tabbed_parent_layout);
+        }
+        else {
+            mView = activity.findViewById(R.id.parent_layout);
+        }
+        return mView;
     }
 
     public static void removeFromListUpdate(Fragment fragment, CardLayoutAdapter adapter, int position) {

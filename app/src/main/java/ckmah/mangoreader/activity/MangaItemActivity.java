@@ -1,10 +1,10 @@
 package ckmah.mangoreader.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -15,9 +15,8 @@ import android.widget.TextView;
 
 import com.william.mangoreader.R;
 
-import ckmah.mangoreader.DividerItemDecoration;
 import ckmah.mangoreader.UserLibraryHelper;
-import ckmah.mangoreader.adapter.MangaItemAdapter;
+import ckmah.mangoreader.adapter.MangaItemTabbedAdapter;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
@@ -30,42 +29,57 @@ import retrofit.Retrofit;
  */
 public class MangaItemActivity extends AppCompatActivity {
 
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
     private MangaEdenMangaListItem mangaListItem;
     private MangaEdenMangaDetailItem manga;
-
-    private RecyclerView mRecyclerView;
-    private MangaItemAdapter mangaItemAdapter;
 
     private Palette.Swatch primaryColor;
     private Palette.Swatch secondaryColor;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manga_item);
+        setContentView(R.layout.activity_manga_item_tabbed);
+        initToolBar();
+        mangaListItem = (MangaEdenMangaListItem) getIntent().getSerializableExtra("mangaListItem");
+        fetchMangaDetailFromMangaEden();
+    }
 
-        manga = new MangaEdenMangaDetailItem();
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_manga_item);
-        setSupportActionBar(mToolbar);
+    private void initToolBar() {
+        toolbar = (Toolbar) findViewById(R.id.item_toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
+    }
 
-        initRecyclerView();
+    private void initViewPager() {
+        ViewPager viewPager = (ViewPager) findViewById(R.id.details_and_chapter_pager);
+        MangaItemTabbedAdapter mangaItemTabbedAdapter = new MangaItemTabbedAdapter(this, this.getSupportFragmentManager(), manga);
+        viewPager.setAdapter(mangaItemTabbedAdapter);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.item_sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+    }
 
-        mangaListItem = (MangaEdenMangaListItem) getIntent().getSerializableExtra("mangaListItem");
-        fetchMangaDetailFromMangaEden();
+    private void initMarqueeTitle() {
+        TextView mangaTitleView = (TextView) findViewById(R.id.manga_item_chapter_title);
+        mangaTitleView.setText(manga.getTitle());
+        mangaTitleView.setSelected(true); // for marquee to scroll
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_manga_item, menu);
         MenuItem bookmarkItem = menu.findItem(R.id.manga_item_bookmark_button);
@@ -86,7 +100,6 @@ public class MangaItemActivity extends AppCompatActivity {
             }
         });
         bookmarkItem.setActionView(bookmarkToggle);
-
         return true;
     }
 
@@ -103,42 +116,15 @@ public class MangaItemActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
                         manga = response.body();
-                        loadContent();
+                        initViewPager();
+                        initMarqueeTitle();
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
-
+                        Log.d("ERROR", t.getMessage());
                     }
-                });
-    }
-
-    private void loadContent() {
-        TextView mangaTitleView = (TextView) findViewById(R.id.manga_item_chapter_title);
-        mangaTitleView.setText(manga.getTitle());
-        mangaTitleView.setSelected(true); // for marquee to scroll
-        ((TextView) findViewById(R.id.subtitle_author)).setText(manga.getAuthor());
-        updateRecyclerView();
-    }
-
-    public void initRecyclerView() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.manga_item_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mangaItemAdapter = new MangaItemAdapter(this, manga);
-        mRecyclerView.setAdapter(mangaItemAdapter);
-
-        RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-        mRecyclerView.addItemDecoration(itemDecoration);
-
-        mRecyclerView.setVisibility(View.GONE);
-    }
-
-    public void updateRecyclerView() {
-        mangaItemAdapter.loadMangaInfo(manga);
-
-        mRecyclerView.setVisibility(View.VISIBLE);
-        findViewById(R.id.manga_item_header_placeholder).setVisibility(View.GONE);
+            });
     }
 
     @Deprecated

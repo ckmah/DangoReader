@@ -56,8 +56,8 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
 
+        final View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
         initRecycler(rootView);
         initSwipeRefresh(rootView);
 
@@ -205,8 +205,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                 return false;
             }
         });
-
-
     }
 
     @Override
