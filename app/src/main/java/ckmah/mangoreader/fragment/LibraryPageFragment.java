@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import ckmah.mangoreader.activity.MangoReaderActivity;
+import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.daogen.UserLibraryManga;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
@@ -53,7 +53,7 @@ public class LibraryPageFragment extends Fragment {
 
         int page = getArguments().getInt((PAGE_NUM));
         String category = getResources().getStringArray(R.array.library_categories)[page];
-        for (UserLibraryManga manga : MangoReaderActivity.userLibraryMangaDao.loadAll()) {
+        for (UserLibraryManga manga : UserLibraryHelper.getDao(getContext()).loadAll()) {
             if (manga.getTab().compareTo(category) == 0)
                 userLibraryCategory.add(manga);
         }

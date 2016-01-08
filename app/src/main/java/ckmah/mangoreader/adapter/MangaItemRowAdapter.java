@@ -1,7 +1,6 @@
 package ckmah.mangoreader.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,21 +27,22 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final String CHAPTER_PREFIX = "Chapter ";
     // In-memory list of ids and titles so we can go onto next/prev chapters
     private ArrayList<String> chapterIds = new ArrayList<>();
-    private ArrayList<String> chapterTitles = new ArrayList<>();
+    private ArrayList<String> chapterNumbers = new ArrayList<>();
+    private String mangaTitle;
 
 
-    public MangaItemRowAdapter(Activity activity, Fragment fragment) {
+    public MangaItemRowAdapter(Activity activity, Fragment fragment, List<MangaEdenMangaChapterItem> chapters, String mangaTitle) {
         this.activity = activity;
         this.fragment = fragment;
-    }
-
-    public void setAllChapters(List<MangaEdenMangaChapterItem> chapters) {
         this.chapters = chapters;
+        this.mangaTitle = mangaTitle;
+
+        // Parse chapters to get chapterIds and chapterNumbers
         chapterIds.clear();
-        chapterTitles.clear();
+        chapterNumbers.clear();
         for (MangaEdenMangaChapterItem item : chapters) {
             chapterIds.add(item.getId());
-            chapterTitles.add(item.getTitle());
+            chapterNumbers.add(item.getNumber());
         }
         notifyDataSetChanged();
     }
@@ -57,11 +57,8 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         chapterView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity, MangaViewerActivity.class);
-                intent.putExtra("chapterIds", chapterIds);
-                intent.putExtra("chapterTitles", chapterTitles);
-                intent.putExtra("chapterIndex", chapterIds.indexOf(chapterHolder.mangaEdenChapterId));
-                activity.startActivity(intent);
+                int chapterIndex = chapterIds.indexOf(chapterHolder.mangaEdenChapterId);
+                MangaViewerActivity.start(activity, mangaTitle, chapterIds, chapterNumbers, chapterIndex);
             }
         });
         return chapterHolder;

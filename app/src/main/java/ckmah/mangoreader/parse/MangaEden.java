@@ -54,11 +54,30 @@ public class MangaEden {
         Call<MangaEdenChapter> getMangaImages(@Path("id") String mangaId);
     }
 
-    private static MangaEdenService service;
+    private static MangaEdenService service, serviceNoCache;
 
+    // Never use cache, always pull from online
+    public static MangaEdenService getMangaEdenServiceNoCache(Context context) {
+        if (serviceNoCache == null) {
+            Log.d("MANGAEDEN", "Service without cache");
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(MangaEdenMangaChapterItem.class, new MangaEdenMangaChapterItem.ChapterDeserializer())
+                    .registerTypeAdapter(MangaEdenImageItem.class, new MangaEdenImageItem.ImageDeserializer())
+                    .create();
+
+            serviceNoCache = new Retrofit.Builder()
+                    .baseUrl("https://www.mangaeden.com/")
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build()
+                    .create(MangaEdenService.class);
+        }
+        return serviceNoCache;
+    }
+
+    // Use cache when possible
     public static MangaEdenService getMangaEdenService(Context context) {
         if (service == null) {
-            Log.d("SORTING", "CREATING NEW CACHE");
+            Log.d("MANGAEDEN", "Creating MangaEdenService");
 
             OkHttpClient okHttpClient = new OkHttpClient();
             // TODO try wiping cache to see what happens
@@ -68,8 +87,10 @@ public class MangaEden {
             okHttpClient.interceptors().add(new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
+                    int maxStale = 60 * 60 * 24; // tolerate 1 day stale
+
                     Response response = chain.proceed(chain.request());
-//                    response.cacheControl().
+                    response.newBuilder().addHeader("Cache-Control", "public, max-age=" + maxStale);
                     return response;
                 }
             });
@@ -83,26 +104,6 @@ public class MangaEden {
                     .baseUrl("https://www.mangaeden.com/")
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
-//                    .setRequestInterceptor(new RequestInterceptor() {
-//                        @Override
-//                        public void intercept(RequestFacade request) {
-//                            // TODO test to make sure it does get cached i.e. doesn't use internet for the next day
-//                            int maxStale = 60 * 60 * 24; // tolerate 1 day stale
-//                            request.addHeader("Cache-Control", "public, max-age=" + maxStale);
-//                        }
-//                    })
-//                    .setProfiler(new Profiler() {
-//                        @Override
-//                        public Object beforeCall() {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public void afterCall(RequestInformation requestInfo, long elapsedTime, int statusCode, Object beforeCallData) {
-//                            Log.d("Retrofit Profiler", String.format("HTTP %d %s %s (%dms)",
-//                                    statusCode, requestInfo.getMethod(), requestInfo.getRelativePath(), elapsedTime));
-//                        }
-//                    })
                     .build()
                     .create(MangaEdenService.class);
         }

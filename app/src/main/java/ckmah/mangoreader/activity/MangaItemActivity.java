@@ -87,7 +87,7 @@ public class MangaItemActivity extends AppCompatActivity {
         final ImageButton bookmarkToggle = new ImageButton(this);
 
         bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
-        bookmarkToggle.setSelected((UserLibraryHelper.findMangaInLibrary(mangaListItem).size() > 0));
+        bookmarkToggle.setSelected((UserLibraryHelper.isInLibrary(this, mangaListItem)));
         bookmarkToggle.setBackgroundColor(getResources().getColor(R.color.transparent));
         bookmarkToggle.setOnClickListener(new View.OnClickListener() {
             @Override
