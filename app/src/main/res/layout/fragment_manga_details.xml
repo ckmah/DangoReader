@@ -1,148 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/details_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/MangaItemActivityTheme"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/MangaItemActivityTheme">
 
     <ScrollView
         style="@style/MangaItemDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:scrollbars="none"
-        >
-
-    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:layout_gravity="fill"
-                android:orientation="vertical">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
-                <TextView
-                    style="@style/MangaItemTag"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Hits" />
+                    android:layout_gravity="fill"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/manga_item_hits"
-                    style="@style/MangaItemProperty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    <TextView
+                        style="@style/MangaItemTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Author" />
 
-                <TextView
-                    style="@style/MangaItemTag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Language" />
+                    <TextView
+                        android:id="@+id/manga_item_author"
+                        style="@style/MangaItemProperty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/manga_item_language"
-                    style="@style/MangaItemProperty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    <TextView
+                        style="@style/MangaItemTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hits" />
 
-                <TextView
-                    style="@style/MangaItemTag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Last Updated" />
+                    <TextView
+                        android:id="@+id/manga_item_hits"
+                        style="@style/MangaItemProperty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/manga_item_last_chapter_date"
-                    style="@style/MangaItemProperty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    <TextView
+                        style="@style/MangaItemTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Language" />
 
-                <TextView
-                    style="@style/MangaItemTag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Status" />
+                    <TextView
+                        android:id="@+id/manga_item_language"
+                        style="@style/MangaItemProperty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/manga_item_status"
-                    style="@style/MangaItemProperty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    <TextView
+                        style="@style/MangaItemTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Last Updated" />
 
-                <TextView
-                    style="@style/MangaItemTag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Date Created" />
+                    <TextView
+                        android:id="@+id/manga_item_last_chapter_date"
+                        style="@style/MangaItemProperty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/manga_item_created"
-                    style="@style/MangaItemProperty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    <TextView
+                        style="@style/MangaItemTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Status" />
 
-                <TextView
-                    style="@style/MangaItemTag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Categories" />
+                    <TextView
+                        android:id="@+id/manga_item_status"
+                        style="@style/MangaItemProperty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/manga_item_categories"
-                    style="@style/MangaItemProperty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    <TextView
+                        style="@style/MangaItemTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date Created" />
+
+                    <TextView
+                        android:id="@+id/manga_item_created"
+                        style="@style/MangaItemProperty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="@style/MangaItemTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Categories" />
+
+                    <TextView
+                        android:id="@+id/manga_item_categories"
+                        style="@style/MangaItemProperty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="250dp"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:id="@+id/manga_item_image_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true" />
+
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="250dp"
-                android:layout_weight="0.5">
+            <TextView
+                style="@style/MangaItemTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About" />
 
-                <ImageView
-                    android:id="@+id/manga_item_image_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"/>
+            <TextView
+                android:id="@+id/manga_item_description"
+                style="@style/MangaItemDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-            </android.support.v7.widget.CardView>
+            <TextView
+                style="@style/MangaItemTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp" />
 
         </LinearLayout>
-
-        <TextView
-            style="@style/MangaItemTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="About" />
-
-        <TextView
-            android:id="@+id/manga_item_description"
-            style="@style/MangaItemDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            style="@style/MangaItemTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textSize="20sp"/>
-
-    </LinearLayout>
     </ScrollView>
- </RelativeLayout>
+</RelativeLayout>
 
 
