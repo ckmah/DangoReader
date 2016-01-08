@@ -1,5 +1,7 @@
 package ckmah.mangoreader.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -30,7 +32,6 @@ import ckmah.mangoreader.adapter.MangaImagePagerAdapter;
 import ckmah.mangoreader.animation.AnimationHelper;
 import ckmah.mangoreader.listener.MangaViewPagerSeekBarChangeListener;
 import ckmah.mangoreader.model.MangaEdenImageItem;
-import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
 import ckmah.mangoreader.seekbar.ReversibleSeekBar;
 import ckmah.mangoreader.viewpager.MangaViewPager;
@@ -71,7 +72,7 @@ public class MangaViewerActivity extends AppCompatActivity {
     private String mangaTitle;
     private int chapterIndex;
     private int chapterTotalSize;
-    private ArrayList<String> chapterIds, chapterTitles;
+    private ArrayList<String> chapterIds, chapterNumbers;
 
     FrameLayout uiLayout;
 
@@ -79,10 +80,35 @@ public class MangaViewerActivity extends AppCompatActivity {
     private TextView leftBubble;
     private TextView rightBubble;
 
+    private final static String
+            KEY_MANGA_TITLE = "manga_title",
+            KEY_CHAPTER_IDS = "chapter_ids",
+            KEY_CHAPTER_NUMBERS = "chapter_numbers",
+            KEY_CHAPTER_INDEX = "chapter_index";
+
+    /**
+     * Start a viewer activity with the specified parameters
+     */
+    public static void start(Context context, String mangaTitle, ArrayList<String> chapterIds, ArrayList<String> chapterNumbers, int chapterIndex) {
+        Intent intent = new Intent(context, MangaViewerActivity.class);
+        intent.putExtra(KEY_MANGA_TITLE, mangaTitle);
+        intent.putExtra(KEY_CHAPTER_IDS, chapterIds);
+        intent.putExtra(KEY_CHAPTER_NUMBERS, chapterNumbers);
+        intent.putExtra(KEY_CHAPTER_INDEX, chapterIndex);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_viewer);
+
+        // read in manga and chapter data
+        mangaTitle = getIntent().getExtras().getString(KEY_MANGA_TITLE);
+        chapterIndex = getIntent().getExtras().getInt(KEY_CHAPTER_INDEX);
+        chapterIds = getIntent().getExtras().getStringArrayList(KEY_CHAPTER_IDS);
+        chapterNumbers = getIntent().getExtras().getStringArrayList(KEY_CHAPTER_NUMBERS);
+        chapterTotalSize = chapterIds != null ? chapterIds.size() : 0;
 
         // black notification bar
         if (Build.VERSION.SDK_INT >= 21) {
@@ -167,13 +193,6 @@ public class MangaViewerActivity extends AppCompatActivity {
         // pass in reading direction
         mangaViewPager.setLeftToRight(readLeftToRight);
 
-        // read in manga and chapter data
-        mangaTitle = getIntent().getExtras().getString("mangaTitle");
-        chapterIndex = getIntent().getExtras().getInt("chapterIndex");
-        chapterIds = getIntent().getExtras().getStringArrayList("chapterIds");
-        chapterTitles = getIntent().getExtras().getStringArrayList("chapterTitles");
-        chapterTotalSize = chapterIds != null ? chapterIds.size() : 0;
-
         isUIVisible = true;
         displayChapter();
     }
@@ -197,7 +216,7 @@ public class MangaViewerActivity extends AppCompatActivity {
 
     private void displayChapter() {
         // chapter title set to manga name and chapter #. Example: "Ch. 1 - Naruto"
-        String title = "Ch. " + getChapterTitle() + " - " + mangaTitle;
+        String title = "Ch. " + getChapterNumber() + " - " + mangaTitle;
         ((TextView) findViewById(R.id.toolbar_chapter_title)).setText(title);
 
         // TODO show progressbar or loading indicator
@@ -258,7 +277,7 @@ public class MangaViewerActivity extends AppCompatActivity {
             return -1;
         } else {
             chapterIndex++;
-            toast = Toast.makeText(this, "Chapter " + getChapterTitle(), Toast.LENGTH_SHORT);
+            toast = Toast.makeText(this, "Chapter " + getChapterNumber(), Toast.LENGTH_SHORT);
             toast.show();
             displayChapter();
             return chapterIndex;
@@ -279,7 +298,7 @@ public class MangaViewerActivity extends AppCompatActivity {
             return -1;
         } else {
             chapterIndex--;
-            toast = Toast.makeText(this, "Chapter " + getChapterTitle(), Toast.LENGTH_SHORT);
+            toast = Toast.makeText(this, "Chapter " + getChapterNumber(), Toast.LENGTH_SHORT);
             toast.show();
             displayChapter();
             return chapterIndex;
@@ -357,8 +376,8 @@ public class MangaViewerActivity extends AppCompatActivity {
         }
     }
 
-    private String getChapterTitle() {
-        return chapterTitles.get(chapterIndex);
+    private String getChapterNumber() {
+        return chapterNumbers.get(chapterIndex);
     }
 
     public List<MangaEdenImageItem> getImages() {

@@ -60,8 +60,8 @@ public class MangaItemChapterFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.chapter_recycler_view);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(getActivity(), this);
-        itemRowAdapter.setAllChapters(mangaItems);
+        MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(
+                getActivity(), this, mangaItems, mangaDetailItem.getTitle());
         mRecyclerView.setAdapter(itemRowAdapter);
 
         VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) rootView.findViewById(R.id.fast_scroller);
