@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.william.mangoreader.R;
 
@@ -43,7 +44,7 @@ public class MangaItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_item_tabbed);
-
+        initToolBar();
         mangaListItem = (MangaEdenMangaListItem) getIntent().getSerializableExtra("mangaListItem");
         fetchMangaDetailFromMangaEden();
     }
@@ -60,16 +61,20 @@ public class MangaItemActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        toolbar.setTitle(manga.getTitle());
     }
 
     private void initViewPager() {
-
         ViewPager viewPager = (ViewPager) findViewById(R.id.details_and_chapter_pager);
         MangaItemTabbedAdapter mangaItemTabbedAdapter = new MangaItemTabbedAdapter(this, this.getSupportFragmentManager(), manga);
         viewPager.setAdapter(mangaItemTabbedAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.item_sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void initMarqueeTitle() {
+        TextView mangaTitleView = (TextView) findViewById(R.id.manga_item_chapter_title);
+        mangaTitleView.setText(manga.getTitle());
+        mangaTitleView.setSelected(true); // for marquee to scroll
     }
 
     @Override
@@ -111,8 +116,8 @@ public class MangaItemActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
                         manga = response.body();
-                        initToolBar();
                         initViewPager();
+                        initMarqueeTitle();
                     }
 
                     @Override
