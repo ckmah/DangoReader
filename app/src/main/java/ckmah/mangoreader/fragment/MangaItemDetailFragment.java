@@ -1,6 +1,5 @@
 package ckmah.mangoreader.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.graphics.Palette;
@@ -32,8 +31,7 @@ public class MangaItemDetailFragment extends Fragment {
         //required empty constructor
     }
 
-    public static MangaItemDetailFragment newInstance(MangaEdenMangaDetailItem mangDetailItem) {
-        mangaDetailItem = mangDetailItem;
+    public static MangaItemDetailFragment newInstance(MangaEdenMangaDetailItem mangaDetailItem) {
         MangaItemDetailFragment fragment = new MangaItemDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(DESCRIPTION_FRAGMENT_KEY, mangaDetailItem);
@@ -51,12 +49,13 @@ public class MangaItemDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView;
         ImageView image;
-        TextView categories;
+        TextView author;
         TextView hits;
         TextView language;
         TextView lastUpdated;
         TextView status;
         TextView dateCreated;
+        TextView categories;
         TextView description;
 
         mangaDetailItem = (MangaEdenMangaDetailItem) getArguments().getSerializable(DESCRIPTION_FRAGMENT_KEY);
@@ -67,10 +66,8 @@ public class MangaItemDetailFragment extends Fragment {
         MangaEden.setMangaArt(mangaDetailItem.getImageUrl(), image, (MangaItemActivity) this.getActivity());
 
         //populate text sections of details page
-
-        categories = (TextView) rootView.findViewById(R.id.manga_item_categories);
-        String categoryListString = mangaDetailItem.getCategories().toString();
-        categories.setText(categoryListString.substring(1,categoryListString.length()-1));
+        author = (TextView) rootView.findViewById(R.id.manga_item_author);
+        author.setText("" + mangaDetailItem.getAuthor());
 
         hits = (TextView) rootView.findViewById(R.id.manga_item_hits);
         hits.setText("" + mangaDetailItem.getHits());
@@ -104,10 +101,13 @@ public class MangaItemDetailFragment extends Fragment {
         Date creationDate = new Date(mangaDetailItem.getDateCreated() * 1000L);
         dateCreated.setText(sdf.format(creationDate));
 
+        categories = (TextView) rootView.findViewById(R.id.manga_item_categories);
+        String categoryListString = mangaDetailItem.getCategories().toString();
+        categories.setText(categoryListString.substring(1, categoryListString.length() - 1));
+
         description = (TextView) rootView.findViewById(R.id.manga_item_description);
         description.setText(mangaDetailItem.getDescription());
 
-        //setLayoutColors();
         return rootView;
     }
 
@@ -122,9 +122,9 @@ public class MangaItemDetailFragment extends Fragment {
 //        descriptionView.setTextColor(textColor);
 //    }
 
-    public int contrastTextColor(int color) {
-        // Contrast formula derived from http://stackoverflow.com/a/1855903/1222351
-        double luminance = 0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color);
-        return luminance > 127 ? Color.BLACK : Color.WHITE;
-    }
+//    public int contrastTextColor(int color) {
+//        // Contrast formula derived from http://stackoverflow.com/a/1855903/1222351
+//        double luminance = 0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color);
+//        return luminance > 127 ? Color.BLACK : Color.WHITE;
+//    }
 }
