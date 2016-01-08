@@ -77,12 +77,17 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() != R.id.settings_nav_item) {
-            menuItem.setChecked(true);
-        }
         drawerLayout.closeDrawers();
-        displayView(menuItem.getItemId());
-        return true;
+        if (menuItem.getItemId() == R.id.settings_nav_item) {
+            // Launch settings activity, but don't keep selected in the drawer
+            Intent settingsIntent = new Intent(MangoReaderActivity.this, SettingsActivity.class);
+            startActivity(settingsIntent);
+            return false;
+        } else {
+            // Switch to the corresponding fragment, and keep selected in the drawer
+            displayView(menuItem.getItemId());
+            return true;
+        }
     }
 
     /**
@@ -105,13 +110,9 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
             case R.id.browse_nav_item: // browse
 //                findViewById(R.id.spinner_browse_sources).setVisibility(View.VISIBLE);
                 findViewById(R.id.sliding_tabs).setVisibility(View.GONE);
-                fragment = new BrowseMangaFragment();
+                fragment = BrowseMangaFragment.getInstance();
                 title = getString(R.string.title_browse);
                 break;
-            case R.id.settings_nav_item: // settings
-                Intent settingsIntent = new Intent(MangoReaderActivity.this, SettingsActivity.class);
-                startActivity(settingsIntent);
-                return;
             default:
                 break;
         }
