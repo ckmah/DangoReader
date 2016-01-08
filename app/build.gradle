@@ -3,10 +3,6 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-//            keyAlias 'MangoReaderKey'
-//            keyPassword 'uC7t2zNQySAC'
-//            storeFile file('C:/Users/Clarence/Documents/MangoReader.alpha.release.jks')
-//            storePassword 'uC7t2zNQySAC'
         }
     }
     compileSdkVersion 21

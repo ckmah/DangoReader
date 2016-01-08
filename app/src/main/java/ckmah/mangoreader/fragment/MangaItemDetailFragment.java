@@ -1,6 +1,5 @@
 package ckmah.mangoreader.fragment;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import com.william.mangoreader.R;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 import ckmah.mangoreader.activity.MangaItemActivity;
@@ -27,16 +25,6 @@ public class MangaItemDetailFragment extends Fragment {
     private static final String DESCRIPTION_FRAGMENT_KEY = "mangaListItem";
     private static final String SWATCH_KEY = "swatch_key";
     private static MangaEdenMangaDetailItem mangaDetailItem;
-
-    private View rootView;
-    private ImageView image;
-    private TextView categories;
-    private TextView hits;
-    private TextView language;
-    private TextView lastUpdated;
-    private TextView status;
-    private TextView dateCreated;
-    private TextView description;
 
     private Palette.Swatch secondaryColor;
 
@@ -61,9 +49,18 @@ public class MangaItemDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView;
+        ImageView image;
+        TextView categories;
+        TextView hits;
+        TextView language;
+        TextView lastUpdated;
+        TextView status;
+        TextView dateCreated;
+        TextView description;
 
         mangaDetailItem = (MangaEdenMangaDetailItem) getArguments().getSerializable(DESCRIPTION_FRAGMENT_KEY);
-        rootView = inflater.inflate(R.layout.details_view, container, false);
+        rootView = inflater.inflate(R.layout.fragment_manga_details, container, false);
 
         //set image for details page
         image = (ImageView) rootView.findViewById(R.id.manga_item_image_view);
@@ -105,11 +102,7 @@ public class MangaItemDetailFragment extends Fragment {
 
         dateCreated = (TextView) rootView.findViewById(R.id.manga_item_created);
         Date creationDate = new Date(mangaDetailItem.getDateCreated() * 1000L);
-        DateFormat dctd = SimpleDateFormat.getDateInstance();
-        dctd.setTimeZone(TimeZone.getTimeZone("GMT-8"));
-        lastUpdated.setText(dctd.format(creationDate));
-//        Date creationDate = new Date(mangaDetailItem.getDateCreated() * 1000L);
-//        dateCreated.setText(sdf.format(creationDate));
+        dateCreated.setText(sdf.format(creationDate));
 
         description = (TextView) rootView.findViewById(R.id.manga_item_description);
         description.setText(mangaDetailItem.getDescription());

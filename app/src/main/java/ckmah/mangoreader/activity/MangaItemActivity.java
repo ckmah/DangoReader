@@ -43,20 +43,17 @@ public class MangaItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_item_tabbed);
-        manga = new MangaEdenMangaDetailItem();
+
         mangaListItem = (MangaEdenMangaListItem) getIntent().getSerializableExtra("mangaListItem");
         fetchMangaDetailFromMangaEden();
     }
 
-    private void loadContent() {
-        initToolBar();
-        initViewPager();
-    }
 
     private void initToolBar() {
         toolbar = (Toolbar) findViewById(R.id.item_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,18 +105,19 @@ public class MangaItemActivity extends AppCompatActivity {
     private void fetchMangaDetailFromMangaEden() {
         Log.d("SORTING", "FETCHING");
         MangaEden.getMangaEdenService(this)
-            .getMangaDetails(mangaListItem.id)
-            .enqueue(new Callback<MangaEdenMangaDetailItem>() {
-                @Override
-                public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
-                    manga = response.body();
-                    loadContent();
-                }
+                .getMangaDetails(mangaListItem.id)
+                .enqueue(new Callback<MangaEdenMangaDetailItem>() {
+                    @Override
+                    public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
+                        manga = response.body();
+                        initToolBar();
+                        initViewPager();
+                    }
 
-                @Override
-                public void onFailure(Throwable t) {
-                    Log.d("ERROR", t.getMessage());
-                }
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Log.d("ERROR", t.getMessage());
+                    }
             });
     }
 

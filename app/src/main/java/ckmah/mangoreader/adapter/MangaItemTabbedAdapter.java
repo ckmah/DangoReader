@@ -1,6 +1,5 @@
 package ckmah.mangoreader.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,8 +7,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.william.mangoreader.R;
 
-import ckmah.mangoreader.activity.MangaItemActivity;
-import ckmah.mangoreader.fragment.LibraryPageFragment;
 import ckmah.mangoreader.fragment.MangaItemChapterFragment;
 import ckmah.mangoreader.fragment.MangaItemDetailFragment;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
@@ -29,7 +26,6 @@ public class MangaItemTabbedAdapter extends FragmentStatePagerAdapter {
         this.mangaDetailItem = mangaDetailItem;
     }
 
-    // TODO repurpose to load details and chapter fragments respectively
     @Override
     public Fragment getItem(int fragmentType) {
         switch (fragmentType) {
