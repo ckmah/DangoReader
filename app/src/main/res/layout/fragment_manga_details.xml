@@ -7,12 +7,6 @@
     android:theme="@style/MangaItemActivityTheme"
     android:orientation="vertical">
 
-    <!--<TextView-->
-    <!--android:id="@+id/manga_item_title"-->
-    <!--style="@style/MangaItemTitle"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content" />-->
-
     <ScrollView
         style="@style/MangaItemDetails"
         android:layout_width="wrap_content"
@@ -38,13 +32,6 @@
                 android:layout_weight="0.5"
                 android:layout_gravity="fill"
                 android:orientation="vertical">
-
-                <!--<TextView-->
-                <!--android:id="@+id/manga_item_author"-->
-                <!--style="@style/MangaItemAuthor"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content" />-->
-
 
                 <TextView
                     style="@style/MangaItemTag"
@@ -118,11 +105,6 @@
                     style="@style/MangaItemProperty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <!--<TextView-->
-                    <!--style="@style/MangaItemTag"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text=""/>-->
 
             </LinearLayout>
 

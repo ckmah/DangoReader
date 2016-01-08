@@ -74,6 +74,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_manga_item, menu);
         MenuItem bookmarkItem = menu.findItem(R.id.manga_item_bookmark_button);
