@@ -109,7 +109,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark,
-                R.color.textColorSecondary);
+                R.color.colorPrimaryExtraDark);
     }
 
     private void fetchMangaListFromMangaEden() {

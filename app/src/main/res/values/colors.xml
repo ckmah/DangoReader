@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">@color/md_amber_500</color>
     <color name="colorPrimaryDark">@color/md_amber_700</color>
+    <color name="colorPrimaryExtraDark">@color/md_amber_900</color>
     <color name="textColorPrimary">@color/white</color>
     <color name="textColorSecondary">#CCFFFFFF</color>
 
