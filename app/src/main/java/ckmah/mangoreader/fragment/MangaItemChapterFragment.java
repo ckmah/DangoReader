@@ -13,6 +13,7 @@ import com.william.mangoreader.R;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import ckmah.mangoreader.DividerItemDecoration;
 import ckmah.mangoreader.adapter.MangaItemRowAdapter;
 import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
@@ -63,6 +64,10 @@ public class MangaItemChapterFragment extends Fragment {
         MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(
                 getActivity(), this, mangaItems, mangaDetailItem.getTitle());
         mRecyclerView.setAdapter(itemRowAdapter);
+
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
+        mRecyclerView.addItemDecoration(itemDecoration);
 
         VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) rootView.findViewById(R.id.fast_scroller);
 
