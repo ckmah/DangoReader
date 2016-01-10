@@ -14,7 +14,6 @@ import com.william.mangoreader.R;
 
 import java.util.List;
 
-import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.daogen.DaoMaster;
 import ckmah.mangoreader.daogen.DaoSession;
@@ -78,10 +77,11 @@ public class UserLibraryHelper {
                 m.lastChapterDate,
                 m.hits);
 
+        View rootView = activity.getWindow().getDecorView().getRootView();
         try { // insert and show snackbar with undo, return true if successful, false otherwise
             getDao(activity).insert(mangaItem);
             Snackbar
-                .make(findMyView(activity), added, Snackbar.LENGTH_LONG)
+                .make(rootView, added, Snackbar.LENGTH_LONG)
                 .setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -102,7 +102,7 @@ public class UserLibraryHelper {
         } catch (SQLiteConstraintException e) {
             String duplicate = "\"" + m.title + "\" is already in your library.";
             Snackbar
-                    .make(findMyView(activity), duplicate, Snackbar.LENGTH_SHORT)
+                    .make(rootView, duplicate, Snackbar.LENGTH_SHORT)
                     .show();
             Log.d("LIBRARY", "Entry already exists");
             return false;
@@ -133,16 +133,17 @@ public class UserLibraryHelper {
         getDao(activity).delete(mangaItem);
         removed = "\"" + m.title + "\" removed from your library.";
 
+        final View rootView = activity.getWindow().getDecorView().getRootView();
         // show undo option only if not called from add undo
         if (showUndo) {
             button.setSelected(false);
             Snackbar
-                .make(findMyView(activity), removed, Snackbar.LENGTH_LONG)
+                .make(rootView, removed, Snackbar.LENGTH_LONG)
                 .setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         getDao(activity).insert(mangaItem);
-                        Snackbar.make(findMyView(activity), removed, Snackbar.LENGTH_LONG);
+                        Snackbar.make(rootView, removed, Snackbar.LENGTH_LONG);
                         button.setSelected(true);
                         if (adapter != null) { // basically called from browse or library
                             addToListUpdate(m, adapter.fragment, adapter, position);
@@ -154,23 +155,12 @@ public class UserLibraryHelper {
 
             button.setSelected(false);
             Snackbar
-                    .make(findMyView(activity), removed, Snackbar.LENGTH_LONG)
+                    .make(rootView, removed, Snackbar.LENGTH_LONG)
                     .show();
         }
         if (adapter != null) { // basically called from browse or library
             removeFromListUpdate(adapter.fragment, adapter, position);
         }
-    }
-
-    private static View findMyView(Activity activity) {
-        View mView;
-        if (activity instanceof MangaItemActivity) {
-            mView = activity.findViewById(R.id.tabbed_parent_layout);
-        }
-        else {
-            mView = activity.findViewById(R.id.parent_layout);
-        }
-        return mView;
     }
 
     public static void removeFromListUpdate(Fragment fragment, CardLayoutAdapter adapter, int position) {
