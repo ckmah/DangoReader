@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 
 import com.william.mangoreader.R;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -65,17 +64,13 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-
         final View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
+
         initRecycler(rootView);
         initSwipeRefresh(rootView);
 
         if (allManga.size() > 0) {
             // If allManga is already populated, just display them
-            cardAdapter.getFilter().filter("");
-        } else if (savedInstanceState != null) {
-            // If the previous list was saved (e.g. on device rotation), use and display them
-            allManga.addAll((List<MangaEdenMangaListItem>) savedInstanceState.getSerializable("allManga"));
             cardAdapter.getFilter().filter("");
         } else {
             // Repopulate the list with an API call
@@ -244,14 +239,5 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the list, if activity is being destroyed due to lack of resources (TODO or rotation?)
-        savedInstanceState.putSerializable("allManga", (Serializable) allManga);
-
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
     }
 }
