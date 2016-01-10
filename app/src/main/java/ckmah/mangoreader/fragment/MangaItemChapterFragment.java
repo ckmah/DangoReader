@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.william.mangoreader.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.adapter.MangaItemRowAdapter;
@@ -58,13 +57,12 @@ public class MangaItemChapterFragment extends Fragment {
     private void initRecycler(View rootView) {
         // retrieve chapters
         ArrayList<Chapter> mangaItems = new ArrayList<>(manga.chaptersList);
-        Collections.reverse(mangaItems);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.chapter_recycler_view);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(
-                getActivity(), this, mangaItems, manga.title);
+                getActivity(), mangaItems, manga.id);
         mRecyclerView.setAdapter(itemRowAdapter);
 
         VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) rootView.findViewById(R.id.fast_scroller);

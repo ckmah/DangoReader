@@ -161,6 +161,7 @@ public class MangaEden {
             temp.number = ch.getNumber();
             temp.date = ch.getDate();
             temp.read = false;
+            temp.mostRecentPage = -1;
             chapters.add(temp);
         }
         return chapters;
