@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -78,6 +77,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_manga_item, menu);
         MenuItem bookmarkItem = menu.findItem(R.id.manga_item_bookmark_button);
@@ -137,7 +137,6 @@ public class MangaItemActivity extends AppCompatActivity {
                     public void onFailure(Throwable t) {
                         Log.e("MangaItemActivity", "Could not fetch details from MangaEden");
                     }
-                });
+            });
     }
-    
 }
