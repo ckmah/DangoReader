@@ -14,15 +14,13 @@ import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 /**
  * My Library view pager tabs adapter
  */
-public class MangaItemTabbedAdapter extends FragmentStatePagerAdapter {
+public class MangaItemPageAdapter extends FragmentStatePagerAdapter {
     private Context context;
-    private FragmentManager fm;
     private MangaEdenMangaDetailItem mangaDetailItem;
 
-    public MangaItemTabbedAdapter(Context context, FragmentManager fm, MangaEdenMangaDetailItem mangaDetailItem) {
+    public MangaItemPageAdapter(Context context, FragmentManager fm, MangaEdenMangaDetailItem mangaDetailItem) {
         super(fm);
         this.context = context;
-        this.fm = fm;
         this.mangaDetailItem = mangaDetailItem;
     }
 

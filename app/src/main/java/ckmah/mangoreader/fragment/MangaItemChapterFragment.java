@@ -65,6 +65,7 @@ public class MangaItemChapterFragment extends Fragment {
         mRecyclerView.setAdapter(itemRowAdapter);
 
         VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) rootView.findViewById(R.id.fast_scroller);
+
         // Connect the recycler to the scroller (to let the scroller scroll the list)
         fastScroller.setRecyclerView(mRecyclerView);
         // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)

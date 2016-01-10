@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -16,7 +15,7 @@ import android.widget.TextView;
 import com.william.mangoreader.R;
 
 import ckmah.mangoreader.UserLibraryHelper;
-import ckmah.mangoreader.adapter.MangaItemTabbedAdapter;
+import ckmah.mangoreader.adapter.MangaItemPageAdapter;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
@@ -30,20 +29,14 @@ import retrofit.Retrofit;
 public class MangaItemActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
 
     private MangaEdenMangaListItem mangaListItem;
     private MangaEdenMangaDetailItem manga;
 
-    private Palette.Swatch primaryColor;
-    private Palette.Swatch secondaryColor;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manga_item_tabbed);
+        setContentView(R.layout.activity_manga_item);
         initToolBar();
         mangaListItem = (MangaEdenMangaListItem) getIntent().getSerializableExtra("mangaListItem");
         fetchMangaDetailFromMangaEden();
@@ -51,7 +44,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
 
     private void initToolBar() {
-        toolbar = (Toolbar) findViewById(R.id.item_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.manga_item_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -64,10 +57,10 @@ public class MangaItemActivity extends AppCompatActivity {
     }
 
     private void initViewPager() {
-        ViewPager viewPager = (ViewPager) findViewById(R.id.details_and_chapter_pager);
-        MangaItemTabbedAdapter mangaItemTabbedAdapter = new MangaItemTabbedAdapter(this, this.getSupportFragmentManager(), manga);
-        viewPager.setAdapter(mangaItemTabbedAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.item_sliding_tabs);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.manga_item_pager);
+        MangaItemPageAdapter mangaItemPageAdapter = new MangaItemPageAdapter(this, getSupportFragmentManager(), manga);
+        viewPager.setAdapter(mangaItemPageAdapter);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.manga_item_tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -79,7 +72,6 @@ public class MangaItemActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_manga_item, menu);
         MenuItem bookmarkItem = menu.findItem(R.id.manga_item_bookmark_button);
@@ -124,16 +116,6 @@ public class MangaItemActivity extends AppCompatActivity {
                     public void onFailure(Throwable t) {
                         Log.d("ERROR", t.getMessage());
                     }
-            });
-    }
-
-    @Deprecated
-    public Palette.Swatch getPrimaryColor() {
-        return primaryColor;
-    }
-
-    @Deprecated
-    public Palette.Swatch getSecondaryColor() {
-        return secondaryColor;
+                });
     }
 }
