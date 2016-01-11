@@ -75,6 +75,8 @@ public class MangaViewerActivity extends AppCompatActivity {
     private TextView leftBubble;
     private TextView rightBubble;
 
+    public boolean loading = false;
+
     /**
      * Start a viewer activity with the specified parameters
      */
@@ -207,6 +209,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.toolbar_chapter_title)).setText(title);
 
         // TODO show progressbar or loading indicator
+        loading = true;
 
         // Fetch the chapter images in the background
         String chapterId = chapters.get(chapterIndex).id;
@@ -252,6 +255,9 @@ public class MangaViewerActivity extends AppCompatActivity {
                 seekBar.refresh();
                 mangaViewPagerSeekBarChangeListener.setTotalPages(images.size());
                 mangaViewPagerSeekBarChangeListener.onPageSelected(mangaViewPager.getCurrentItem());
+
+                loading = false;
+
             }
 
             @Override
@@ -267,6 +273,9 @@ public class MangaViewerActivity extends AppCompatActivity {
      */
     public void nextChapter() {
         Toast toast;
+        if (loading)
+            return;
+
         if (chapterIndex == chapterTotalSize - 1) {
             // handle last chapter
             toast = Toast.makeText(this, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
@@ -292,6 +301,9 @@ public class MangaViewerActivity extends AppCompatActivity {
      */
     public void prevChapter() {
         Toast toast;
+        if (loading)
+            return;
+
         if (chapterIndex == 0) {
             // handle first chapter
             toast = Toast.makeText(this, "No more previous chapters.", Toast.LENGTH_LONG);
