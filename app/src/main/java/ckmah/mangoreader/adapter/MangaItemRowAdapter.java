@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.william.mangoreader.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ckmah.mangoreader.activity.MangaViewerActivity;
@@ -27,7 +26,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private String mangaId;
 
 
-    public MangaItemRowAdapter(Activity activity, ArrayList<Chapter> chapters, String mangaId) {
+    public MangaItemRowAdapter(Activity activity, List<Chapter> chapters, String mangaId) {
         this.activity = activity;
         this.chapters = chapters;
         this.mangaId = mangaId;
