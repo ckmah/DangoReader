@@ -44,38 +44,46 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MangaViewerActivity extends AppCompatActivity {
-
+    // Constants
     private static final float LEFT_SIDE = 0.33f;
     private static final float RIGHT_SIDE = 0.66f;
-    private static final String IMAGES_KEY = "images";
     private final static String
+            KEY_IMAGES = "images",
             KEY_MANGA_ID = "manga_title",
             KEY_CHAPTER_INDEX = "chapter_index";
+
     // Constants for animating toolbar positions.
     private static float LAYOUT_HEIGHT;
     private static float SEEKBAR_YPOS;
     private static float STATUS_BAR_YPOS;
     private static float SCALE;
-    FrameLayout uiLayout;
-    private AnimationHelper animationHelper = new AnimationHelper();
-    private boolean isUIVisible;
+
+    // Views and layouts
+    private FrameLayout uiLayout;
     private Toolbar mToolbar;
     private Toolbar seekBarToolBar;
     private MangaViewPager mangaViewPager;
-    private MangaImagePagerAdapter imageAdapter;
     private ReversibleSeekBar seekBar;
-    private MangaViewPagerSeekBarChangeListener mangaViewPagerSeekBarChangeListener;
-    private SharedPreferences sharedPref;
-    private List<MangaEdenImageItem> images; // holds requested images for single chapter
-    private static Manga manga;
-    private static int chapterIndex;
-    private int chapterTotalSize;
-    private List<Chapter> chapters;
-    private boolean readLeftToRight; // true - left to right; false - right to left
     private TextView leftBubble;
     private TextView rightBubble;
 
-    public boolean loading = false;
+    // Other Android objects
+    private AnimationHelper animationHelper = new AnimationHelper();
+    private MangaImagePagerAdapter imageAdapter;
+    private MangaViewPagerSeekBarChangeListener mangaViewPagerSeekBarChangeListener;
+    private SharedPreferences sharedPref;
+
+    // Actual data
+    private Manga manga;
+    private List<MangaEdenImageItem> images; // holds requested images for single chapter
+    private List<Chapter> chapters;
+
+    // Flags and other state
+    private boolean isUIVisible;
+    private int chapterTotalSize;
+    private int chapterIndex;
+    private boolean readLeftToRight; // true - left to right; false - right to left
+    private boolean loading = false;
 
     /**
      * Start a viewer activity with the specified parameters
@@ -113,7 +121,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         // Check whether we're recreating a previously destroyed instance
         if (savedInstanceState != null) {
             // Restore image list from saved state
-            images = (ArrayList<MangaEdenImageItem>) savedInstanceState.getSerializable(IMAGES_KEY);
+            images = (ArrayList<MangaEdenImageItem>) savedInstanceState.getSerializable(KEY_IMAGES);
         } else {
             // Otherwise initialize empty list of images
             images = new ArrayList<>();
@@ -173,7 +181,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         readLeftToRight = sharedPref.getBoolean(getString(R.string.PREF_KEY_READ_DIRECTION), false);
         boolean showPageNumbers = sharedPref.getBoolean(getString(R.string.PREF_KEY_PAGE_NUMBERS), false);
 
-        mangaViewPagerSeekBarChangeListener = new MangaViewPagerSeekBarChangeListener(mangaViewPager, seekBar, pageNumberView);
+        mangaViewPagerSeekBarChangeListener = new MangaViewPagerSeekBarChangeListener(this, mangaViewPager, seekBar, pageNumberView);
 
         // set all listeners
         seekBar.setOnSeekBarChangeListener(mangaViewPagerSeekBarChangeListener);
@@ -272,14 +280,12 @@ public class MangaViewerActivity extends AppCompatActivity {
      * Navigates to next available chapter.
      */
     public void nextChapter() {
-        Toast toast;
         if (loading)
             return;
 
         if (chapterIndex == chapterTotalSize - 1) {
-            // handle last chapter
-            toast = Toast.makeText(this, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
-            toast.show();
+            // Do nothing if already on last chapter
+            Toast.makeText(this, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG).show();
         } else {
             if (readLeftToRight) {
                 mangaViewPager.setPageIndex(images.size() - 1);
@@ -290,8 +296,7 @@ public class MangaViewerActivity extends AppCompatActivity {
             saveMostRecentPage();
             markChapterRead();
             chapterIndex++;
-            toast = Toast.makeText(this, "Chapter " + getChapterNumber(), Toast.LENGTH_SHORT);
-            toast.show();
+            Toast.makeText(this, "Chapter " + getChapterNumber(), Toast.LENGTH_SHORT).show();
             displayChapter();
         }
     }
@@ -300,19 +305,16 @@ public class MangaViewerActivity extends AppCompatActivity {
      * Navigates to previous chapter if available.
      */
     public void prevChapter() {
-        Toast toast;
         if (loading)
             return;
 
         if (chapterIndex == 0) {
-            // handle first chapter
-            toast = Toast.makeText(this, "No more previous chapters.", Toast.LENGTH_LONG);
-            toast.show();
+            // Do nothing if already on first chapter
+            Toast.makeText(this, "No more previous chapters.", Toast.LENGTH_LONG).show();
         } else {
             saveMostRecentPage();
             chapterIndex--;
-            toast = Toast.makeText(this, "Chapter " + getChapterNumber(), Toast.LENGTH_SHORT);
-            toast.show();
+            Toast.makeText(this, "Chapter " + getChapterNumber(), Toast.LENGTH_SHORT).show();
             displayChapter();
         }
     }
@@ -456,14 +458,14 @@ public class MangaViewerActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the list of images, if activity is being destroyed due to lack of resources
-        savedInstanceState.putSerializable(IMAGES_KEY, (Serializable) images);
+        savedInstanceState.putSerializable(KEY_IMAGES, (Serializable) images);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
 
 
-    public static void markChapterRead() {
+    public void markChapterRead() {
         manga.chaptersList.get(chapterIndex).read = true;
         Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
     }
