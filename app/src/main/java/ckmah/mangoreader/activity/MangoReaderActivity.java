@@ -19,6 +19,7 @@ import com.william.mangoreader.R;
 import ckmah.mangoreader.BootReceiver;
 import ckmah.mangoreader.fragment.BrowseMangaFragment;
 import ckmah.mangoreader.fragment.MyLibraryFragment;
+import io.paperdb.Paper;
 
 /**
  * Main activity screen. Displays various fragments.
@@ -38,6 +39,8 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         initNavigation();
 //        initSpinner();
 
+        // load user library
+        Paper.init(this);
 
         // display library by default
         displayView(R.id.library_nav_item);

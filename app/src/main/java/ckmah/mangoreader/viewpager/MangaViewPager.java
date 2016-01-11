@@ -12,6 +12,7 @@ public class MangaViewPager extends ViewPager {
 
     public MangaViewerActivity activity;
     private boolean leftToRight;
+    private int pageIndex;
 
     public MangaViewPager(Context context) {
         super(context);
@@ -27,9 +28,9 @@ public class MangaViewPager extends ViewPager {
         ((AppCompatActivity) context).getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-                // | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                // | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                // | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        // | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+        // | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+        // | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
 
@@ -78,5 +79,13 @@ public class MangaViewPager extends ViewPager {
 
     public void setLeftToRight(boolean leftToRight) {
         this.leftToRight = leftToRight;
+    }
+
+    public int getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(int pageIndex) {
+        this.pageIndex = pageIndex;
     }
 }

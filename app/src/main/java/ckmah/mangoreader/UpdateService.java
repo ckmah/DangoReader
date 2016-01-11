@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ckmah.mangoreader.activity.MangoReaderActivity;
+import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
+import io.paperdb.Paper;
 
 public class UpdateService extends IntentService {
     /**
@@ -46,9 +48,9 @@ public class UpdateService extends IntentService {
                 DateTime lastChapterDate = new DateTime(item.lastChapterDate * 1000L); // Convert ms to sec
                 DateTime yesterday = new DateTime().minusDays(1);
                 if (lastChapterDate.isAfter(yesterday)) {
-
+                    Manga m = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(item.id);
                     // Check whether manga is in library
-                    if (UserLibraryHelper.isInLibrary(this, item)) {
+                    if (m != null && m.favorite) {
                         updated.add(item);
                     }
                 }
