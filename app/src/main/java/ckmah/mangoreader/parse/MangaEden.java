@@ -19,6 +19,7 @@ import com.william.mangoreader.R;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ckmah.mangoreader.UserLibraryHelper;
@@ -164,6 +165,7 @@ public class MangaEden {
             temp.mostRecentPage = -1;
             chapters.add(temp);
         }
+        Collections.reverse(chapters);
         return chapters;
     }
 

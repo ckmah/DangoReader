@@ -1,9 +1,8 @@
 package ckmah.mangoreader.database;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class Manga implements Serializable{
+public class Manga {
     public String id;
     public String title;
     public String imageSrc;

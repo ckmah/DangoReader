@@ -43,8 +43,6 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-import static io.paperdb.Paper.book;
-
 public class MangaViewerActivity extends AppCompatActivity {
 
     private static final float LEFT_SIDE = 0.33f;
@@ -94,7 +92,7 @@ public class MangaViewerActivity extends AppCompatActivity {
 
         // read in manga and chapter data
         String mangaId = getIntent().getExtras().getString(KEY_MANGA_ID);
-        manga = book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
+        manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
         chapters = manga.chaptersList;
         chapterIndex = getIntent().getExtras().getInt(KEY_CHAPTER_INDEX);
         chapterTotalSize = chapters != null ? chapters.size() : 0;
@@ -216,13 +214,17 @@ public class MangaViewerActivity extends AppCompatActivity {
             @Override
             public void onResponse(Response<MangaEden.MangaEdenChapter> response, Retrofit retrofit) {
                 images = response.body().images;
+                if (readLeftToRight) {
+                    Collections.reverse(images);
+                    leftBubble.setText(R.string.back);
+                    rightBubble.setText(R.string.next);
+
+                } else {
+                    leftBubble.setText(R.string.next);
+                    rightBubble.setText(R.string.back);
+                }
+
                 imageAdapter = new MangaImagePagerAdapter(getSupportFragmentManager(), images.size());
-                mangaViewPager.setAdapter(imageAdapter);
-
-                seekBar.setMax(imageAdapter.getCount() - 1);
-                seekBar.setLeftToRight(readLeftToRight);
-
-                Log.d("DisplayChapter", "total pages: " + (imageAdapter.getCount() - 1));
 
                 int currentPage;
                 if (chapters.get(chapterIndex).mostRecentPage != -1) {
@@ -234,18 +236,16 @@ public class MangaViewerActivity extends AppCompatActivity {
                         currentPage = images.size() - 1;
                     }
                 }
-                if (readLeftToRight) {
-                    Collections.reverse(images);
-                    leftBubble.setText(R.string.back);
-                    rightBubble.setText(R.string.next);
-                    imageAdapter.notifyDataSetChanged();
 
-                } else {
-                    leftBubble.setText(R.string.next);
-                    rightBubble.setText(R.string.back);
-                }
+                mangaViewPager.setAdapter(imageAdapter);
+
+                seekBar.setMax(imageAdapter.getCount() - 1);
+                seekBar.setLeftToRight(readLeftToRight);
+
+                Log.d("DisplayChapter", "total pages: " + (imageAdapter.getCount() - 1));
 
                 mangaViewPager.setCurrentItem(currentPage, false);
+                mangaViewPager.setPageIndex(currentPage);
 
                 Log.d("DisplayChapter", "showing fragment " + currentPage);
 
@@ -272,6 +272,7 @@ public class MangaViewerActivity extends AppCompatActivity {
             toast = Toast.makeText(this, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
             toast.show();
         } else {
+            saveMostRecentPage();
             chapterIndex++;
             toast = Toast.makeText(this, "Chapter " + getChapterNumber(), Toast.LENGTH_SHORT);
             toast.show();
@@ -289,6 +290,7 @@ public class MangaViewerActivity extends AppCompatActivity {
             toast = Toast.makeText(this, "No more previous chapters.", Toast.LENGTH_LONG);
             toast.show();
         } else {
+            saveMostRecentPage();
             chapterIndex--;
             toast = Toast.makeText(this, "Chapter " + getChapterNumber(), Toast.LENGTH_SHORT);
             toast.show();
@@ -397,6 +399,10 @@ public class MangaViewerActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        saveMostRecentPage();
+    }
+
+    public void saveMostRecentPage() {
         manga.chaptersList.get(chapterIndex).mostRecentPage = mangaViewPager.getPageIndex();
         Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
     }

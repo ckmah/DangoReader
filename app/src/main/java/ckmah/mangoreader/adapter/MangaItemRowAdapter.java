@@ -51,21 +51,18 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
         ChapterViewHolder chapterHolder = (ChapterViewHolder) holder;
-        int index = chapters.size() - position - 1;
-        Chapter chapterItem = chapters.get(index);
+        Chapter chapterItem = chapters.get(position);
 
         chapterHolder.titleView.setText(chapterItem.title);
         chapterHolder.numberView.setText(CHAPTER_PREFIX + chapterItem.number);
-        //TODO janky and doesnt update properly
         if (chapterItem.read) {
             chapterHolder.numberView.setTextColor(activity.getResources().getColor(R.color.colorPrimary));
         }
         else {
             chapterHolder.numberView.setTextColor(activity.getResources().getColor(R.color.black));
         }
-        chapterHolder.chapterIndex = index;
+        chapterHolder.chapterIndex = position;
     }
 
     @Override
