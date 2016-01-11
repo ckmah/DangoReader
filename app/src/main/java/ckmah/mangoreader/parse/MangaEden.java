@@ -41,28 +41,31 @@ public class MangaEden {
     public static final String MANGAEDEN_IMAGE_CDN = "https://cdn.mangaeden.com/mangasimg/";
     private static MangaEdenService service, serviceNoCache;
 
-    // Always pull from online
-    public static MangaEdenService getMangaEdenServiceNoCache(Context context) {
-        if (serviceNoCache == null) {
-            Log.d("MANGAEDEN", "Service without cache");
-
-            // "no-cache" flag forces the service to check for updates
-            // See https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=en#cache-control
-            serviceNoCache = buildService(context, "public, no-cache");
-        }
-        return serviceNoCache;
+    // Default is to rely on cache when possible
+    public static MangaEdenService getMangaEdenService(Context context) {
+        return getMangaEdenService(context, false);
     }
 
-    // Use cache when possible
-    public static MangaEdenService getMangaEdenService(Context context) {
-        if (service == null) {
-            Log.d("MANGAEDEN", "Creating MangaEdenService");
+    public static MangaEdenService getMangaEdenService(Context context, boolean skipCache) {
+        if (skipCache) {
+            if (serviceNoCache == null) {
+                Log.d("MANGAEDEN", "Service without cache");
 
-            // Tolerate 1 day stale
-            String cacheControl = "public, max-age=" + 60 * 60 * 24;
-            service = buildService(context, cacheControl);
+                // "no-cache" flag forces the service to check for updates
+                // See https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=en#cache-control
+                serviceNoCache = buildService(context, "public, no-cache");
+            }
+            return serviceNoCache;
+        } else {
+            if (service == null) {
+                Log.d("MANGAEDEN", "Creating MangaEdenService");
+
+                // Tolerate 1 day stale
+                String cacheControl = "public, max-age=" + 60 * 60 * 24;
+                service = buildService(context, cacheControl);
+            }
+            return service;
         }
-        return service;
     }
 
     private static MangaEdenService buildService(Context context, final String cacheControl) {

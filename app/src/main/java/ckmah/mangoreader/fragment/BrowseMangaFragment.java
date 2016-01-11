@@ -34,7 +34,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class BrowseMangaFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private GridLayoutManager gridLayoutManager;
@@ -73,8 +73,8 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
             // If allManga is already populated, just display them
             cardAdapter.getFilter().filter("");
         } else {
-            // Repopulate the list with an API call
-            fetchMangaListFromMangaEden();
+            // Repopulate the list with an API call, relying on cache if possible
+            fetchMangaListFromMangaEden(false);
         }
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Browse");
@@ -100,10 +100,16 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     private void initSwipeRefresh(View rootView) {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.browse_swipe_refresh);
-        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // If user swiped down to refresh, force a check for updates
+                fetchMangaListFromMangaEden(true);
+            }
+        });
     }
 
-    private void fetchMangaListFromMangaEden() {
+    private void fetchMangaListFromMangaEden(boolean skipCache) {
         Log.d("BrowseMangaFragment", "Fetching manga list");
 
         swipeRefreshLayout.post(new Runnable() {
@@ -113,7 +119,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
             }
         });
 
-        MangaEden.getMangaEdenService(getActivity()).listAllManga().enqueue(new Callback<MangaEden.MangaEdenList>() {
+        MangaEden.getMangaEdenService(getActivity(), skipCache).listAllManga().enqueue(new Callback<MangaEden.MangaEdenList>() {
             @Override
             public void onResponse(Response<MangaEden.MangaEdenList> response, Retrofit retrofit) {
                 sortMangaInBackground(response.body());
@@ -171,11 +177,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                 Log.d("BrowseMangaFragment", "Finished sorting manga");
             }
         }.execute(list);
-    }
-
-    @Override
-    public void onRefresh() {
-        fetchMangaListFromMangaEden();
     }
 
     @Override
