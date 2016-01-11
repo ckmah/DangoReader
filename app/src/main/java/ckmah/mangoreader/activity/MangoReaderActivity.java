@@ -2,7 +2,6 @@ package ckmah.mangoreader.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -17,11 +16,10 @@ import android.view.View;
 
 import com.william.mangoreader.R;
 
-import ckmah.mangoreader.daogen.DaoMaster;
-import ckmah.mangoreader.daogen.DaoSession;
-import ckmah.mangoreader.daogen.UserLibraryMangaDao;
+import ckmah.mangoreader.BootReceiver;
 import ckmah.mangoreader.fragment.BrowseMangaFragment;
 import ckmah.mangoreader.fragment.MyLibraryFragment;
+import io.paperdb.Paper;
 
 /**
  * Main activity screen. Displays various fragments.
@@ -30,11 +28,6 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
-
-    public SQLiteDatabase userLibraryDb;
-    public DaoMaster daoMaster;
-    public DaoSession daoSession;
-    public static UserLibraryMangaDao userLibraryMangaDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +40,13 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
 //        initSpinner();
 
         // load user library
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "user-library-db", null);
-        userLibraryDb = helper.getWritableDatabase();
-//        helper.onUpgrade(userLibraryDb, userLibraryDb.getVersion(), 1000); // DEBUG PURPOSES ONLY
-        daoMaster = new DaoMaster(userLibraryDb);
-        daoSession = daoMaster.newSession();
-        userLibraryMangaDao = daoSession.getUserLibraryMangaDao();
+        Paper.init(this);
 
         // display library by default
         displayView(R.id.library_nav_item);
+
+        // Start polling for chapter updates
+        BootReceiver.RefreshService.start(this);
     }
 
     private void initToolbar() {
@@ -89,12 +80,17 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() != R.id.settings_nav_item) {
-            menuItem.setChecked(true);
-        }
         drawerLayout.closeDrawers();
-        displayView(menuItem.getItemId());
-        return true;
+        if (menuItem.getItemId() == R.id.settings_nav_item) {
+            // Launch settings activity, but don't keep selected in the drawer
+            Intent settingsIntent = new Intent(MangoReaderActivity.this, SettingsActivity.class);
+            startActivity(settingsIntent);
+            return false;
+        } else {
+            // Switch to the corresponding fragment, and keep selected in the drawer
+            displayView(menuItem.getItemId());
+            return true;
+        }
     }
 
     /**
@@ -117,13 +113,9 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
             case R.id.browse_nav_item: // browse
 //                findViewById(R.id.spinner_browse_sources).setVisibility(View.VISIBLE);
                 findViewById(R.id.sliding_tabs).setVisibility(View.GONE);
-                fragment = new BrowseMangaFragment();
+                fragment = BrowseMangaFragment.getInstance();
                 title = getString(R.string.title_browse);
                 break;
-            case R.id.settings_nav_item: // settings
-                Intent settingsIntent = new Intent(MangoReaderActivity.this, SettingsActivity.class);
-                startActivity(settingsIntent);
-                return;
             default:
                 break;
         }

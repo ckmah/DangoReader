@@ -28,7 +28,7 @@ import java.util.List;
 
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
-import ckmah.mangoreader.model.MangaEdenMangaListItem;
+import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.parse.MangaEden;
 import retrofit.Callback;
 import retrofit.Response;
@@ -42,10 +42,18 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     private SwipeRefreshLayout swipeRefreshLayout;
 
     // In-memory list of all manga, period
-    private List<MangaEdenMangaListItem> allManga = new ArrayList<>();
+    private List<Manga> allManga = new ArrayList<>();
 
     public BrowseMangaFragment() {
         // Required empty public constructor
+    }
+
+    private static BrowseMangaFragment instance;
+    public static BrowseMangaFragment getInstance() {
+        if (instance == null) {
+            instance = new BrowseMangaFragment();
+        }
+        return instance;
     }
 
     @Override
@@ -56,12 +64,19 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
 
+        final View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
         initRecycler(rootView);
         initSwipeRefresh(rootView);
 
-        fetchMangaListFromMangaEden();
+        if (allManga.size() > 0) {
+            // If allManga is already populated, just display them
+            cardAdapter.getFilter().filter("");
+        } else {
+            // Repopulate the list with an API call
+            fetchMangaListFromMangaEden();
+        }
+
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Browse");
         setHasOptionsMenu(true);
         return rootView;
@@ -89,7 +104,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private void fetchMangaListFromMangaEden() {
-        Log.d("SORTING", "FETCHING");
+        Log.d("BrowseMangaFragment", "Fetching manga list");
 
         swipeRefreshLayout.post(new Runnable() {
             @Override
@@ -101,14 +116,12 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         MangaEden.getMangaEdenService(getActivity()).listAllManga().enqueue(new Callback<MangaEden.MangaEdenList>() {
             @Override
             public void onResponse(Response<MangaEden.MangaEdenList> response, Retrofit retrofit) {
-                response.body();
                 sortMangaInBackground(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
-                Log.d("SORTING", "FAILED");
-                Log.d("SORTING", t.getMessage());
+                Log.d("BrowseMangaFragment", "Could not fetch manga list");
 
                 // Hide the refresh layout
                 swipeRefreshLayout.post(new Runnable() {
@@ -122,17 +135,17 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private void sortMangaInBackground(MangaEden.MangaEdenList list) {
-        Log.d("SORTING", "STARTING");
-        new AsyncTask<MangaEden.MangaEdenList, Void, List<MangaEdenMangaListItem>>() {
+        Log.d("BrowseMangaFragment", "Sorting manga in background");
+        new AsyncTask<MangaEden.MangaEdenList, Void, List<Manga>>() {
 
             @Override
-            protected List<MangaEdenMangaListItem> doInBackground(MangaEden.MangaEdenList... params) {
+            protected List<Manga> doInBackground(MangaEden.MangaEdenList... params) {
                 // On background thread, sort manga by most to least # of views
-                List<MangaEdenMangaListItem> results = params[0].manga;
-                Collections.sort(results, new Comparator<MangaEdenMangaListItem>() {
+                List<Manga> results = MangaEden.convertMangaListItemsToManga(params[0].manga);
+                Collections.sort(results, new Comparator<Manga>() {
 
                     @Override
-                    public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                    public int compare(Manga lhs, Manga rhs) {
                         return ((Integer) rhs.hits).compareTo(lhs.hits);
                     }
                 });
@@ -140,7 +153,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
             }
 
             @Override
-            protected void onPostExecute(List<MangaEdenMangaListItem> results) {
+            protected void onPostExecute(List<Manga> results) {
                 // On UI thread, update list of all manga and display them
                 allManga.clear();
                 allManga.addAll(results);
@@ -155,7 +168,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                     }
                 });
 
-                Log.d("SORTING", "ENDING");
+                Log.d("BrowseMangaFragment", "Finished sorting manga");
             }
         }.execute(list);
     }
@@ -205,8 +218,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                 return false;
             }
         });
-
-
     }
 
     @Override

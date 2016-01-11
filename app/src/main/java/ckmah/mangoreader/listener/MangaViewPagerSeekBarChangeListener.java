@@ -7,12 +7,14 @@ import android.widget.TextView;
 
 import com.william.mangoreader.R;
 
+import ckmah.mangoreader.activity.MangaViewerActivity;
 import ckmah.mangoreader.seekbar.ReversibleSeekBar;
+import ckmah.mangoreader.viewpager.MangaViewPager;
 
 public class MangaViewPagerSeekBarChangeListener extends ViewPager.SimpleOnPageChangeListener implements SeekBar.OnSeekBarChangeListener {
 
     private final ReversibleSeekBar seekBar;
-    private ViewPager viewPager;
+    private MangaViewPager viewPager;
     private TextView pageNumberView;
     private int progress; // index of current viewpager page
     private int totalPages;
@@ -24,7 +26,7 @@ public class MangaViewPagerSeekBarChangeListener extends ViewPager.SimpleOnPageC
      * @param seekBar        - SeekBar to synchronize with ViewPager
      * @param pageNumberView
      */
-    public MangaViewPagerSeekBarChangeListener(ViewPager viewPager, ReversibleSeekBar seekBar, TextView pageNumberView) {
+    public MangaViewPagerSeekBarChangeListener(MangaViewPager viewPager, ReversibleSeekBar seekBar, TextView pageNumberView) {
         progress = 0;
         this.viewPager = viewPager;
         this.seekBar = seekBar;
@@ -71,13 +73,20 @@ public class MangaViewPagerSeekBarChangeListener extends ViewPager.SimpleOnPageC
     public void onPageSelected(int position) {
         String currentPageText;
 
+        viewPager.setPageIndex(position);
         // flip seekbar progress as necessary
         if (this.seekBar.isLeftToRight()) {
             seekBar.setProgress(position);
             currentPageText = (position + 1) + " / " + totalPages;
+            if (position + 1 == totalPages) {
+                MangaViewerActivity.markChapterRead();
+            }
         } else {
             seekBar.setProgress(totalPages - position - 1);
             currentPageText = (totalPages - position) + " / " + totalPages;
+            if (position == 0) {
+                MangaViewerActivity.markChapterRead();
+            }
         }
         ((TextView) pageNumberView.findViewById(R.id.page_number)).setText(currentPageText);
         Log.d("SeekBarChangeListener", "onPageSelected " + position);

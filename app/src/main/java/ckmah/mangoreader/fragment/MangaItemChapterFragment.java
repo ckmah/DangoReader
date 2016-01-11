@@ -10,26 +10,29 @@ import android.view.ViewGroup;
 
 import com.william.mangoreader.R;
 
-import ckmah.mangoreader.adapter.MangaItemAdapter;
-import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
+import ckmah.mangoreader.UserLibraryHelper;
+import ckmah.mangoreader.adapter.MangaItemRowAdapter;
+import ckmah.mangoreader.database.Manga;
+import io.paperdb.Paper;
+import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
-@Deprecated
 public class MangaItemChapterFragment extends Fragment {
     private static final String CHAPTER_FRAGMENT_KEY = "chapter_fragment_key";
-    private MangaEdenMangaDetailItem mangaDetailItem;
 
+    private Manga manga;
+    private String mangaId;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
-    private MangaItemAdapter chapterAdapter;
+    //private MangaItemAdapter chapterAdapter;
 
     public MangaItemChapterFragment() {
         // required empty constructor
     }
 
-    public static MangaItemChapterFragment newInstance(MangaEdenMangaDetailItem mangaDetailItem) {
+    public static MangaItemChapterFragment newInstance(String mangaId) {
         MangaItemChapterFragment fragment = new MangaItemChapterFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CHAPTER_FRAGMENT_KEY, mangaDetailItem);
+        bundle.putString(CHAPTER_FRAGMENT_KEY, mangaId);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -42,23 +45,37 @@ public class MangaItemChapterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-
-        mangaDetailItem = (MangaEdenMangaDetailItem) getArguments().getSerializable(CHAPTER_FRAGMENT_KEY);
-//        View rootView = inflater.inflate(R.layout.fragment_chapters, container, false);
-//
-//        initRecycler(rootView);
-//        return rootView;
-        return null;
+        String mangaId = getArguments().getString(CHAPTER_FRAGMENT_KEY);
+        this.mangaId = mangaId;
+        manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
+        final View rootView = inflater.inflate(R.layout.fragment_manga_item_chapters, container, false);
+        initRecycler(rootView);
+        return rootView;
     }
 
     private void initRecycler(View rootView) {
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.manga_item_recycler_view);
+        // retrieve chapters
 
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.chapter_recycler_view);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
+        MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(
+                getActivity(), manga.chaptersList, manga.id);
+        mRecyclerView.setAdapter(itemRowAdapter);
 
-        chapterAdapter = new MangaItemAdapter(getActivity(), mangaDetailItem);
+        VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) rootView.findViewById(R.id.fast_scroller);
+        // Connect the recycler to the scroller (to let the scroller scroll the list)
+        fastScroller.setRecyclerView(mRecyclerView);
+        // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
+        mRecyclerView.addOnScrollListener(fastScroller.getOnScrollListener());
+    }
 
-        mRecyclerView.setAdapter(chapterAdapter);
+    @Override
+    public void onResume() {
+        super.onResume();
+        manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
+        MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(
+                getActivity(), manga.chaptersList, manga.id);
+        mRecyclerView.setAdapter(itemRowAdapter);
     }
 }

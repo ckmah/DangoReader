@@ -32,6 +32,7 @@ public class LibraryPagerAdapter extends FragmentStatePagerAdapter {
         return context.getResources().getStringArray(R.array.library_categories).length;
     }
 
+    @Override
     public CharSequence getPageTitle(int position) {
         return context.getResources().getStringArray(R.array.library_categories)[position];
     }

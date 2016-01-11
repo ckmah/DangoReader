@@ -28,7 +28,7 @@ import java.util.List;
 import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.adapter.helper.ItemTouchHelperAdapter;
-import ckmah.mangoreader.model.MangaEdenMangaListItem;
+import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.parse.MangaEden;
 
 /**
@@ -37,9 +37,9 @@ import ckmah.mangoreader.parse.MangaEden;
 public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable, Serializable {
 
     public Fragment fragment;
-    private List<MangaEdenMangaListItem> allManga;
-    public List<MangaEdenMangaListItem> filteredManga;
+    public List<Manga> filteredManga;
     public Activity activity;
+    private List<Manga> allManga;
 
     public CardLayoutAdapter(Activity activity, Fragment fragment) {
         filteredManga = new ArrayList<>();
@@ -48,7 +48,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         // Pass context or other static stuff that will be needed.
     }
 
-    public void setAllManga(List<MangaEdenMangaListItem> allManga) {
+    public void setAllManga(List<Manga> allManga) {
         this.allManga = allManga;
     }
 
@@ -56,9 +56,9 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     public void onBindViewHolder(final CardViewHolder viewHolder, final int position) {
         viewHolder.title.setText(filteredManga.get(position).title);
         viewHolder.subtitle.setText("Placeholder");
-        MangaEden.setThumbnail(filteredManga.get(position).imageUrl, activity.getApplicationContext(), viewHolder.thumbnail);
+        MangaEden.setThumbnail(filteredManga.get(position).imageSrc, activity.getApplicationContext(), viewHolder.thumbnail);
         viewHolder.manga = filteredManga.get(position);
-        viewHolder.bookmarkToggle.setSelected(UserLibraryHelper.findMangaInLibrary(viewHolder.manga).size() > 0);
+        viewHolder.bookmarkToggle.setSelected(viewHolder.manga.favorite);
         viewHolder.bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
 
         final CardLayoutAdapter adapter = this;
@@ -69,15 +69,10 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                 if (button.isSelected()) {
                     UserLibraryHelper.removeFromLibrary(viewHolder.manga, button, activity, true, adapter, position);
                 } else {
-                    UserLibraryHelper.addToLibrary(viewHolder.manga, button, activity, adapter, position);
+                    UserLibraryHelper.addToLibrary(viewHolder.manga, button, activity, true, adapter, position);
                 }
             }
         });
-    }
-
-    public void clearList() {
-        filteredManga.clear();
-        notifyDataSetChanged();
     }
 
     @Override
@@ -92,7 +87,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, MangaItemActivity.class);
-                intent.putExtra("mangaListItem", holder.manga);
+                intent.putExtra("mangaId", holder.manga.id);
                 activity.startActivity(intent);
             }
         });
@@ -126,6 +121,23 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     // mimics filter
     public Filter getFilter(int sortOptionIndex, boolean isReverseOrder, List<Integer> selectedGenres) {
         return new CardLayoutFilter(sortOptionIndex, isReverseOrder, selectedGenres);
+    }
+
+    public static class CardViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView title;
+        public TextView subtitle;
+        public ImageView thumbnail;
+        public Manga manga;
+        public ImageButton bookmarkToggle;
+
+        public CardViewHolder(View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.card_title);
+            subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
+            thumbnail = (ImageView) itemView.findViewById(R.id.card_thumbnail);
+            bookmarkToggle = (ImageButton) itemView.findViewById(R.id.card_bookmark_toggle);
+        }
     }
 
     /**
@@ -164,7 +176,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                 // TODO replace with better fuzzy match algorithm
                 String filterPattern = query.toString().toLowerCase().trim();
 
-                for (MangaEdenMangaListItem item : allManga) {
+                for (Manga item : allManga) {
                     if (item.title.toLowerCase().contains(filterPattern)) {
                         filteredManga.add(item);
                     }
@@ -189,7 +201,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                 }
 
                 // filter genres first
-                for (MangaEdenMangaListItem manga : allManga) {
+                for (Manga manga : allManga) {
                     Collection<String> genres = new ArrayList<>();
 
                     for (String genre : manga.genres)
@@ -205,25 +217,25 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             // sort by specified order
             switch (sortOptionIndex) {
                 case 0: // sort by popularity
-                    Collections.sort(allManga, new Comparator<MangaEdenMangaListItem>() {
+                    Collections.sort(allManga, new Comparator<Manga>() {
                         @Override
-                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                        public int compare(Manga lhs, Manga rhs) {
                             return ((Integer) rhs.hits).compareTo(lhs.hits);
                         }
                     });
                     break;
                 case 1: // sort by recently updated
-                    Collections.sort(allManga, new Comparator<MangaEdenMangaListItem>() {
+                    Collections.sort(allManga, new Comparator<Manga>() {
                         @Override
-                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                        public int compare(Manga lhs, Manga rhs) {
                             return ((Long) rhs.lastChapterDate).compareTo(lhs.lastChapterDate);
                         }
                     });
                     break;
                 case 2: // sort alphabetically
-                    Collections.sort(allManga, new Comparator<MangaEdenMangaListItem>() {
+                    Collections.sort(allManga, new Comparator<Manga>() {
                         @Override // reverse comparison b/c default is Z to A
-                        public int compare(MangaEdenMangaListItem lhs, MangaEdenMangaListItem rhs) {
+                        public int compare(Manga lhs, Manga rhs) {
                             return lhs.title.compareTo(rhs.title);
                         }
                     });
@@ -244,23 +256,6 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             notifyDataSetChanged();
-        }
-    }
-
-    public static class CardViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView title;
-        public TextView subtitle;
-        public ImageView thumbnail;
-        public MangaEdenMangaListItem manga;
-        public ImageButton bookmarkToggle;
-
-        public CardViewHolder(View itemView) {
-            super(itemView);
-            title = (TextView) itemView.findViewById(R.id.card_title);
-            subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
-            thumbnail = (ImageView) itemView.findViewById(R.id.card_thumbnail);
-            bookmarkToggle = (ImageButton) itemView.findViewById(R.id.card_bookmark_toggle);
         }
     }
 }
