@@ -272,7 +272,14 @@ public class MangaViewerActivity extends AppCompatActivity {
             toast = Toast.makeText(this, "There are no more chapters available. This is the last chapter.", Toast.LENGTH_LONG);
             toast.show();
         } else {
+            if (readLeftToRight) {
+                mangaViewPager.setPageIndex(images.size() - 1);
+            }
+            else {
+                mangaViewPager.setPageIndex(0);
+            }
             saveMostRecentPage();
+            markChapterRead();
             chapterIndex++;
             toast = Toast.makeText(this, "Chapter " + getChapterNumber(), Toast.LENGTH_SHORT);
             toast.show();
