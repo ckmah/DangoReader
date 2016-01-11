@@ -1,26 +1,24 @@
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:recyclerviewfastscroller="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/MangaItemActivityTheme"
-    android:orientation="vertical"
     tools:context="ckmah.mangoreader.fragment.MangaItemChapterFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chapter_recycler_view"
-        android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:backgroundTint="@color/colorPrimary"
+        android:scrollbars="none" />
 
-        <xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller
-            android:id="@+id/fast_scroller"
-            android:layout_gravity="right"
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            />
+    <xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller
+        android:id="@+id/fast_scroller"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        recyclerviewfastscroller:rfs_barBackground="@color/transparent"
+        recyclerviewfastscroller:rfs_handleBackground="@drawable/fast_scroll_bg"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

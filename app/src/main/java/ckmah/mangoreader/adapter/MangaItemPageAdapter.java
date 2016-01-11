@@ -13,15 +13,13 @@ import ckmah.mangoreader.fragment.MangaItemDetailFragment;
 /**
  * My Library view pager tabs adapter
  */
-public class MangaItemTabbedAdapter extends FragmentStatePagerAdapter {
+public class MangaItemPageAdapter extends FragmentStatePagerAdapter {
     private Context context;
-    private FragmentManager fm;
     private String mangaId;
 
-    public MangaItemTabbedAdapter(Context context, FragmentManager fm, String mangaId) {
+    public MangaItemPageAdapter(Context context, FragmentManager fm, String mangaId) {
         super(fm);
         this.context = context;
-        this.fm = fm;
         this.mangaId = mangaId;
     }
 
