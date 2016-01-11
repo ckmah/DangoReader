@@ -6,9 +6,12 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 
+import com.william.mangoreader.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.fragment.LibraryPageFragment;
@@ -66,9 +69,7 @@ public class UserLibraryHelper {
                     }
                 });
 
-
-        View rootView = activity.getWindow().getDecorView().getRootView();
-        Snackbar sb = Snackbar.make(rootView, String.format(added, m.title), Snackbar.LENGTH_LONG);
+        Snackbar sb = Snackbar.make(findMyView(activity), String.format(added, m.title), Snackbar.LENGTH_LONG);
         if (showUndo) {
             sb.setAction("UNDO", new View.OnClickListener() {
                 @Override
@@ -90,8 +91,7 @@ public class UserLibraryHelper {
         Paper.book(USER_LIBRARY_DB).write(m.id, m);
         button.setSelected(false);
         // show undo option only if not called from add undo
-        View rootView = activity.getWindow().getDecorView().getRootView();
-        Snackbar sb = Snackbar.make(rootView, String.format(removed, m.title), Snackbar.LENGTH_LONG);
+        Snackbar sb = Snackbar.make(findMyView(activity), String.format(removed, m.title), Snackbar.LENGTH_LONG);
         if (showUndo) {
             sb.setAction("UNDO", new View.OnClickListener() {
                 @Override
@@ -104,6 +104,16 @@ public class UserLibraryHelper {
         if (adapter != null) { // basically called from browse or library
             removeFromListUpdate(adapter.fragment, adapter, position);
         }
+    }
+
+    private static View findMyView(Activity activity) {
+        View mView;
+        if (activity instanceof MangaItemActivity) {
+            mView = activity.findViewById(R.id.manga_item_layout);
+        } else {
+            mView = activity.findViewById(R.id.drawer_layout);
+        }
+        return mView;
     }
 
     public static void removeFromListUpdate(Fragment fragment, CardLayoutAdapter adapter, int position) {
