@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.william.mangoreader.R;
 
+import ckmah.mangoreader.DividerItemDecoration;
 import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.adapter.MangaItemRowAdapter;
 import ckmah.mangoreader.database.Manga;
@@ -63,7 +64,12 @@ public class MangaItemChapterFragment extends Fragment {
                 getActivity(), manga.chaptersList, manga.id);
         mRecyclerView.setAdapter(itemRowAdapter);
 
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
+        mRecyclerView.addItemDecoration(itemDecoration);
+
         VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) rootView.findViewById(R.id.fast_scroller);
+
         // Connect the recycler to the scroller (to let the scroller scroll the list)
         fastScroller.setRecyclerView(mRecyclerView);
         // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)

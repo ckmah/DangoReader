@@ -13,6 +13,7 @@ import ckmah.mangoreader.viewpager.MangaViewPager;
 
 public class MangaViewPagerSeekBarChangeListener extends ViewPager.SimpleOnPageChangeListener implements SeekBar.OnSeekBarChangeListener {
 
+    private MangaViewerActivity activity;
     private final ReversibleSeekBar seekBar;
     private MangaViewPager viewPager;
     private TextView pageNumberView;
@@ -26,8 +27,9 @@ public class MangaViewPagerSeekBarChangeListener extends ViewPager.SimpleOnPageC
      * @param seekBar        - SeekBar to synchronize with ViewPager
      * @param pageNumberView
      */
-    public MangaViewPagerSeekBarChangeListener(MangaViewPager viewPager, ReversibleSeekBar seekBar, TextView pageNumberView) {
+    public MangaViewPagerSeekBarChangeListener(MangaViewerActivity activity, MangaViewPager viewPager, ReversibleSeekBar seekBar, TextView pageNumberView) {
         progress = 0;
+        this.activity = activity;
         this.viewPager = viewPager;
         this.seekBar = seekBar;
         this.pageNumberView = pageNumberView;
@@ -79,13 +81,13 @@ public class MangaViewPagerSeekBarChangeListener extends ViewPager.SimpleOnPageC
             seekBar.setProgress(position);
             currentPageText = (position + 1) + " / " + totalPages;
             if (position + 1 == totalPages) {
-                MangaViewerActivity.markChapterRead();
+                activity.markChapterRead();
             }
         } else {
             seekBar.setProgress(totalPages - position - 1);
             currentPageText = (totalPages - position) + " / " + totalPages;
             if (position == 0) {
-                MangaViewerActivity.markChapterRead();
+                activity.markChapterRead();
             }
         }
         ((TextView) pageNumberView.findViewById(R.id.page_number)).setText(currentPageText);
