@@ -26,8 +26,8 @@ import retrofit.Retrofit;
 public class UserLibraryHelper {
 
     public static final String USER_LIBRARY_DB = "user-library";
-    private static String added;
-    private static String removed;
+    private static String added = "\"%s\" added to your library.";
+    private static String removed = "\"%s\" removed from your library.";
 
     public static List<Manga> findAllFavoritedManga() {
         List<Manga> response = new ArrayList<>();
@@ -42,9 +42,6 @@ public class UserLibraryHelper {
     }
 
     public static void addToLibrary(final Manga m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
-
-        added = "\"" + m.title + "\" added to your library under \"Plan to Read\"";
-        removed = "\"" + m.title + "\" removed from your library.";
 
         m.favorite = true;
         Paper.book(USER_LIBRARY_DB).write(m.id, m);
@@ -74,7 +71,7 @@ public class UserLibraryHelper {
 
 
 
-        Snackbar sb = Snackbar.make(findMyView(activity), added, Snackbar.LENGTH_LONG);
+        Snackbar sb = Snackbar.make(findMyView(activity), String.format(added, m.title), Snackbar.LENGTH_LONG);
         if (showUndo) {
             sb.setAction("UNDO", new View.OnClickListener() {
                 @Override
@@ -91,14 +88,12 @@ public class UserLibraryHelper {
     }
 
     public static void removeFromLibrary(final Manga m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
-        added = "\"" + m.title + "\" added to your library under \"Plan to Read\"";
-        removed = "\"" + m.title + "\" removed from your library.";
 
         m.favorite = false;
         Paper.book(USER_LIBRARY_DB).write(m.id, m);
         button.setSelected(false);
         // show undo option only if not called from add undo
-        Snackbar sb = Snackbar.make(findMyView(activity), removed, Snackbar.LENGTH_LONG);
+        Snackbar sb = Snackbar.make(findMyView(activity), String.format(removed, m.title), Snackbar.LENGTH_LONG);
         if (showUndo) {
             sb.setAction("UNDO", new View.OnClickListener() {
                 @Override
