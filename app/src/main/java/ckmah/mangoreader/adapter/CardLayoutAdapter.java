@@ -119,6 +119,14 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     }
 
     // mimics filter
+
+    /**
+     *
+     * @param sortOptionIndex 0 = popularity, 1 = recently updated, 2 = alphabetically
+     * @param isReverseOrder true = reversed, false = as is
+     * @param selectedGenres list of genres to filter for (intersection)
+     * @return
+     */
     public Filter getFilter(int sortOptionIndex, boolean isReverseOrder, List<Integer> selectedGenres) {
         return new CardLayoutFilter(sortOptionIndex, isReverseOrder, selectedGenres);
     }
@@ -165,7 +173,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             filteredManga.clear();
             FilterResults results = new FilterResults();
 
-            // dialogFragment sorting
+            // sort and filter genres
             if (sortOptionIndex != -1) {
                 dialogFilter();
             } else if (query.length() == 0) {
@@ -188,6 +196,9 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             return results;
         }
 
+        /**
+         * Sort and filter by genre.
+         */
         private void dialogFilter() {
             String[] allGenres = activity.getResources().getStringArray(R.array.genre_list);
             Collection<String> selectedGenres = new ArrayList<>();

@@ -3,14 +3,11 @@ package ckmah.mangoreader.fragment;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,11 +20,9 @@ import com.william.mangoreader.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
-import ckmah.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.parse.MangaEden;
 import retrofit.Callback;
@@ -36,9 +31,8 @@ import retrofit.Retrofit;
 
 public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private RecyclerView mRecyclerView;
-    private GridLayoutManager gridLayoutManager;
-    private CardLayoutAdapter cardAdapter;
+    private CardLayoutAdapter updatesCardAdapter;
+    private CardLayoutAdapter popularCardAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     // In-memory list of all manga, period
@@ -49,6 +43,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private static BrowseMangaFragment instance;
+
     public static BrowseMangaFragment getInstance() {
         if (instance == null) {
             instance = new BrowseMangaFragment();
@@ -65,13 +60,14 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
-        initRecycler(rootView);
+        final View rootView = inflater.inflate(R.layout.fragment_browse_manga_fancy, container, false);
         initSwipeRefresh(rootView);
+        initRecyclerViews(rootView);
 
         if (allManga.size() > 0) {
             // If allManga is already populated, just display them
-            cardAdapter.getFilter().filter("");
+            sortAdapterData();
+
         } else {
             // Repopulate the list with an API call
             fetchMangaListFromMangaEden();
@@ -82,20 +78,25 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         return rootView;
     }
 
-    private void initRecycler(View rootView) {
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_recycler_view);
+    private void initRecyclerViews(View rootView) {
+        RecyclerView updatesRecyclerView = (RecyclerView) rootView.findViewById(R.id.recently_updated_row).findViewById(R.id.row_recycler_view);
+        RecyclerView popularRecyclerView = (RecyclerView) rootView.findViewById(R.id.popular_row).findViewById(R.id.row_recycler_view);
+        RecyclerView genreRecyclerView = (RecyclerView) rootView.findViewById(R.id.genre_row).findViewById(R.id.row_recycler_view);
 
-        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
+        updatesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        popularRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        genreRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        cardAdapter = new CardLayoutAdapter(getActivity(), this);
-        cardAdapter.setAllManga(allManga);
-        mRecyclerView.setAdapter(cardAdapter);
+        updatesCardAdapter = new CardLayoutAdapter(getActivity(), this);
+        popularCardAdapter = new CardLayoutAdapter(getActivity(), this);
 
-        ItemTouchHelper.Callback callback =
-                new SimpleItemTouchHelperCallback(cardAdapter);
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(mRecyclerView);
+        updatesCardAdapter.setAllManga(allManga);
+        popularCardAdapter.setAllManga(allManga);
+
+        updatesRecyclerView.setAdapter(updatesCardAdapter);
+        popularRecyclerView.setAdapter(popularCardAdapter);
+
+        // TODO genre row
     }
 
     private void initSwipeRefresh(View rootView) {
@@ -116,7 +117,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         MangaEden.getMangaEdenService(getActivity()).listAllManga().enqueue(new Callback<MangaEden.MangaEdenList>() {
             @Override
             public void onResponse(Response<MangaEden.MangaEdenList> response, Retrofit retrofit) {
-                sortMangaInBackground(response.body());
+                getMangaInBackground(response.body());
             }
 
             @Override
@@ -134,22 +135,15 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         });
     }
 
-    private void sortMangaInBackground(MangaEden.MangaEdenList list) {
+    private void getMangaInBackground(MangaEden.MangaEdenList list) {
         Log.d("BrowseMangaFragment", "Sorting manga in background");
         new AsyncTask<MangaEden.MangaEdenList, Void, List<Manga>>() {
+            //TODO add manga to respective recyclerviews
 
             @Override
             protected List<Manga> doInBackground(MangaEden.MangaEdenList... params) {
                 // On background thread, sort manga by most to least # of views
-                List<Manga> results = MangaEden.convertMangaListItemsToManga(params[0].manga);
-                Collections.sort(results, new Comparator<Manga>() {
-
-                    @Override
-                    public int compare(Manga lhs, Manga rhs) {
-                        return ((Integer) rhs.hits).compareTo(lhs.hits);
-                    }
-                });
-                return results;
+                return MangaEden.convertMangaListItemsToManga(params[0].manga);
             }
 
             @Override
@@ -157,9 +151,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                 // On UI thread, update list of all manga and display them
                 allManga.clear();
                 allManga.addAll(results);
-                cardAdapter.getFilter().filter("");
-
-
+                sortAdapterData();
                 // Hide the refresh layout
                 swipeRefreshLayout.post(new Runnable() {
                     @Override
@@ -173,6 +165,12 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         }.execute(list);
     }
 
+    private void sortAdapterData() {
+        popularCardAdapter.getFilter(0, false, Collections.<Integer>emptyList()).filter("");
+        updatesCardAdapter.getFilter(1, false, Collections.<Integer>emptyList()).filter("");
+    }
+
+
     @Override
     public void onRefresh() {
         fetchMangaListFromMangaEden();
@@ -180,44 +178,44 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuinflator) {
-        menuinflator.inflate(R.menu.menu_browse_manga, menu);
-
-        // Configure the SearchView to filter the cards
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (query.isEmpty()) {
-                    swipeRefreshLayout.setEnabled(true);
-                } else {
-                    swipeRefreshLayout.setEnabled(false);
-                }
-                cardAdapter.getFilter().filter(query);
-                return true; // The listener has handled the query
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    swipeRefreshLayout.setEnabled(true);
-                } else {
-                    swipeRefreshLayout.setEnabled(false);
-                }
-                cardAdapter.getFilter().filter(newText);
-                return false; // The searchview should show suggestions
-            }
-        });
-
-        MenuItem sortItem = menu.findItem(R.id.action_sort);
-        sortItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                DialogFragment dialog = SortDialogFragment.newInstance(cardAdapter);
-                dialog.show(getActivity().getSupportFragmentManager(), "SortDialogFragment");
-                return false;
-            }
-        });
+//        menuinflator.inflate(R.menu.menu_browse_manga, menu);
+//
+//        // Configure the SearchView to filter the cards
+//        MenuItem searchItem = menu.findItem(R.id.action_search);
+//        SearchView searchView = (SearchView) searchItem.getActionView();
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                if (query.isEmpty()) {
+//                    swipeRefreshLayout.setEnabled(true);
+//                } else {
+//                    swipeRefreshLayout.setEnabled(false);
+//                }
+//                popularCardAdapter.getFilter().filter(query);
+//                return true; // The listener has handled the query
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                if (newText.isEmpty()) {
+//                    swipeRefreshLayout.setEnabled(true);
+//                } else {
+//                    swipeRefreshLayout.setEnabled(false);
+//                }
+//                popularCardAdapter.getFilter().filter(newText);
+//                return false; // The searchview should show suggestions
+//            }
+//        });
+//
+//        MenuItem sortItem = menu.findItem(R.id.action_sort);
+//        sortItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                DialogFragment dialog = SortDialogFragment.newInstance(popularCardAdapter);
+//                dialog.show(getActivity().getSupportFragmentManager(), "SortDialogFragment");
+//                return false;
+//            }
+//        });
     }
 
     @Override
