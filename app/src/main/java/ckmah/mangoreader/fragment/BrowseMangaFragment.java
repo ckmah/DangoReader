@@ -33,6 +33,8 @@ import retrofit.Retrofit;
 
 public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private View rootView;
+
     private CardLayoutAdapter updatesCardAdapter;
     private CardLayoutAdapter popularCardAdapter;
     private CardLayoutAdapter alphabetCardAdapter;
@@ -65,9 +67,9 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View rootView = inflater.inflate(R.layout.fragment_browse_manga_fancy, container, false);
-        initSwipeRefresh(rootView);
-        initRecyclerViews(rootView);
+        rootView = inflater.inflate(R.layout.fragment_browse_manga_fancy, container, false);
+        initSwipeRefresh();
+        initRecyclerViews();
 
         if (allManga.size() > 0) {
             // If allManga is already populated, just display them
@@ -83,7 +85,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         return rootView;
     }
 
-    private void initRecyclerViews(View rootView) {
+    private void initRecyclerViews() {
         // display all genres
         RecyclerView genreRecyclerView = (RecyclerView) rootView.findViewById(R.id.genre_recycler_view);
         genreRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -117,12 +119,12 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
         updatesRecyclerView.setAdapter(updatesCardAdapter);
         popularRecyclerView.setAdapter(popularCardAdapter);
-        alphabetRecyclerView.setAdapter(popularCardAdapter);
+        alphabetRecyclerView.setAdapter(alphabetCardAdapter);
 
-
+        rootView.findViewById(R.id.browse_recycler_view_parent).setVisibility(View.GONE);
     }
 
-    private void initSwipeRefresh(View rootView) {
+    private void initSwipeRefresh() {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.browse_swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(this);
     }
@@ -176,6 +178,9 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                 allManga.addAll(results);
                 sortAdapterData();
 
+                // show actual content
+                replacePlaceholders();
+
                 // Hide the refresh layout
                 swipeRefreshLayout.post(new Runnable() {
                     @Override
@@ -196,7 +201,11 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         popularCardAdapter.getFilter(0, false, Collections.<Integer>emptyList()).filter("");
         // Sort alphabetical.
         alphabetCardAdapter.getFilter(2, false, Collections.<Integer>emptyList()).filter("");
+    }
 
+    private void replacePlaceholders() {
+        rootView.findViewById(R.id.browse_placeholder).setVisibility(View.GONE);
+        rootView.findViewById(R.id.browse_recycler_view_parent).setVisibility(View.VISIBLE);
     }
 
     @Override

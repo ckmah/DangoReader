@@ -15,6 +15,7 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/browse_recycler_view_parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="108dp"
@@ -45,5 +46,8 @@
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <include
+        android:id="@+id/browse_placeholder"
+        layout="@layout/browse_placeholder"/>
 
 </RelativeLayout>
