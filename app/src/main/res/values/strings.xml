@@ -164,4 +164,7 @@
     <string name="rotation_lock">Rotation Lock</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
+    <string name="recentlyUpdatedTitle">Recently Updated</string>
+    <string name="popularTitle">Popular</string>
+    <string name="alphabeticalTitle">Alphabetical</string>
 </resources>

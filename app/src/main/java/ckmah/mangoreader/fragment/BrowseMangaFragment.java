@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.william.mangoreader.R;
 
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
+import ckmah.mangoreader.adapter.GenreTextAdapter;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.parse.MangaEden;
 import retrofit.Callback;
@@ -33,10 +35,13 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     private CardLayoutAdapter updatesCardAdapter;
     private CardLayoutAdapter popularCardAdapter;
+    private CardLayoutAdapter alphabetCardAdapter;
+
     private SwipeRefreshLayout swipeRefreshLayout;
 
     // In-memory list of all manga, period
     private List<Manga> allManga = new ArrayList<>();
+    private List<Manga> genreMangaList;
 
     public BrowseMangaFragment() {
         // Required empty public constructor
@@ -79,24 +84,42 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private void initRecyclerViews(View rootView) {
-        RecyclerView updatesRecyclerView = (RecyclerView) rootView.findViewById(R.id.recently_updated_row).findViewById(R.id.row_recycler_view);
-        RecyclerView popularRecyclerView = (RecyclerView) rootView.findViewById(R.id.popular_row).findViewById(R.id.row_recycler_view);
-        RecyclerView genreRecyclerView = (RecyclerView) rootView.findViewById(R.id.genre_row).findViewById(R.id.row_recycler_view);
+        // display all genres
+        RecyclerView genreRecyclerView = (RecyclerView) rootView.findViewById(R.id.genre_recycler_view);
+        genreRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        GenreTextAdapter genreTextAdapter = new GenreTextAdapter(getActivity());
+        genreRecyclerView.setAdapter(genreTextAdapter);
+
+        View recentlyUpdatedRow = rootView.findViewById(R.id.recently_updated_row);
+        View popularRow = rootView.findViewById(R.id.popular_row);
+        View alphabetRow = rootView.findViewById(R.id.alphabet_row);
+
+        ((TextView) recentlyUpdatedRow.findViewById(R.id.sectionTitle)).setText(R.string.recentlyUpdatedTitle);
+        ((TextView) popularRow.findViewById(R.id.sectionTitle)).setText(R.string.popularTitle);
+        ((TextView) alphabetRow.findViewById(R.id.sectionTitle)).setText(R.string.alphabeticalTitle);
+
+        // initialize category rows
+        RecyclerView updatesRecyclerView = (RecyclerView) recentlyUpdatedRow.findViewById(R.id.row_recycler_view);
+        RecyclerView popularRecyclerView = (RecyclerView) popularRow.findViewById(R.id.row_recycler_view);
+        RecyclerView alphabetRecyclerView = (RecyclerView) alphabetRow.findViewById(R.id.row_recycler_view);
 
         updatesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         popularRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        genreRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        alphabetRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
         updatesCardAdapter = new CardLayoutAdapter(getActivity(), this);
         popularCardAdapter = new CardLayoutAdapter(getActivity(), this);
+        alphabetCardAdapter = new CardLayoutAdapter(getActivity(), this);
 
         updatesCardAdapter.setAllManga(allManga);
         popularCardAdapter.setAllManga(allManga);
+        alphabetCardAdapter.setAllManga(allManga);
 
         updatesRecyclerView.setAdapter(updatesCardAdapter);
         popularRecyclerView.setAdapter(popularCardAdapter);
+        alphabetRecyclerView.setAdapter(popularCardAdapter);
 
-        // TODO genre row
+
     }
 
     private void initSwipeRefresh(View rootView) {
@@ -152,6 +175,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                 allManga.clear();
                 allManga.addAll(results);
                 sortAdapterData();
+
                 // Hide the refresh layout
                 swipeRefreshLayout.post(new Runnable() {
                     @Override
@@ -166,8 +190,13 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private void sortAdapterData() {
-        popularCardAdapter.getFilter(0, false, Collections.<Integer>emptyList()).filter("");
+        // Sort by recently updated.
         updatesCardAdapter.getFilter(1, false, Collections.<Integer>emptyList()).filter("");
+        // Sort by popularity.
+        popularCardAdapter.getFilter(0, false, Collections.<Integer>emptyList()).filter("");
+        // Sort alphabetical.
+        alphabetCardAdapter.getFilter(2, false, Collections.<Integer>emptyList()).filter("");
+
     }
 
     @Override

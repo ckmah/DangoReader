@@ -46,7 +46,6 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         filteredManga = new ArrayList<>();
         this.activity = activity;
         this.fragment = fragment;
-        // Pass context or other static stuff that will be needed.
     }
 
     public void setAllManga(List<Manga> allManga) {
@@ -81,10 +80,8 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView;
         if (fragment instanceof BrowseMangaFragment) {
-            Log.d("CardLayoutAdapter", "using mini card");
             itemView = inflater.inflate(R.layout.manga_card_mini, parent, false);
         } else {
-            Log.d("CardLayoutAdapter", "using normal card");
             itemView = inflater.inflate(R.layout.manga_card, parent, false);
 
         }
@@ -132,7 +129,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     /**
      * @param sortOptionIndex 0 = popularity, 1 = recently updated, 2 = alphabetically
      * @param isReverseOrder  true = reversed, false = as is
-     * @param selectedGenres  list of genres to filter for (intersection)
+     * @param selectedGenres  indices of genres to filter for (intersection)
      * @return
      */
     public Filter getFilter(int sortOptionIndex, boolean isReverseOrder, List<Integer> selectedGenres) {

@@ -12,12 +12,22 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="108dp"
                 android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/genre_recycler_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="64dp"
+                    android:clipToPadding="false"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp" />
 
                 <include
                     android:id="@+id/recently_updated_row"
@@ -28,8 +38,9 @@
                     layout="@layout/browse_manga_row" />
 
                 <include
-                    android:id="@+id/genre_row"
+                    android:id="@+id/alphabet_row"
                     layout="@layout/browse_manga_row" />
+
             </LinearLayout>
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
