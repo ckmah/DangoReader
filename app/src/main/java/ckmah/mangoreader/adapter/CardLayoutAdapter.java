@@ -29,6 +29,7 @@ import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.adapter.helper.ItemTouchHelperAdapter;
 import ckmah.mangoreader.database.Manga;
+import ckmah.mangoreader.fragment.BrowseMangaFragment;
 import ckmah.mangoreader.parse.MangaEden;
 
 /**
@@ -78,7 +79,15 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.manga_card, parent, false);
+        View itemView;
+        if (fragment instanceof BrowseMangaFragment) {
+            Log.d("CardLayoutAdapter", "using mini card");
+            itemView = inflater.inflate(R.layout.manga_card_mini, parent, false);
+        } else {
+            Log.d("CardLayoutAdapter", "using normal card");
+            itemView = inflater.inflate(R.layout.manga_card, parent, false);
+
+        }
         final CardViewHolder holder = new CardViewHolder(itemView);
 
         final CardView cardView = (CardView) itemView.findViewById(R.id.card_view);
@@ -121,10 +130,9 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     // mimics filter
 
     /**
-     *
      * @param sortOptionIndex 0 = popularity, 1 = recently updated, 2 = alphabetically
-     * @param isReverseOrder true = reversed, false = as is
-     * @param selectedGenres list of genres to filter for (intersection)
+     * @param isReverseOrder  true = reversed, false = as is
+     * @param selectedGenres  list of genres to filter for (intersection)
      * @return
      */
     public Filter getFilter(int sortOptionIndex, boolean isReverseOrder, List<Integer> selectedGenres) {

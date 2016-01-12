@@ -170,7 +170,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         updatesCardAdapter.getFilter(1, false, Collections.<Integer>emptyList()).filter("");
     }
 
-
     @Override
     public void onRefresh() {
         fetchMangaListFromMangaEden();

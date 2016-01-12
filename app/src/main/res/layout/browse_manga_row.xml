@@ -33,53 +33,12 @@
 
     </FrameLayout>
 
-    <HorizontalScrollView
-        android:id="@+id/horizontalScrollView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/row_recycler_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/browseRowHeight"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/row_recycler_view"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:padding="8dp" />
-
-        <!-- for visualizing layout purposes -->
-        <!--<LinearLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:padding="8dp">-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-
-        <!--<include layout="@layout/manga_card_mini" />-->
-        <!--</LinearLayout>-->
-    </HorizontalScrollView>
 </LinearLayout>
