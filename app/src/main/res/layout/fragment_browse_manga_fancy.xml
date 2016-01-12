@@ -5,21 +5,25 @@
     android:layout_height="match_parent"
     tools:context="ckmah.mangoreader.fragment.BrowseMangaFragment">
 
+    <include
+        android:id="@+id/browse_placeholder"
+        layout="@layout/browse_placeholder" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/browse_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ScrollView
+            android:id="@+id/browse_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/browse_recycler_view_parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="108dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="108dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/genre_recycler_view"
@@ -46,8 +50,5 @@
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include
-        android:id="@+id/browse_placeholder"
-        layout="@layout/browse_placeholder"/>
 
 </RelativeLayout>

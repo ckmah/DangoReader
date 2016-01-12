@@ -34,6 +34,7 @@ import retrofit.Retrofit;
 public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private View rootView;
+    private View contentView;
 
     private CardLayoutAdapter updatesCardAdapter;
     private CardLayoutAdapter popularCardAdapter;
@@ -68,6 +69,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
                              Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_browse_manga_fancy, container, false);
+        contentView = rootView.findViewById(R.id.browse_content);
         initSwipeRefresh();
         initRecyclerViews();
 
@@ -76,6 +78,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
             sortAdapterData();
 
         } else {
+            contentView.setVisibility(View.GONE);
             // Repopulate the list with an API call
             fetchMangaListFromMangaEden();
         }
@@ -121,7 +124,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         popularRecyclerView.setAdapter(popularCardAdapter);
         alphabetRecyclerView.setAdapter(alphabetCardAdapter);
 
-        rootView.findViewById(R.id.browse_recycler_view_parent).setVisibility(View.GONE);
     }
 
     private void initSwipeRefresh() {
@@ -205,7 +207,9 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     private void replacePlaceholders() {
         rootView.findViewById(R.id.browse_placeholder).setVisibility(View.GONE);
-        rootView.findViewById(R.id.browse_recycler_view_parent).setVisibility(View.VISIBLE);
+        contentView.setVisibility(View.VISIBLE);
+
+        Log.d("BrowseMangaFragment", "content visibile: " + contentView.getVisibility());
     }
 
     @Override

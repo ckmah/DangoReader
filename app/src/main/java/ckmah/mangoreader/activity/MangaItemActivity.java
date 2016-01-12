@@ -36,6 +36,7 @@ public class MangaItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manga_item);
         manga = new Manga();
 
+        findViewById(R.id.manga_item_pager).setVisibility(View.GONE);
         initToolBar();
 
         String mangaId = getIntent().getStringExtra("mangaId");
@@ -67,6 +68,10 @@ public class MangaItemActivity extends AppCompatActivity {
         viewPager.setAdapter(mangaItemPageAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.manga_item_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        findViewById(R.id.manga_item_placeholder).setVisibility(View.GONE);
+        findViewById(R.id.manga_item_pager).setVisibility(View.VISIBLE);
+
     }
 
     private void initMarqueeTitle() {
@@ -137,6 +142,6 @@ public class MangaItemActivity extends AppCompatActivity {
                     public void onFailure(Throwable t) {
                         Log.e("MangaItemActivity", "Could not fetch details from MangaEden");
                     }
-            });
+                });
     }
 }
