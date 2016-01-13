@@ -56,11 +56,8 @@ public class BrowseMangaFragment extends SearchSortFragment {
             }
         });
 
-        if (allManga.size() > 0) {
-            // If allManga is already populated, just display them
-            cardAdapter.getFilter().filter("");
-        } else {
-            // Repopulate the list with an API call, relying on cache if possible
+        // If allManga is empty, repopulate the list with an API call, relying on cache if possible
+        if (allManga.size() == 0) {
             fetchMangaListFromMangaEden(false);
         }
 
@@ -106,6 +103,7 @@ public class BrowseMangaFragment extends SearchSortFragment {
             @Override
             protected List<Manga> doInBackground(MangaEden.MangaEdenList... params) {
                 // On background thread, sort manga by most to least # of views
+                // Most time is actually taken by conversion process ( ~2 sec vs ~0.150 for sorting)
                 List<Manga> results = MangaEden.convertMangaListItemsToManga(params[0].manga);
                 Collections.sort(results, new Comparator<Manga>() {
 
@@ -122,7 +120,7 @@ public class BrowseMangaFragment extends SearchSortFragment {
                 // On UI thread, update list of all manga and display them
                 allManga.clear();
                 allManga.addAll(results);
-                cardAdapter.getFilter().filter("");
+                cardAdapter.showAllManga();
 
 
                 // Hide the refresh layout

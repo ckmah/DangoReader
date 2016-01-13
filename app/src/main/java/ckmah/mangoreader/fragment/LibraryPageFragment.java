@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.william.mangoreader.R;
 
+import java.util.Collections;
+
 import ckmah.mangoreader.UserLibraryHelper;
 
 public class LibraryPageFragment extends SearchSortFragment {
@@ -36,6 +38,9 @@ public class LibraryPageFragment extends SearchSortFragment {
         allManga = UserLibraryHelper.findAllFavoritedManga();
 
         super.init();
+        // Sort My Library by most recently updated first, by default
+        cardAdapter.getFilter(1, false, Collections.<Integer>emptyList()).filter("");
+
         return rootView;
     }
 }

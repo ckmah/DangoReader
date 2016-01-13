@@ -42,7 +42,7 @@ public class SearchSortFragment extends Fragment {
 
         cardAdapter = new CardLayoutAdapter(getActivity(), this);
         cardAdapter.setAllManga(allManga);
-        cardAdapter.getFilter().filter(""); // Actually display the manga
+        cardAdapter.showAllManga();
         mRecyclerView.setAdapter(cardAdapter);
 
         ItemTouchHelper.Callback callback =
