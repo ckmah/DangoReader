@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.william.mangoreader.R;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,7 +33,7 @@ import ckmah.mangoreader.parse.MangaEden;
 /**
  * Layout adapter for adding cards
  */
-public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable, Serializable {
+public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable {
 
     public Fragment fragment;
     public List<Manga> filteredManga;

@@ -21,6 +21,8 @@ import java.util.List;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
 import ckmah.mangoreader.database.Manga;
+import ckmah.mangoreader.SortEvent;
+import de.greenrobot.event.EventBus;
 
 public class SearchSortFragment extends Fragment {
 
@@ -50,6 +52,7 @@ public class SearchSortFragment extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mRecyclerView);
 
+        // Show the options
         setHasOptionsMenu(true);
     }
 
@@ -87,11 +90,29 @@ public class SearchSortFragment extends Fragment {
         sortItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                DialogFragment dialog = SortDialogFragment.newInstance(cardAdapter);
+                DialogFragment dialog = SortDialogFragment.newInstance();
                 dialog.show(getActivity().getSupportFragmentManager(), "SortDialogFragment");
                 return false;
             }
         });
+    }
+
+    // Receive sort criteria from EventBus
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    public void onEvent(SortEvent sortEvent) {
+        cardAdapter.getFilter(sortEvent.sortOrder, sortEvent.reverse, sortEvent.genres).filter("");
+        mRecyclerView.scrollToPosition(0);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
