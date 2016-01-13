@@ -18,7 +18,7 @@ import com.william.mangoreader.R;
 
 import ckmah.mangoreader.BootReceiver;
 import ckmah.mangoreader.fragment.BrowseMangaFragment;
-import ckmah.mangoreader.fragment.MyLibraryFragment;
+import ckmah.mangoreader.fragment.LibraryPageFragment;
 import io.paperdb.Paper;
 
 /**
@@ -109,8 +109,8 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         switch (id) {
             case R.id.library_nav_item: // library
 //                findViewById(R.id.spinner_browse_sources).setVisibility(View.GONE);
-                findViewById(R.id.sliding_tabs).setVisibility(View.VISIBLE);
-                fragment = new MyLibraryFragment();
+                findViewById(R.id.sliding_tabs).setVisibility(View.GONE);
+                fragment = LibraryPageFragment.newInstance(0);
                 title = getString(R.string.title_my_library);
                 break;
             case R.id.browse_nav_item: // browse
