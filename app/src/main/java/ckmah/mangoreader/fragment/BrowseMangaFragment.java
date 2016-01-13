@@ -33,7 +33,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class BrowseMangaFragment extends Fragment {
 
     private View rootView;
     private View contentView;
@@ -52,7 +52,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private static BrowseMangaFragment instance;
-
     public static BrowseMangaFragment getInstance() {
         if (instance == null) {
             instance = new BrowseMangaFragment();
@@ -80,8 +79,8 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
         } else {
             contentView.setVisibility(View.GONE);
-            // Repopulate the list with an API call
-            fetchMangaListFromMangaEden();
+            // Repopulate the list with an API call, relying on cache if possible
+            fetchMangaListFromMangaEden(false);
         }
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Browse");
@@ -160,10 +159,16 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     private void initSwipeRefresh() {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.browse_swipe_refresh);
-        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // If user swiped down to refresh, force a check for updates
+                fetchMangaListFromMangaEden(true);
+            }
+        });
     }
 
-    private void fetchMangaListFromMangaEden() {
+    private void fetchMangaListFromMangaEden(boolean skipCache) {
         Log.d("BrowseMangaFragment", "Fetching manga list");
 
         swipeRefreshLayout.post(new Runnable() {
@@ -173,7 +178,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
             }
         });
 
-        MangaEden.getMangaEdenService(getActivity()).listAllManga().enqueue(new Callback<MangaEden.MangaEdenList>() {
+        MangaEden.getMangaEdenService(getActivity(), skipCache).listAllManga().enqueue(new Callback<MangaEden.MangaEdenList>() {
             @Override
             public void onResponse(Response<MangaEden.MangaEdenList> response, Retrofit retrofit) {
                 getMangaInBackground(response.body());
@@ -197,7 +202,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
     private void getMangaInBackground(MangaEden.MangaEdenList list) {
         Log.d("BrowseMangaFragment", "Sorting manga in background");
         new AsyncTask<MangaEden.MangaEdenList, Void, List<Manga>>() {
-            //TODO add manga to respective recyclerviews
 
             @Override
             protected List<Manga> doInBackground(MangaEden.MangaEdenList... params) {
@@ -243,12 +247,7 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
         Log.d("BrowseMangaFragment", "content visibile: " + contentView.getVisibility());
     }
-
-    @Override
-    public void onRefresh() {
-        fetchMangaListFromMangaEden();
-    }
-
+    
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuinflator) {
 //        menuinflator.inflate(R.menu.menu_browse_manga, menu);
