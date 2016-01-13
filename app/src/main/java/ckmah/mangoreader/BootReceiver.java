@@ -33,7 +33,9 @@ public class BootReceiver extends BroadcastReceiver {
         }
 
         private static String KEY_CYCLING = "ckmah.mangoreader.cycling";
+        private static String KEY_STARTED = "ckmah.mangoreader.started";
 
+        // Helper functions
         public static boolean isCycling(Context context) {
             return context.getSharedPreferences(KEY_CYCLING, 0).getBoolean(KEY_CYCLING, false);
         }
@@ -42,14 +44,20 @@ public class BootReceiver extends BroadcastReceiver {
             getSharedPreferences(KEY_CYCLING, 0).edit().putBoolean(KEY_CYCLING, value).commit();
         }
 
+        public static boolean isStarted(Context context) {
+            return context.getSharedPreferences(KEY_STARTED, 0).getBoolean(KEY_STARTED, false);
+        }
+
+        public static void setStarted(Context context, boolean value) {
+            context.getSharedPreferences(KEY_STARTED, 0).edit().putBoolean(KEY_STARTED, value).commit();
+        }
+
         /**
-         * Start polling for updated chapters, if not started.
+         * Toggle between polling and not polling
          */
-        public static void start(Context context) {
-            if (!isCycling(context)) {
-                Intent intent = new Intent(context, RefreshService.class);
-                context.startService(intent.setAction(RefreshService.TOGGLE));
-            }
+        public static void toggle(Context context) {
+            Intent intent = new Intent(context, RefreshService.class);
+            context.startService(intent.setAction(RefreshService.TOGGLE));
         }
 
         private final static String TOGGLE = "ckmah.mangoreader.TOGGLE";

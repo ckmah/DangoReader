@@ -1,10 +1,12 @@
 package ckmah.mangoreader.activity;
 
 import android.app.FragmentManager;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,10 +19,8 @@ import android.view.ViewGroup;
 
 import com.william.mangoreader.R;
 
-/**
- * Created by clarence on 7/7/15.
- * <p/>
- */
+import ckmah.mangoreader.BootReceiver;
+
 public class SettingsActivity extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
@@ -53,6 +53,18 @@ public class SettingsActivity extends PreferenceActivity {
             getFragmentManager().beginTransaction().replace(R.id.preference_fragment, new SettingsFragment()).commit();
             fm.executePendingTransactions();
         }
+
+        // Listen for changes to the settings
+        PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (key.equals(getString(R.string.PREF_KEY_CHECK_FOR_UPDATES))) {
+                    BootReceiver.RefreshService.toggle(SettingsActivity.this);
+                }
+            }
+        });
     }
 
     @Override

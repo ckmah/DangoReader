@@ -4,17 +4,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <PreferenceCategory android:title="General">
-
-        <CheckBoxPreference
-            android:defaultValue="false"
+    <PreferenceCategory android:title="Reading">
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="@string/PREF_KEY_READ_DIRECTION"
-            android:title="@string/pref_read_direction"
-            android:summary="@string/pref_read_direction_summary" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/PREF_KEY_PAGE_NUMBERS"
-            android:title="@string/pref_pagenum"
-            android:summary="@string/pref_pagenum_summary" />
+            android:title="@string/pref_read_direction" />
+        <!--<SwitchPreference-->
+            <!--android:defaultValue="false"-->
+            <!--android:key="@string/PREF_KEY_PAGE_NUMBERS"-->
+            <!--android:summary="@string/pref_pagenum_summary"-->
+            <!--android:title="@string/pref_pagenum" />-->
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Notifications">
+        <SwitchPreference
+            android:id="@+id/check_for_updates"
+            android:defaultValue="true"
+            android:key="@string/PREF_KEY_CHECK_FOR_UPDATES"
+            android:title="New chapter notifications" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -45,8 +45,11 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         // display library by default
         displayView(R.id.library_nav_item);
 
-        // Start polling for chapter updates
-        BootReceiver.RefreshService.start(this);
+        // Start polling for chapter updates if this is the first launch
+        if (!BootReceiver.RefreshService.isStarted(this)) {
+            BootReceiver.RefreshService.setStarted(this, true);
+            BootReceiver.RefreshService.toggle(this);
+        }
     }
 
     private void initToolbar() {
