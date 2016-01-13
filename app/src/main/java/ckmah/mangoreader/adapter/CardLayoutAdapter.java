@@ -52,6 +52,14 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         this.allManga = allManga;
     }
 
+    /**
+     * Returns sorted and filtered list of manga.
+     * @return
+     */
+    public List<Manga> getAllManga() {
+        return filteredManga;
+    }
+
     @Override
     public void onBindViewHolder(final CardViewHolder viewHolder, final int position) {
         viewHolder.title.setText(filteredManga.get(position).title);

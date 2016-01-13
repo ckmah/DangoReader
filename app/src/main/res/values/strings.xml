@@ -167,4 +167,7 @@
     <string name="recentlyUpdatedTitle">Recently Updated</string>
     <string name="popularTitle">Popular</string>
     <string name="alphabeticalTitle">Alphabetical</string>
+    <string name="title_activity_manga_browse">MangaBrowseActivity</string>
+
+    <string name="browse_order">BROWSE_ORDER</string>
 </resources>

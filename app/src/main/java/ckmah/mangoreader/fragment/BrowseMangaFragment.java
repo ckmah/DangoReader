@@ -1,6 +1,7 @@
 package ckmah.mangoreader.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ckmah.mangoreader.activity.MangaBrowseActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.adapter.GenreTextAdapter;
 import ckmah.mangoreader.database.Manga;
@@ -44,7 +46,6 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
 
     // In-memory list of all manga, period
     private List<Manga> allManga = new ArrayList<>();
-    private List<Manga> genreMangaList;
 
     public BrowseMangaFragment() {
         // Required empty public constructor
@@ -123,6 +124,37 @@ public class BrowseMangaFragment extends Fragment implements SwipeRefreshLayout.
         updatesRecyclerView.setAdapter(updatesCardAdapter);
         popularRecyclerView.setAdapter(popularCardAdapter);
         alphabetRecyclerView.setAdapter(alphabetCardAdapter);
+
+        View updatesHeaderView = recentlyUpdatedRow.findViewById(R.id.row_header);
+        View popularHeaderView = popularRow.findViewById(R.id.row_header);
+        View alphabetHeaderView = alphabetRow.findViewById(R.id.row_header);
+
+        View[] headerViews = {updatesHeaderView, popularHeaderView, alphabetHeaderView};
+
+        for (int index = 0; index < headerViews.length; index++) {
+            final int finalIndex = index;
+
+            headerViews[index].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), MangaBrowseActivity.class);
+                    String browseOrder = "";
+                    switch (finalIndex) {
+                        case 0: // recently updated
+                            browseOrder = getString(R.string.recentlyUpdatedTitle);
+                            break;
+                        case 1: // popular
+                            browseOrder = getString(R.string.popularTitle);
+                            break;
+                        case 2: // alphabetical
+                            browseOrder = getString(R.string.alphabeticalTitle);
+                            break;
+                    }
+                    intent.putExtra(getString(R.string.browse_order), browseOrder);
+                    getActivity().startActivity(intent);
+                }
+            });
+        }
 
     }
 
