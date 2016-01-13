@@ -42,6 +42,9 @@ public class UpdateService extends IntentService {
                     .execute()
                     .body();
 
+            // Start up user library
+            Paper.init(this);
+
             List<MangaEdenMangaListItem> updated = new ArrayList<>();
 
             for (MangaEdenMangaListItem item : list.manga) {
