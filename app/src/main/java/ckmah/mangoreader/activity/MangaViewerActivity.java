@@ -179,7 +179,6 @@ public class MangaViewerActivity extends AppCompatActivity {
         // read in global settings
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         readLeftToRight = sharedPref.getBoolean(getString(R.string.PREF_KEY_READ_DIRECTION), false);
-        boolean showPageNumbers = sharedPref.getBoolean(getString(R.string.PREF_KEY_PAGE_NUMBERS), false);
 
         mangaViewPagerSeekBarChangeListener = new MangaViewPagerSeekBarChangeListener(this, mangaViewPager, seekBar, pageNumberView);
 

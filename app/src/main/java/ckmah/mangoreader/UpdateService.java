@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ckmah.mangoreader.activity.MangoReaderActivity;
+import ckmah.mangoreader.database.Chapter;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
@@ -36,10 +37,13 @@ public class UpdateService extends IntentService {
             Log.d("UpdateService", "starting");
             // Synchronously download list of all manga
             MangaEden.MangaEdenList list = MangaEden
-                    .getMangaEdenServiceNoCache(this)
+                    .getMangaEdenService(this, true)
                     .listAllManga()
                     .execute()
                     .body();
+
+            // Start up user library
+            Paper.init(this);
 
             List<MangaEdenMangaListItem> updated = new ArrayList<>();
 
@@ -48,10 +52,16 @@ public class UpdateService extends IntentService {
                 DateTime lastChapterDate = new DateTime(item.lastChapterDate * 1000L); // Convert ms to sec
                 DateTime yesterday = new DateTime().minusDays(1);
                 if (lastChapterDate.isAfter(yesterday)) {
-                    Manga m = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(item.id);
+
                     // Check whether manga is in library
+                    Manga m = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(item.id);
                     if (m != null && m.favorite) {
-                        updated.add(item);
+
+                        // Check whether latest chapter was read
+                        Chapter latest = m.chaptersList.get(m.chaptersList.size()-1);
+                        if (latest.mostRecentPage == -1) {
+                            updated.add(item);
+                        }
                     }
                 }
             }
