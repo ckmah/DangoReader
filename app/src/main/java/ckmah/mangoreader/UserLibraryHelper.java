@@ -69,8 +69,6 @@ public class UserLibraryHelper {
                     }
                 });
 
-
-
         Snackbar sb = Snackbar.make(findMyView(activity), String.format(added, m.title), Snackbar.LENGTH_LONG);
         if (showUndo) {
             sb.setAction("UNDO", new View.OnClickListener() {
@@ -111,9 +109,9 @@ public class UserLibraryHelper {
     private static View findMyView(Activity activity) {
         View mView;
         if (activity instanceof MangaItemActivity) {
-            mView = activity.findViewById(R.id.tabbed_parent_layout);
+            mView = activity.findViewById(R.id.manga_item_layout);
         } else {
-            mView = activity.findViewById(R.id.parent_layout);
+            mView = activity.findViewById(R.id.drawer_layout);
         }
         return mView;
     }
