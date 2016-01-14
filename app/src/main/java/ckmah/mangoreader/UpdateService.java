@@ -104,7 +104,8 @@ public class UpdateService extends IntentService {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(title)
-                        .setContentText(message);
+                        .setContentText(message)
+                        .setAutoCancel(true); // Dismiss notification when clicked
 
         // Sets up the larger notification aka expanded layout
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
