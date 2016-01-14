@@ -104,6 +104,7 @@ public class BrowseMangaFragment extends SearchSortFragment {
             protected List<Manga> doInBackground(MangaEden.MangaEdenList... params) {
                 // On background thread, sort manga by most to least # of views
                 // Most time is actually taken by conversion process ( ~2 sec vs ~0.150 for sorting)
+                // TODO see if conversion process can be optimized
                 List<Manga> results = MangaEden.convertMangaListItemsToManga(params[0].manga);
                 Collections.sort(results, new Comparator<Manga>() {
 

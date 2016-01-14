@@ -108,6 +108,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
     private void fetchMangaDetailFromMangaEden(String mangaId) {
         manga = new Manga();
+        manga.id = mangaId;
         Log.d("MangaItemActivity", "Fetching manga details");
         MangaEden.getMangaEdenService(this)
                 .getMangaDetails(mangaId)
