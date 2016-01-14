@@ -36,8 +36,8 @@ public class BootReceiver extends BroadcastReceiver {
         private static String KEY_STARTED = "ckmah.mangoreader.started";
 
         // Helper functions
-        public static boolean isCycling(Context context) {
-            return context.getSharedPreferences(KEY_CYCLING, 0).getBoolean(KEY_CYCLING, false);
+        private boolean isCycling() {
+            return getSharedPreferences(KEY_CYCLING, 0).getBoolean(KEY_CYCLING, false);
         }
 
         private void setCycling(boolean value) {
@@ -77,16 +77,16 @@ public class BootReceiver extends BroadcastReceiver {
 
             if (intent.getAction().equals(BOOT)) {
                 // Device was just started
-                if (isCycling(this)) {
+                if (isCycling()) {
                     // Start polling in half a period, and repeat every period
                     alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME,
                             SystemClock.elapsedRealtime() + period / 2, period, pendingIntent);
                 }
             } else if (intent.getAction().equals(TOGGLE)) {
                 // Toggle between polling and not polling
-                setCycling(!isCycling(this));
+                setCycling(!isCycling());
 
-                if (isCycling(this)) {
+                if (isCycling()) {
                     // Start polling now, and repeat every period
                     alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, 0, period, pendingIntent);
                 } else {
@@ -94,7 +94,7 @@ public class BootReceiver extends BroadcastReceiver {
                 }
             } else if (intent.getAction().equals(UPDATE)) {
                 // Update the period between polls
-                if (isCycling(this)) {
+                if (isCycling()) {
                     // Start polling in a period, and repeat every period
                     alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME,
                             SystemClock.elapsedRealtime() + period, period, pendingIntent);
