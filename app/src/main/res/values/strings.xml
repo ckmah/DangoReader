@@ -36,7 +36,7 @@
     <string name="library_page4">Dropped</string>
     <string name="library_page5">Completed</string>
 
-    <!-- browse fragment source names -->
+    <!-- browse isBrowsing source names -->
     <string-array name="browse_sources">
         <item>@string/browse_source1</item>
         <item>@string/browse_source2</item>

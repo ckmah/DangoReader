@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ckmah.mangoreader.activity.MangaBrowseActivity"
+            android:name="ckmah.mangoreader.activity.BrowseMangaActivity"
             android:label="@string/title_activity_manga_browse"
             android:launchMode="singleTop"
             android:parentActivityName="ckmah.mangoreader.activity.MangoReaderActivity"

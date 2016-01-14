@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.william.mangoreader.R;
 
-import ckmah.mangoreader.activity.MangaBrowseActivity;
+import ckmah.mangoreader.activity.BrowseMangaActivity;
 
 public class GenreTextAdapter extends RecyclerView.Adapter<GenreTextAdapter.TextViewHolder> {
 
@@ -45,7 +45,7 @@ public class GenreTextAdapter extends RecyclerView.Adapter<GenreTextAdapter.Text
         genreText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity, MangaBrowseActivity.class);
+                Intent intent = new Intent(activity, BrowseMangaActivity.class);
                 intent.putExtra(activity.getString(R.string.browse_order), genreText.getText());
                 activity.startActivity(intent);
             }

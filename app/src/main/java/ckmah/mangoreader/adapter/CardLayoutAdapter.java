@@ -2,7 +2,6 @@ package ckmah.mangoreader.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,7 +28,6 @@ import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.adapter.helper.ItemTouchHelperAdapter;
 import ckmah.mangoreader.database.Manga;
-import ckmah.mangoreader.fragment.BrowseMangaFragment;
 import ckmah.mangoreader.parse.MangaEden;
 
 /**
@@ -37,27 +35,21 @@ import ckmah.mangoreader.parse.MangaEden;
  */
 public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable, Serializable {
 
-    public Fragment fragment;
+    private final boolean useMiniCards;
+    public final boolean isBrowsing;
     public List<Manga> filteredManga;
     public Activity activity;
     private List<Manga> allManga;
 
-    public CardLayoutAdapter(Activity activity, Fragment fragment) {
+    public CardLayoutAdapter(Activity activity, boolean isBrowsing, boolean useMiniCards) {
         filteredManga = new ArrayList<>();
         this.activity = activity;
-        this.fragment = fragment;
+        this.isBrowsing = isBrowsing;
+        this.useMiniCards = useMiniCards;
     }
 
     public void setAllManga(List<Manga> allManga) {
         this.allManga = allManga;
-    }
-
-    /**
-     * Returns sorted and filtered list of manga.
-     * @return
-     */
-    public List<Manga> getAllManga() {
-        return filteredManga;
     }
 
     @Override
@@ -87,7 +79,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView;
-        if (fragment instanceof BrowseMangaFragment) {
+        if (useMiniCards) {
             itemView = inflater.inflate(R.layout.manga_card_mini, parent, false);
         } else {
             itemView = inflater.inflate(R.layout.manga_card, parent, false);
@@ -279,6 +271,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
+            Log.d("SORTING", "Published Results.");
             notifyDataSetChanged();
         }
     }

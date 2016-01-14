@@ -13,7 +13,7 @@ import com.william.mangoreader.R;
 
 import ckmah.mangoreader.adapter.BrowsePagerAdapter;
 
-public class MangaBrowseActivity extends AppCompatActivity {
+public class BrowseMangaActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private String toolbarTitle;
@@ -47,19 +47,18 @@ public class MangaBrowseActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.browse_tabs);
         tabLayout.setVisibility(View.GONE);
 
-
         BrowsePagerAdapter pagerAdapter = null;
         // if genre requested, use TabLayout
         for (String genre : allGenres) {
             if (toolbarTitle.compareTo(genre) == 0) {
                 tabLayout.setVisibility(View.VISIBLE);
 
-                pagerAdapter = new BrowsePagerAdapter(getApplicationContext(), getSupportFragmentManager(), toolbarTitle);
+                pagerAdapter = new BrowsePagerAdapter(this, getSupportFragmentManager(), toolbarTitle);
                 break;
             }
         }
         if (pagerAdapter == null) {
-            pagerAdapter = new BrowsePagerAdapter(getApplicationContext(), getSupportFragmentManager(), toolbarTitle);
+            pagerAdapter = new BrowsePagerAdapter(this, getSupportFragmentManager(), toolbarTitle);
         }
 
         viewPager.setAdapter(pagerAdapter);

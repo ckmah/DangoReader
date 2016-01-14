@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.william.mangoreader.R;
 
@@ -45,15 +46,20 @@ public class BrowsePageFragment extends Fragment {
     private int pageNumber;
     private String sortKey;
 
+    static ArrayList<String> sortItems;
+    static ArrayList<String> genreList;
+    int sortIndex;
+    int genreIndex;
+
     public BrowsePageFragment() {
         // Required empty public constructor
     }
 
     public static BrowsePageFragment newInstance(int page, String sortKey) {
+        BrowsePageFragment fragment = new BrowsePageFragment();
         Bundle args = new Bundle();
         args.putInt(PAGE_NUM, page);
         args.putString(SORT_KEY, sortKey);
-        BrowsePageFragment fragment = new BrowsePageFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,6 +67,8 @@ public class BrowsePageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pageNumber = getArguments().getInt(PAGE_NUM);
+        sortKey = getArguments().getString(SORT_KEY);
         allManga = BrowseMangaFragment.allManga;
     }
 
@@ -68,11 +76,15 @@ public class BrowsePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_browse_page, container, false);
+
         initRecycler(rootView);
         initSwipeRefresh(rootView);
 
-        pageNumber = getArguments().getInt(PAGE_NUM);
-        sortKey = getArguments().getString(SORT_KEY);
+        sortItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.sort_items)));
+        genreList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.genre_list)));
+        sortIndex = sortItems.indexOf(sortKey);
+        genreIndex = genreList.indexOf(sortKey);
+
         if (allManga.size() > 0) {
             // If allManga is already populated, just display them
             sortOrderAndGenre();
@@ -91,7 +103,7 @@ public class BrowsePageFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        cardAdapter = new CardLayoutAdapter(getActivity(), this);
+        cardAdapter = new CardLayoutAdapter(getActivity(), true, false);
         cardAdapter.setAllManga(allManga);
         mRecyclerView.setAdapter(cardAdapter);
 
@@ -171,11 +183,6 @@ public class BrowsePageFragment extends Fragment {
     }
 
     private void sortOrderAndGenre() {
-        ArrayList<String> sortItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.sort_items)));
-        ArrayList<String> genreList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.genre_list)));
-        int sortIndex = sortItems.indexOf(sortKey);
-        int genreIndex = genreList.indexOf(sortKey);
-
         Log.d("BrowsePageFragment", "sortKey: " + sortKey);
         // sort by order only
         if (sortIndex != -1) {
@@ -185,10 +192,22 @@ public class BrowsePageFragment extends Fragment {
         // sort by genre and order
         else if (genreIndex != -1) {
             Log.d("BrowsePageFragment", "genreIndex: " + genreIndex);
-
-            cardAdapter.getFilter(pageNumber, false, new ArrayList<Integer>(genreIndex)).filter("");
+            Log.d("BrowsePageFragment", "pageNumber: " + pageNumber);
+            List<Integer> selectedGenre = new ArrayList<>();
+            selectedGenre.add(genreIndex);
+            cardAdapter.getFilter(pageNumber, false, selectedGenre).filter("");
         } else {
+            Log.d("BrowsePageFragment", "genreIndex and sortIndex = -1");
             cardAdapter.getFilter().filter("");
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Toast.makeText(getContext(), "" + pageNumber, Toast.LENGTH_SHORT).show();
+        } else {
         }
     }
 

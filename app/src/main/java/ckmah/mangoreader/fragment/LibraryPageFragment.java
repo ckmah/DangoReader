@@ -44,7 +44,7 @@ public class LibraryPageFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        CardLayoutAdapter cgAdapter = new CardLayoutAdapter(getActivity(), this);
+        CardLayoutAdapter cgAdapter = new CardLayoutAdapter(getActivity(), false, false);
 
         List<Manga> library = UserLibraryHelper.findAllFavoritedManga();
 

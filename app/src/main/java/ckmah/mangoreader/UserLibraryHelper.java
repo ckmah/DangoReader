@@ -2,7 +2,6 @@ package ckmah.mangoreader;
 
 import android.app.Activity;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 
@@ -14,7 +13,6 @@ import java.util.List;
 import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.database.Manga;
-import ckmah.mangoreader.fragment.LibraryPageFragment;
 import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.parse.MangaEden;
@@ -81,7 +79,7 @@ public class UserLibraryHelper {
         sb.show();
 
         if (adapter != null) { // basically called from browse or library
-            addToListUpdate(m, adapter.fragment, adapter, position);
+            addToListUpdate(m,adapter, position);
         }
     }
 
@@ -102,7 +100,7 @@ public class UserLibraryHelper {
         }
         sb.show();
         if (adapter != null) { // basically called from browse or library
-            removeFromListUpdate(adapter.fragment, adapter, position);
+            removeFromListUpdate(adapter, position);
         }
     }
 
@@ -116,16 +114,16 @@ public class UserLibraryHelper {
         return mView;
     }
 
-    public static void removeFromListUpdate(Fragment fragment, CardLayoutAdapter adapter, int position) {
-        if (fragment instanceof LibraryPageFragment) {
+    public static void removeFromListUpdate( CardLayoutAdapter adapter, int position) {
+        if (!adapter.isBrowsing) {
             adapter.filteredManga.remove(position);
             adapter.notifyItemRemoved(position);
             adapter.notifyItemRangeChanged(position, adapter.filteredManga.size());
         }
     }
 
-    private static void addToListUpdate(Manga m, Fragment fragment, CardLayoutAdapter adapter, int position) {
-        if (fragment instanceof LibraryPageFragment) {
+    private static void addToListUpdate(Manga m, CardLayoutAdapter adapter, int position) {
+        if (!adapter.isBrowsing) {
             adapter.filteredManga.add(position, m);
             adapter.notifyItemInserted(position);
             adapter.notifyItemRangeChanged(position, adapter.filteredManga.size());

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ckmah.mangoreader.activity.MangaBrowseActivity;
+import ckmah.mangoreader.activity.BrowseMangaActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.adapter.GenreTextAdapter;
 import ckmah.mangoreader.database.Manga;
@@ -113,9 +113,9 @@ public class BrowseMangaFragment extends Fragment {
         popularRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         alphabetRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        updatesCardAdapter = new CardLayoutAdapter(getActivity(), this);
-        popularCardAdapter = new CardLayoutAdapter(getActivity(), this);
-        alphabetCardAdapter = new CardLayoutAdapter(getActivity(), this);
+        updatesCardAdapter = new CardLayoutAdapter(getActivity(), true, true);
+        popularCardAdapter = new CardLayoutAdapter(getActivity(), true, true);
+        alphabetCardAdapter = new CardLayoutAdapter(getActivity(), true, true);
 
         updatesCardAdapter.setAllManga(allManga);
         popularCardAdapter.setAllManga(allManga);
@@ -137,7 +137,7 @@ public class BrowseMangaFragment extends Fragment {
             headerViews[index].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), MangaBrowseActivity.class);
+                    Intent intent = new Intent(getActivity(), BrowseMangaActivity.class);
                     String browseOrder = "";
                     switch (finalIndex) {
                         case 0: // recently updated
