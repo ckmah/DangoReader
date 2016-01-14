@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -120,7 +119,7 @@ public class SortDialogFragment extends DialogFragment {
                         }
 
                         cardAdapter.getFilter(sortOptionIndex, reverseSwitch.isChecked(), selectedGenres).filter("");
-                        ((RecyclerView)getActivity().findViewById(R.id.browse_recycler_view)).scrollToPosition(0);
+//                        ((RecyclerView)getActivity().findViewById(R.id.browse_recycler_view)).scrollToPosition(0);
                         // User clicked OK button
                     }
                 })

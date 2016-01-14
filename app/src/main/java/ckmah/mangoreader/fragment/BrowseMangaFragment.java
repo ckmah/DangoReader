@@ -45,13 +45,14 @@ public class BrowseMangaFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
 
     // In-memory list of all manga, period
-    private List<Manga> allManga = new ArrayList<>();
+    public static List<Manga> allManga = new ArrayList<>();
 
     public BrowseMangaFragment() {
         // Required empty public constructor
     }
 
     private static BrowseMangaFragment instance;
+
     public static BrowseMangaFragment getInstance() {
         if (instance == null) {
             instance = new BrowseMangaFragment();
@@ -99,9 +100,9 @@ public class BrowseMangaFragment extends Fragment {
         View popularRow = rootView.findViewById(R.id.popular_row);
         View alphabetRow = rootView.findViewById(R.id.alphabet_row);
 
-        ((TextView) recentlyUpdatedRow.findViewById(R.id.sectionTitle)).setText(R.string.recentlyUpdatedTitle);
-        ((TextView) popularRow.findViewById(R.id.sectionTitle)).setText(R.string.popularTitle);
-        ((TextView) alphabetRow.findViewById(R.id.sectionTitle)).setText(R.string.alphabeticalTitle);
+        ((TextView) recentlyUpdatedRow.findViewById(R.id.sectionTitle)).setText(R.string.recently_updated);
+        ((TextView) popularRow.findViewById(R.id.sectionTitle)).setText(R.string.popular);
+        ((TextView) alphabetRow.findViewById(R.id.sectionTitle)).setText(R.string.a_to_z);
 
         // initialize category rows
         RecyclerView updatesRecyclerView = (RecyclerView) recentlyUpdatedRow.findViewById(R.id.row_recycler_view);
@@ -140,13 +141,13 @@ public class BrowseMangaFragment extends Fragment {
                     String browseOrder = "";
                     switch (finalIndex) {
                         case 0: // recently updated
-                            browseOrder = getString(R.string.recentlyUpdatedTitle);
+                            browseOrder = getString(R.string.recently_updated);
                             break;
                         case 1: // popular
-                            browseOrder = getString(R.string.popularTitle);
+                            browseOrder = getString(R.string.popular);
                             break;
                         case 2: // alphabetical
-                            browseOrder = getString(R.string.alphabeticalTitle);
+                            browseOrder = getString(R.string.a_to_z);
                             break;
                     }
                     intent.putExtra(getString(R.string.browse_order), browseOrder);
@@ -247,7 +248,7 @@ public class BrowseMangaFragment extends Fragment {
 
         Log.d("BrowseMangaFragment", "content visibile: " + contentView.getVisibility());
     }
-    
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuinflator) {
 //        menuinflator.inflate(R.menu.menu_browse_manga, menu);

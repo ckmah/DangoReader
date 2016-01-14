@@ -52,7 +52,7 @@
 
     <string name="recently_updated">Recently Updated</string>
     <string name="popular">Popular</string>
-    <string name="a_to_z">A to Z</string>
+    <string name="a_to_z">A - Z</string>
 
     <string-array name="genre_list">
         <item>@string/genre_action</item>
@@ -162,9 +162,6 @@
     <string name="rotation_lock">Rotation Lock</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
-    <string name="recentlyUpdatedTitle">Recently Updated</string>
-    <string name="popularTitle">Popular</string>
-    <string name="alphabeticalTitle">Alphabetical</string>
     <string name="title_activity_manga_browse">MangaBrowseActivity</string>
 
     <string name="browse_order">BROWSE_ORDER</string>
