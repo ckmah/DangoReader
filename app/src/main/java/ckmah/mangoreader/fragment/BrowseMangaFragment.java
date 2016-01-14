@@ -1,48 +1,27 @@
 package ckmah.mangoreader.fragment;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.william.mangoreader.R;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import ckmah.mangoreader.adapter.CardLayoutAdapter;
-import ckmah.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.parse.MangaEden;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class BrowseMangaFragment extends Fragment {
-
-    private RecyclerView mRecyclerView;
-    private GridLayoutManager gridLayoutManager;
-    private CardLayoutAdapter cardAdapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
-
-    // In-memory list of all manga, period
-    private List<Manga> allManga = new ArrayList<>();
+public class BrowseMangaFragment extends SearchSortFragment {
 
     public BrowseMangaFragment() {
         // Required empty public constructor
@@ -66,39 +45,8 @@ public class BrowseMangaFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_browse_manga, container, false);
-        initRecycler(rootView);
-        initSwipeRefresh(rootView);
 
-        if (allManga.size() > 0) {
-            // If allManga is already populated, just display them
-            cardAdapter.getFilter().filter("");
-        } else {
-            // Repopulate the list with an API call, relying on cache if possible
-            fetchMangaListFromMangaEden(false);
-        }
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Browse");
-        setHasOptionsMenu(true);
-        return rootView;
-    }
-
-    private void initRecycler(View rootView) {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_recycler_view);
-
-        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-
-        cardAdapter = new CardLayoutAdapter(getActivity(), this);
-        cardAdapter.setAllManga(allManga);
-        mRecyclerView.setAdapter(cardAdapter);
-
-        ItemTouchHelper.Callback callback =
-                new SimpleItemTouchHelperCallback(cardAdapter);
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(mRecyclerView);
-    }
-
-    private void initSwipeRefresh(View rootView) {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.browse_swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -107,6 +55,14 @@ public class BrowseMangaFragment extends Fragment {
                 fetchMangaListFromMangaEden(true);
             }
         });
+
+        // If allManga is empty, repopulate the list with an API call, relying on cache if possible
+        if (allManga.size() == 0) {
+            fetchMangaListFromMangaEden(false);
+        }
+
+        super.init();
+        return rootView;
     }
 
     private void fetchMangaListFromMangaEden(boolean skipCache) {
@@ -147,6 +103,7 @@ public class BrowseMangaFragment extends Fragment {
             @Override
             protected List<Manga> doInBackground(MangaEden.MangaEdenList... params) {
                 // On background thread, sort manga by most to least # of views
+                // Most time is actually taken by conversion process ( ~2 sec vs ~0.150 for sorting)
                 List<Manga> results = MangaEden.convertMangaListItemsToManga(params[0].manga);
                 Collections.sort(results, new Comparator<Manga>() {
 
@@ -163,7 +120,7 @@ public class BrowseMangaFragment extends Fragment {
                 // On UI thread, update list of all manga and display them
                 allManga.clear();
                 allManga.addAll(results);
-                cardAdapter.getFilter().filter("");
+                cardAdapter.showAllManga();
 
 
                 // Hide the refresh layout
@@ -177,62 +134,5 @@ public class BrowseMangaFragment extends Fragment {
                 Log.d("BrowseMangaFragment", "Finished sorting manga");
             }
         }.execute(list);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuinflator) {
-        menuinflator.inflate(R.menu.menu_browse_manga, menu);
-
-        // Configure the SearchView to filter the cards
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (query.isEmpty()) {
-                    swipeRefreshLayout.setEnabled(true);
-                } else {
-                    swipeRefreshLayout.setEnabled(false);
-                }
-                cardAdapter.getFilter().filter(query);
-                return true; // The listener has handled the query
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    swipeRefreshLayout.setEnabled(true);
-                } else {
-                    swipeRefreshLayout.setEnabled(false);
-                }
-                cardAdapter.getFilter().filter(newText);
-                return false; // The searchview should show suggestions
-            }
-        });
-
-        MenuItem sortItem = menu.findItem(R.id.action_sort);
-        sortItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                DialogFragment dialog = SortDialogFragment.newInstance(cardAdapter);
-                dialog.show(getActivity().getSupportFragmentManager(), "SortDialogFragment");
-                return false;
-            }
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 }

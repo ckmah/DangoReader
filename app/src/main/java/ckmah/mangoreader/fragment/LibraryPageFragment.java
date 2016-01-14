@@ -1,10 +1,7 @@
 package ckmah.mangoreader.fragment;
 
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +10,10 @@ import android.view.ViewGroup;
 import com.william.mangoreader.R;
 
 import java.util.Collections;
-import java.util.List;
 
 import ckmah.mangoreader.UserLibraryHelper;
-import ckmah.mangoreader.adapter.CardLayoutAdapter;
-import ckmah.mangoreader.database.Manga;
 
-public class LibraryPageFragment extends Fragment {
+public class LibraryPageFragment extends SearchSortFragment {
     private final static String PAGE_NUM = "ARG_PAGE";
 
     public static LibraryPageFragment newInstance(int page) {
@@ -40,28 +34,13 @@ public class LibraryPageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.card_grid, container, false);
 
-        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_recycler_view);
+        allManga = UserLibraryHelper.findAllFavoritedManga();
 
-        CardLayoutAdapter cgAdapter = new CardLayoutAdapter(getActivity(), this);
-
-        List<Manga> library = UserLibraryHelper.findAllFavoritedManga();
-
-        cgAdapter.setAllManga(library);
-        cgAdapter.getFilter(2, false, Collections.<Integer>emptyList()).filter(""); // copies allManga to filteredManga, sorted alphabetically
-        mRecyclerView.setAdapter(cgAdapter);
+        super.init();
+        // Sort My Library by most recently updated first, by default
+        cardAdapter.getFilter(1, false, Collections.<Integer>emptyList()).filter("");
 
         return rootView;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 }
