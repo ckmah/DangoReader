@@ -12,19 +12,20 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Filter;
 
 import com.william.mangoreader.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ckmah.mangoreader.SortEvent;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
 import ckmah.mangoreader.database.Manga;
-import ckmah.mangoreader.SortEvent;
 import de.greenrobot.event.EventBus;
 
-public class SearchSortFragment extends Fragment {
+public abstract class SearchSortFragment extends Fragment {
 
     protected CardLayoutAdapter cardAdapter;
     @Nullable protected SwipeRefreshLayout swipeRefreshLayout;
@@ -44,7 +45,7 @@ public class SearchSortFragment extends Fragment {
 
         cardAdapter = new CardLayoutAdapter(getActivity(), true, false);
         cardAdapter.setAllManga(allManga);
-        cardAdapter.showAllManga();
+        getFilter().filter("");
         mRecyclerView.setAdapter(cardAdapter);
 
         ItemTouchHelper.Callback callback =
@@ -71,7 +72,7 @@ public class SearchSortFragment extends Fragment {
                     // Disable swipe to refresh if user is searching
                     swipeRefreshLayout.setEnabled(query.isEmpty());
                 }
-                cardAdapter.getFilter().filter(query);
+                getFilter().filter(query);
                 return true; // The listener has handled the query
             }
 
@@ -81,7 +82,7 @@ public class SearchSortFragment extends Fragment {
                     // Disable swipe to refresh if user is searching
                     swipeRefreshLayout.setEnabled(newText.isEmpty());
                 }
-                cardAdapter.getFilter().filter(newText);
+                getFilter().filter(newText);
                 return false; // The searchview should show suggestions
             }
         });
@@ -96,6 +97,9 @@ public class SearchSortFragment extends Fragment {
             }
         });
     }
+
+    // In subclasses, getFilter should specify the default sort order and genres
+    public abstract Filter getFilter();
 
     // Receive sort criteria from EventBus
     @Override

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import ckmah.mangoreader.UserLibraryHelper;
@@ -49,10 +50,6 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
     public void setAllManga(List<Manga> allManga) {
         this.allManga = allManga;
-    }
-
-    public void showAllManga() {
-        getFilter().filter("");
     }
 
     @Override
@@ -182,22 +179,19 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             FilterResults results = new FilterResults();
 
             // sort and filter genres
-            if (sortOptionIndex != -1) {
-                dialogFilter();
-            } else if (query.length() == 0) {
-                // If search term empty, show all manga
-                filteredManga.addAll(allManga);
-            } else {
-                // Otherwise, do a case-blind search
-                // TODO replace with better fuzzy match algorithm
-                String filterPattern = query.toString().toLowerCase().trim();
+            dialogFilter();
 
-                for (Manga item : allManga) {
-                    if (item.title.toLowerCase().contains(filterPattern)) {
-                        filteredManga.add(item);
-                    }
+            // Filter out manga whose titles do not include query
+            // TODO replace with better fuzzy match algorithm
+            String filterPattern = query.toString().toLowerCase().trim();
+            for (Iterator<Manga> iterator = filteredManga.iterator(); iterator.hasNext();) {
+                Manga manga = iterator.next();
+                if (!manga.title.toLowerCase().contains(filterPattern)) {
+                    // Remove the current element from the iterator and the list.
+                    iterator.remove();
                 }
             }
+
             results.values = filteredManga;
             results.count = filteredManga.size();
 

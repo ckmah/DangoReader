@@ -1,21 +1,16 @@
 package ckmah.mangoreader.fragment;
 
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.Toast;
 
 import com.william.mangoreader.R;
@@ -32,21 +27,15 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class BrowsePageFragment extends Fragment {
-
-    private CardLayoutAdapter cardAdapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
-
-    // In-memory list of all manga, period
-    private List<Manga> allManga = new ArrayList<>();
+public class BrowsePageFragment extends SearchSortFragment {
 
     private static final String PAGE_NUM = "PAGE_NUM";
     private static final String SORT_KEY = "SORT_KEY";
     private int pageNumber;
     private String sortKey;
 
-    static ArrayList<String> sortItems;
-    static ArrayList<String> genreList;
+    List<String> sortItems;
+    List<String> genreList;
     int sortIndex;
     int genreIndex;
 
@@ -86,7 +75,7 @@ public class BrowsePageFragment extends Fragment {
 
         if (allManga.size() > 0) {
             // If allManga is already populated, just display them
-            sortOrderAndGenre();
+            getFilter().filter("");
         } else {
             // Repopulate the list with an API call, relying on cache if possible
             fetchMangaListFromMangaEden(false);
@@ -165,8 +154,7 @@ public class BrowsePageFragment extends Fragment {
                 // On UI thread, update list of all manga and display them
                 allManga.clear();
                 allManga.addAll(results);
-
-                sortOrderAndGenre();
+                getFilter().filter("");
 
                 // Hide the refresh layout
                 swipeRefreshLayout.post(new Runnable() {
@@ -181,12 +169,12 @@ public class BrowsePageFragment extends Fragment {
         }.execute(list);
     }
 
-    private void sortOrderAndGenre() {
-        Log.d("BrowsePageFragment", "sortKey: " + sortKey);
+    @Override
+    public Filter getFilter() {
         // sort by order only
         if (sortIndex != -1) {
             Log.d("BrowsePageFragment", "sortIndex: " + sortIndex);
-            cardAdapter.getFilter(sortIndex, false, Collections.<Integer>emptyList()).filter("");
+            return cardAdapter.getFilter(sortIndex, false, Collections.<Integer>emptyList());
         }
         // sort by genre and order
         else if (genreIndex != -1) {
@@ -194,10 +182,10 @@ public class BrowsePageFragment extends Fragment {
             Log.d("BrowsePageFragment", "pageNumber: " + pageNumber);
             List<Integer> selectedGenre = new ArrayList<>();
             selectedGenre.add(genreIndex);
-            cardAdapter.getFilter(pageNumber, false, selectedGenre).filter("");
+            return cardAdapter.getFilter(pageNumber, false, selectedGenre);
         } else {
             Log.d("BrowsePageFragment", "genreIndex and sortIndex = -1");
-            cardAdapter.getFilter().filter("");
+            return cardAdapter.getFilter();
         }
     }
 
@@ -208,62 +196,5 @@ public class BrowsePageFragment extends Fragment {
             Toast.makeText(getContext(), "" + pageNumber, Toast.LENGTH_SHORT).show();
         } else {
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuinflator) {
-        menuinflator.inflate(R.menu.menu_browse_manga, menu);
-
-        // Configure the SearchView to filter the cards
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (query.isEmpty()) {
-                    swipeRefreshLayout.setEnabled(true);
-                } else {
-                    swipeRefreshLayout.setEnabled(false);
-                }
-                cardAdapter.getFilter().filter(query);
-                return true; // The listener has handled the query
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    swipeRefreshLayout.setEnabled(true);
-                } else {
-                    swipeRefreshLayout.setEnabled(false);
-                }
-                cardAdapter.getFilter().filter(newText);
-                return false; // The searchview should show suggestions
-            }
-        });
-
-        MenuItem sortItem = menu.findItem(R.id.action_sort);
-//        sortItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                DialogFragment dialog = SortDialogFragment.newInstance(cardAdapter);
-//                dialog.show(getActivity().getSupportFragmentManager(), "SortDialogFragment");
-//                return false;
-//            }
-//        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 }

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 
 import com.william.mangoreader.R;
 
@@ -38,9 +39,12 @@ public class LibraryPageFragment extends SearchSortFragment {
         allManga = UserLibraryHelper.findAllFavoritedManga();
 
         super.init();
-        // Sort My Library by most recently updated first, by default
-        cardAdapter.getFilter(1, false, Collections.<Integer>emptyList()).filter("");
-
         return rootView;
+    }
+
+    @Override
+    public Filter getFilter() {
+        // Sort My Library by most recently updated first, by default
+        return cardAdapter.getFilter(1, false, Collections.<Integer>emptyList());
     }
 }
