@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.william.mangoreader.R;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,7 +32,7 @@ import ckmah.mangoreader.parse.MangaEden;
 /**
  * Layout adapter for adding cards
  */
-public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable, Serializable {
+public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable {
 
     private final boolean useMiniCards;
     public final boolean isBrowsing;
@@ -50,6 +49,10 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
     public void setAllManga(List<Manga> allManga) {
         this.allManga = allManga;
+    }
+
+    public void showAllManga() {
+        getFilter().filter("");
     }
 
     @Override
@@ -208,9 +211,9 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             String[] allGenres = activity.getResources().getStringArray(R.array.genre_list);
             Collection<String> selectedGenres = new ArrayList<>();
 
-            // no genres selected, skip filtering
+
             if (selectedGenresIndices.size() > 0) {
-                // retrieve genre names
+                // retrieve genre names to filter by
                 for (Integer index : selectedGenresIndices) {
                     selectedGenres.add(allGenres[index].toLowerCase());
                     Log.d("SORTING", "selected genre: " + allGenres[index].toLowerCase());
@@ -228,12 +231,15 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                         filteredManga.add(manga);
                     }
                 }
+            } else {
+                // No genres selected, skip filtering
+                filteredManga.addAll(allManga);
             }
 
             // sort by specified order
             switch (sortOptionIndex) {
                 case 0: // sort by popularity
-                    Collections.sort(allManga, new Comparator<Manga>() {
+                    Collections.sort(filteredManga, new Comparator<Manga>() {
                         @Override
                         public int compare(Manga lhs, Manga rhs) {
                             return ((Integer) rhs.hits).compareTo(lhs.hits);
@@ -241,7 +247,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                     });
                     break;
                 case 1: // sort by recently updated
-                    Collections.sort(allManga, new Comparator<Manga>() {
+                    Collections.sort(filteredManga, new Comparator<Manga>() {
                         @Override
                         public int compare(Manga lhs, Manga rhs) {
                             return ((Long) rhs.lastChapterDate).compareTo(lhs.lastChapterDate);
@@ -249,13 +255,12 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                     });
                     break;
                 case 2: // sort alphabetically
-                    Collections.sort(allManga, new Comparator<Manga>() {
+                    Collections.sort(filteredManga, new Comparator<Manga>() {
                         @Override // reverse comparison b/c default is Z to A
                         public int compare(Manga lhs, Manga rhs) {
                             return lhs.title.compareTo(rhs.title);
                         }
                     });
-
                     break;
                 default:
                     Log.d("SORTING", "Did not dialog sort by genres properly.");
@@ -263,10 +268,8 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
             // reverse list
             if (isReverseOrder) {
-                Collections.reverse(allManga);
+                Collections.reverse(filteredManga);
             }
-
-            filteredManga.addAll(allManga);
         }
 
         @Override

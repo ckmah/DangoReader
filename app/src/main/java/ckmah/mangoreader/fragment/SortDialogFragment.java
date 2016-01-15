@@ -23,24 +23,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import ckmah.mangoreader.adapter.CardLayoutAdapter;
+import ckmah.mangoreader.SortEvent;
+import de.greenrobot.event.EventBus;
 
 public class SortDialogFragment extends DialogFragment {
 
-    private CardLayoutAdapter cardAdapter;
     private List<Integer> sortOptionIds;
     private List<Integer> genreListIds;
 
     private static String[] sortOptions;
     private static String[] genreList;
 
-    private static final String CARD_ADAPTER = "CARD_ADAPTER";
-
-    public static SortDialogFragment newInstance(CardLayoutAdapter cardAdapter) {
-
-
+    public static SortDialogFragment newInstance() {
         Bundle args = new Bundle();
-        args.putSerializable(CARD_ADAPTER, cardAdapter);
         SortDialogFragment fragment = new SortDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -49,7 +44,6 @@ public class SortDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        cardAdapter = (CardLayoutAdapter) getArguments().getSerializable((CARD_ADAPTER));
         sortOptions = getResources().getStringArray(R.array.sort_items);
         genreList = getResources().getStringArray(R.array.genre_list);
 
@@ -118,8 +112,7 @@ public class SortDialogFragment extends DialogFragment {
                                 selectedGenres.add(index);
                         }
 
-                        cardAdapter.getFilter(sortOptionIndex, reverseSwitch.isChecked(), selectedGenres).filter("");
-//                        ((RecyclerView)getActivity().findViewById(R.id.browse_recycler_view)).scrollToPosition(0);
+                        EventBus.getDefault().post(new SortEvent(sortOptionIndex, reverseSwitch.isChecked(), selectedGenres));
                         // User clicked OK button
                     }
                 })
