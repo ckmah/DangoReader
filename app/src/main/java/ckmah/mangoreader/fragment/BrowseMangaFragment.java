@@ -75,9 +75,9 @@ public class BrowseMangaFragment extends Fragment {
         initRecyclerViews();
 
         if (allManga.size() > 0) {
-            // If allManga is already populated, just display them
+            // If allManga is already populated, just display them and hide the placeholders
             sortAdapterData();
-
+            replacePlaceholders();
         } else {
             contentView.setVisibility(View.GONE);
             // Repopulate the list with an API call, relying on cache if possible
