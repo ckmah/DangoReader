@@ -1,6 +1,6 @@
 package ckmah.mangoreader.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -125,8 +125,8 @@ public abstract class SearchSortFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
     }
 
     @Override

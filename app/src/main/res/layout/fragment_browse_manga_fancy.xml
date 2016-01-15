@@ -7,12 +7,8 @@
 
     <include
         android:id="@+id/browse_placeholder"
+        android:visibility="gone"
         layout="@layout/browse_placeholder" />
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/browse_swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <ScrollView
             android:id="@+id/browse_content"
@@ -23,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="108dp">
+                android:paddingBottom="68dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/genre_recycler_view"
@@ -48,7 +44,4 @@
 
             </LinearLayout>
         </ScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-
 </RelativeLayout>

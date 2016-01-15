@@ -1,14 +1,14 @@
 package ckmah.mangoreader.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,15 +34,12 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class BrowseMangaFragment extends Fragment {
-
     private View rootView;
     private View contentView;
-
+    private View placeholder;
     private CardLayoutAdapter updatesCardAdapter;
     private CardLayoutAdapter popularCardAdapter;
     private CardLayoutAdapter alphabetCardAdapter;
-
-    private SwipeRefreshLayout swipeRefreshLayout;
 
     // In-memory list of all manga, period
     public static List<Manga> allManga = new ArrayList<>();
@@ -71,20 +68,21 @@ public class BrowseMangaFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_browse_manga_fancy, container, false);
         contentView = rootView.findViewById(R.id.browse_content);
-        initSwipeRefresh();
+
+        placeholder = rootView.findViewById(R.id.browse_placeholder);
         initRecyclerViews();
 
+        // If allManga is already populated, just display them
         if (allManga.size() > 0) {
-            // If allManga is already populated, just display them and hide the placeholders
             sortAdapterData();
-            replacePlaceholders();
+            showContent();
         } else {
-            contentView.setVisibility(View.GONE);
+            hideContent();
             // Repopulate the list with an API call, relying on cache if possible
             fetchMangaListFromMangaEden(false);
         }
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Browse");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.title_browse);
         setHasOptionsMenu(true);
         return rootView;
     }
@@ -158,26 +156,8 @@ public class BrowseMangaFragment extends Fragment {
 
     }
 
-    private void initSwipeRefresh() {
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.browse_swipe_refresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // If user swiped down to refresh, force a check for updates
-                fetchMangaListFromMangaEden(true);
-            }
-        });
-    }
-
     private void fetchMangaListFromMangaEden(boolean skipCache) {
         Log.d("BrowseMangaFragment", "Fetching manga list");
-
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-            }
-        });
 
         MangaEden.getMangaEdenService(getActivity(), skipCache).listAllManga().enqueue(new Callback<MangaEden.MangaEdenList>() {
             @Override
@@ -187,15 +167,7 @@ public class BrowseMangaFragment extends Fragment {
 
             @Override
             public void onFailure(Throwable t) {
-                Log.d("BrowseMangaFragment", "Could not fetch manga list");
-
-                // Hide the refresh layout
-                swipeRefreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+                Log.d("BrowseMangaFragment", "Failed to fetch manga list,");
             }
         });
     }
@@ -218,15 +190,7 @@ public class BrowseMangaFragment extends Fragment {
                 sortAdapterData();
 
                 // show actual content
-                replacePlaceholders();
-
-                // Hide the refresh layout
-                swipeRefreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+                showContent();
 
                 Log.d("BrowseMangaFragment", "Finished sorting manga");
             }
@@ -234,52 +198,55 @@ public class BrowseMangaFragment extends Fragment {
     }
 
     private void sortAdapterData() {
-        // Sort by recently updated.
+        // Sort by recently updated
         updatesCardAdapter.getFilter(1, false, Collections.<Integer>emptyList()).filter("");
-        // Sort by popularity.
+        // Sort by popularity
         popularCardAdapter.getFilter(0, false, Collections.<Integer>emptyList()).filter("");
-        // Sort alphabetical.
+        // Sort alphabetical
         alphabetCardAdapter.getFilter(2, false, Collections.<Integer>emptyList()).filter("");
     }
 
-    private void replacePlaceholders() {
+    private void showContent() {
         rootView.findViewById(R.id.browse_placeholder).setVisibility(View.GONE);
         contentView.setVisibility(View.VISIBLE);
+    }
 
-        Log.d("BrowseMangaFragment", "content visibile: " + contentView.getVisibility());
+    private void hideContent() {
+        placeholder.setVisibility(View.VISIBLE);
+        contentView.setVisibility(View.GONE);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuinflator) {
-//        menuinflator.inflate(R.menu.menu_browse_manga, menu);
-//
-//        // Configure the SearchView to filter the cards
-//        MenuItem searchItem = menu.findItem(R.id.action_search);
-//        SearchView searchView = (SearchView) searchItem.getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
+        menuinflator.inflate(R.menu.menu_browse_manga, menu);
+
+        // Configure the SearchView to filter the cards
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
 //                if (query.isEmpty()) {
 //                    swipeRefreshLayout.setEnabled(true);
 //                } else {
 //                    swipeRefreshLayout.setEnabled(false);
 //                }
-//                popularCardAdapter.getFilter().filter(query);
-//                return true; // The listener has handled the query
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
+                popularCardAdapter.getFilter().filter(query);
+                return true; // The listener has handled the query
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
 //                if (newText.isEmpty()) {
 //                    swipeRefreshLayout.setEnabled(true);
 //                } else {
 //                    swipeRefreshLayout.setEnabled(false);
 //                }
-//                popularCardAdapter.getFilter().filter(newText);
-//                return false; // The searchview should show suggestions
-//            }
-//        });
-//
+                popularCardAdapter.getFilter().filter(newText);
+                return false; // The searchview should show suggestions
+            }
+        });
+
 //        MenuItem sortItem = menu.findItem(R.id.action_sort);
 //        sortItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 //            @Override
@@ -297,8 +264,8 @@ public class BrowseMangaFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
     }
 
     @Override

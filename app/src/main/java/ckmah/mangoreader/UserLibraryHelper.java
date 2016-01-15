@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ckmah.mangoreader.activity.MangaItemActivity;
+import ckmah.mangoreader.activity.MangoReaderActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
@@ -79,7 +80,7 @@ public class UserLibraryHelper {
         sb.show();
 
         if (adapter != null) { // basically called from browse or library
-            addToListUpdate(m,adapter, position);
+            addToListUpdate(m, adapter, position);
         }
     }
 
@@ -108,8 +109,10 @@ public class UserLibraryHelper {
         View mView;
         if (activity instanceof MangaItemActivity) {
             mView = activity.findViewById(R.id.manga_item_layout);
-        } else {
+        } else if (activity instanceof MangoReaderActivity) {
             mView = activity.findViewById(R.id.drawer_layout);
+        } else { // Bookmarked in browse sub-page
+            mView = activity.findViewById(R.id.browse_activity_layout);
         }
         return mView;
     }
