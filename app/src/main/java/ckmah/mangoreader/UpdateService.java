@@ -43,6 +43,7 @@ public class UpdateService extends IntentService {
                     .body();
 
             // Start up user library
+            // TODO update Paper entries for all manga
             Paper.init(this);
 
             List<Manga> updated = new ArrayList<>();
