@@ -4,7 +4,6 @@ package ckmah.mangoreader.fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.parse.MangaEden;
 import retrofit.Callback;
@@ -65,7 +63,7 @@ public class BrowsePageFragment extends SearchSortFragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_browse_page, container, false);
 
-        initRecycler(rootView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_page_recycler_view);
         initSwipeRefresh(rootView);
 
         sortItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.sort_items)));
@@ -73,28 +71,13 @@ public class BrowsePageFragment extends SearchSortFragment {
         sortIndex = sortItems.indexOf(sortKey);
         genreIndex = genreList.indexOf(sortKey);
 
-        if (allManga.size() > 0) {
-            // If allManga is already populated, just display them
-            getFilter().filter("");
-        } else {
-            // Repopulate the list with an API call, relying on cache if possible
+        if (allManga.size() == 0) {
+            // If allManga is empty, repopulate the list with an API call, relying on cache if possible
             fetchMangaListFromMangaEden(false);
         }
 
-        setHasOptionsMenu(true);
+        super.init(true);
         return rootView;
-    }
-
-    private void initRecycler(View rootView) {
-        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_page_recycler_view);
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-
-        cardAdapter = new CardLayoutAdapter(getActivity(), true, false);
-        cardAdapter.setAllManga(allManga);
-        mRecyclerView.setAdapter(cardAdapter);
-
     }
 
     private void initSwipeRefresh(View rootView) {

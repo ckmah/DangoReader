@@ -38,7 +38,7 @@ public class LibraryPageFragment extends SearchSortFragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_recycler_view);
         allManga = UserLibraryHelper.findAllFavoritedManga();
 
-        super.init();
+        super.init(false);
         return rootView;
     }
 

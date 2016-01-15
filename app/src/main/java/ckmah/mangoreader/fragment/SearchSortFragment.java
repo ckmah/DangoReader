@@ -39,11 +39,11 @@ public abstract class SearchSortFragment extends Fragment {
      * Initialize and hook up the various Android components
      * Call in subclasses at the end of onCreateView
      */
-    public void init() {
+    public void init(boolean isBrowsing) {
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        cardAdapter = new CardLayoutAdapter(getActivity(), true, false);
+        cardAdapter = new CardLayoutAdapter(getActivity(), isBrowsing, false);
         cardAdapter.setAllManga(allManga);
         getFilter().filter("");
         mRecyclerView.setAdapter(cardAdapter);
