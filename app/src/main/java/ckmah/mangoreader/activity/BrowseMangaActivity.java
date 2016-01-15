@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.william.mangoreader.R;
@@ -30,8 +31,7 @@ public class BrowseMangaActivity extends AppCompatActivity {
         toolbarTitle = getIntent().getStringExtra(getString(R.string.browse_order));
         toolbar = (Toolbar) findViewById(R.id.browse_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(toolbarTitle);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,5 +68,10 @@ public class BrowseMangaActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 }
