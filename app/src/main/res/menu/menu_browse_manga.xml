@@ -4,7 +4,7 @@
     tools:context="ckmah.mangoreader.activity.MangoReaderActivity">
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_action_search"
+        android:icon="@drawable/ic_search_white_24dp"
         android:orderInCategory="100"
         android:title="@string/action_search"
         app:showAsAction="collapseActionView|ifRoom"

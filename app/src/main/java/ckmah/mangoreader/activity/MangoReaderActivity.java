@@ -17,14 +17,17 @@ import android.view.View;
 import com.william.mangoreader.R;
 
 import ckmah.mangoreader.BootReceiver;
+import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.fragment.BrowseMangaFragment;
-import ckmah.mangoreader.fragment.MyLibraryFragment;
+import ckmah.mangoreader.fragment.LibraryPageFragment;
+import io.paperdb.Paper;
 
 /**
  * Main activity screen. Displays various fragments.
  */
 public class MangoReaderActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
 
@@ -38,12 +41,25 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         initNavigation();
 //        initSpinner();
 
+        // load user library
+        Paper.init(this);
 
-        // display library by default
-        displayView(R.id.library_nav_item);
+        if (UserLibraryHelper.findAllFavoritedManga().size() > 0) {
+            // Show library as first page, if any manga are favorited
+            displayView(R.id.library_nav_item);
+            navigationView.setCheckedItem(R.id.library_nav_item);
+        } else {
+            // Show browse as first page otherwise
+            displayView(R.id.browse_nav_item);
+            navigationView.setCheckedItem(R.id.browse_nav_item);
+        }
 
-        // Start polling for chapter updates
-        BootReceiver.RefreshService.start(this);
+
+        // Start polling for chapter updates if this is the first launch
+        if (!BootReceiver.RefreshService.isStarted(this)) {
+            BootReceiver.RefreshService.setStarted(this, true);
+            BootReceiver.RefreshService.toggle(this);
+        }
     }
 
     private void initToolbar() {
@@ -53,9 +69,9 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
     }
 
     private void initNavigation() {
-        NavigationView view = (NavigationView) findViewById(R.id.navigation_view);
-        drawerLayout = (DrawerLayout) findViewById(R.id.parent_layout);
-        view.setNavigationItemSelectedListener(this);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
@@ -103,8 +119,8 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         switch (id) {
             case R.id.library_nav_item: // library
 //                findViewById(R.id.spinner_browse_sources).setVisibility(View.GONE);
-                findViewById(R.id.sliding_tabs).setVisibility(View.VISIBLE);
-                fragment = new MyLibraryFragment();
+                findViewById(R.id.sliding_tabs).setVisibility(View.GONE);
+                fragment = LibraryPageFragment.newInstance(0);
                 title = getString(R.string.title_my_library);
                 break;
             case R.id.browse_nav_item: // browse

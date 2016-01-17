@@ -16,8 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ckmah.mangoreader.activity.MangoReaderActivity;
+import ckmah.mangoreader.database.Chapter;
+import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.model.MangaEdenMangaListItem;
 import ckmah.mangoreader.parse.MangaEden;
+import io.paperdb.Paper;
 
 public class UpdateService extends IntentService {
     /**
@@ -34,10 +37,13 @@ public class UpdateService extends IntentService {
             Log.d("UpdateService", "starting");
             // Synchronously download list of all manga
             MangaEden.MangaEdenList list = MangaEden
-                    .getMangaEdenServiceNoCache(this)
+                    .getMangaEdenService(this, true)
                     .listAllManga()
                     .execute()
                     .body();
+
+            // Start up user library
+            Paper.init(this);
 
             List<MangaEdenMangaListItem> updated = new ArrayList<>();
 
@@ -48,8 +54,14 @@ public class UpdateService extends IntentService {
                 if (lastChapterDate.isAfter(yesterday)) {
 
                     // Check whether manga is in library
-                    if (UserLibraryHelper.isInLibrary(this, item)) {
-                        updated.add(item);
+                    Manga m = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(item.id);
+                    if (m != null && m.favorite) {
+
+                        // Check whether latest chapter was read
+                        Chapter latest = m.chaptersList.get(m.chaptersList.size()-1);
+                        if (latest.mostRecentPage == -1) {
+                            updated.add(item);
+                        }
                     }
                 }
             }
@@ -92,7 +104,8 @@ public class UpdateService extends IntentService {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(title)
-                        .setContentText(message);
+                        .setContentText(message)
+                        .setAutoCancel(true); // Dismiss notification when clicked
 
         // Sets up the larger notification aka expanded layout
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();

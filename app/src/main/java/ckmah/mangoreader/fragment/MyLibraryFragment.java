@@ -18,6 +18,7 @@ import com.william.mangoreader.R;
 
 import ckmah.mangoreader.adapter.LibraryPagerAdapter;
 
+@Deprecated // Until we decide what categories we want
 public class MyLibraryFragment extends Fragment {
 
     public MyLibraryFragment() {

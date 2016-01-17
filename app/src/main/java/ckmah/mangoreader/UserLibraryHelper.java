@@ -1,162 +1,106 @@
 package ckmah.mangoreader;
 
 import android.app.Activity;
-import android.content.Context;
-import android.database.sqlite.SQLiteConstraintException;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
 import com.william.mangoreader.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
-import ckmah.mangoreader.daogen.DaoMaster;
-import ckmah.mangoreader.daogen.DaoSession;
-import ckmah.mangoreader.daogen.UserLibraryManga;
-import ckmah.mangoreader.daogen.UserLibraryMangaDao;
+import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.fragment.LibraryPageFragment;
-import ckmah.mangoreader.model.MangaEdenMangaListItem;
-import de.greenrobot.dao.query.QueryBuilder;
-
-
+import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
+import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
+import ckmah.mangoreader.parse.MangaEden;
+import io.paperdb.Paper;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class UserLibraryHelper {
-    private SQLiteDatabase userLibraryDb;
-    private DaoMaster daoMaster;
-    private DaoSession daoSession;
-    private static UserLibraryMangaDao userLibraryMangaDao;
 
-    /**
-     * Singleton pattern to access DAO
-     */
-    public static UserLibraryMangaDao getDao(Context context) {
-        if (userLibraryMangaDao == null) {
-            Log.d("USERLIBRARYHELPER", "Creating DAO");
-            // load user library
-            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, "user-library-db", null);
-            SQLiteDatabase userLibraryDb = helper.getWritableDatabase();
-            // helper.onUpgrade(userLibraryDb, userLibraryDb.getVersion(), 1000); // DEBUG PURPOSES ONLY
-            DaoMaster daoMaster = new DaoMaster(userLibraryDb);
-            DaoSession daoSession = daoMaster.newSession();
-            userLibraryMangaDao = daoSession.getUserLibraryMangaDao();
-        }
-        return userLibraryMangaDao;
-    }
+    public static final String USER_LIBRARY_DB = "user-library";
+    private static String added = "\"%s\" added to your library.";
+    private static String removed = "\"%s\" removed from your library.";
 
-    private static String added;
-    private static String removed;
-
-    public static boolean isInLibrary(Context context, MangaEdenMangaListItem item) {
-        // If any manga ids are matched, then manga must be in library.
-        QueryBuilder qb = getDao(context).queryBuilder();
-        qb.where(UserLibraryMangaDao.Properties.MangaEdenId.eq(item.id));
-        return qb.list().size() > 0;
-    }
-
-    /**
-     * Creates dialog for user to select library category to add to.
-     *
-     * @param m
-     */
-    public static boolean addToLibrary(final MangaEdenMangaListItem m, final View button, final Activity activity, final CardLayoutAdapter adapter, final int position) {
-        String genres = TextUtils.join("\t", m.genres);
-        added = "\"" + m.title + "\" added to your library under \"Plan to Read\"";
-        removed = "\"" + m.title + "\" removed from your library.";
-        final UserLibraryManga mangaItem = new UserLibraryManga(
-                m.id,
-                activity.getResources().getStringArray(R.array.library_categories)[0],
-                m.title,
-                m.imageUrl,
-                genres,
-                m.status,
-                m.lastChapterDate,
-                m.hits);
-
-        try { // insert and show snackbar with undo, return true if successful, false otherwise
-            getDao(activity).insert(mangaItem);
-            Snackbar
-                .make(findMyView(activity), added, Snackbar.LENGTH_LONG)
-                .setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        removeFromLibrary(m, button, activity, false, adapter, position);
-                        button.setSelected(false);
-                        if (adapter != null) { // basically called from browse or library
-                            removeFromListUpdate(adapter.fragment, adapter, position);
-                        }
-                    }
-                })
-                .show();
-
-            if (adapter != null) { // basically called from browse or library
-                addToListUpdate(m, adapter.fragment, adapter, position);
+    public static List<Manga> findAllFavoritedManga() {
+        List<Manga> response = new ArrayList<>();
+        for (String key : Paper.book(USER_LIBRARY_DB).getAllKeys()) {
+            Manga m = Paper.book(USER_LIBRARY_DB).read(key);
+            if (m.favorite) {
+                response.add(m);
             }
-            button.setSelected(true);
-            return true;
-        } catch (SQLiteConstraintException e) {
-            String duplicate = "\"" + m.title + "\" is already in your library.";
-            Snackbar
-                    .make(findMyView(activity), duplicate, Snackbar.LENGTH_SHORT)
-                    .show();
-            Log.d("LIBRARY", "Entry already exists");
-            return false;
+            //TODO: else check if flagged for deletion
+        }
+        return response;
+    }
+
+    public static void addToLibrary(final Manga m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
+
+        m.favorite = true;
+        Paper.book(USER_LIBRARY_DB).write(m.id, m);
+        button.setSelected(true);
+
+        MangaEden.getMangaEdenService(activity)
+                .getMangaDetails(m.id)
+                .enqueue(new Callback<MangaEdenMangaDetailItem>() {
+                    @Override
+                    public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
+                        MangaEdenMangaDetailItem r = response.body();
+                        List<MangaEdenMangaChapterItem> c = r.getChapters();
+                        m.author = r.getAuthor();
+                        m.dateCreated = r.getDateCreated();
+                        m.description = r.getDescription();
+                        m.language = r.getLanguage();
+                        m.numChapters = c.size();
+                        m.chaptersList = MangaEden.convertChapterItemstoChapters(c);
+                        Paper.book(USER_LIBRARY_DB).write(m.id, m);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Log.e("UserLibraryHelper", "Could not get manga details to store in db.");
+                    }
+                });
+
+        Snackbar sb = Snackbar.make(findMyView(activity), String.format(added, m.title), Snackbar.LENGTH_LONG);
+        if (showUndo) {
+            sb.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeFromLibrary(m, button, activity, false, adapter, position);
+                }
+            });
+        }
+        sb.show();
+
+        if (adapter != null) { // basically called from browse or library
+            addToListUpdate(m, adapter.fragment, adapter, position);
         }
     }
 
-    /**
-     * @param m
-     * @param button
-     * @param activity
-     * @param showUndo
-     */
-    public static void removeFromLibrary(final MangaEdenMangaListItem m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
-        // don't do anything if not found in library
-        if(!isInLibrary(activity, m)) {
-            Log.e("MangoReader", "No manga found in user library.");
-            return;
-        }
+    public static void removeFromLibrary(final Manga m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
 
-        added = "\"" + m.title + "\" added to your library under \"Plan to Read\"";
-        removed = "\"" + m.title + "\" removed from your library.";
-
-        QueryBuilder qb = getDao(activity).queryBuilder();
-        qb.where(UserLibraryMangaDao.Properties.MangaEdenId.eq(m.id));
-        List<UserLibraryManga> matches = qb.list();
-
-        final UserLibraryManga mangaItem = matches.get(0);
-        getDao(activity).delete(mangaItem);
-        removed = "\"" + m.title + "\" removed from your library.";
-
+        m.favorite = false;
+        Paper.book(USER_LIBRARY_DB).write(m.id, m);
+        button.setSelected(false);
         // show undo option only if not called from add undo
+        Snackbar sb = Snackbar.make(findMyView(activity), String.format(removed, m.title), Snackbar.LENGTH_LONG);
         if (showUndo) {
-            button.setSelected(false);
-            Snackbar
-                .make(findMyView(activity), removed, Snackbar.LENGTH_LONG)
-                .setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getDao(activity).insert(mangaItem);
-                        Snackbar.make(findMyView(activity), removed, Snackbar.LENGTH_LONG);
-                        button.setSelected(true);
-                        if (adapter != null) { // basically called from browse or library
-                            addToListUpdate(m, adapter.fragment, adapter, position);
-                        }
-                    }
-                })
-                .show();
-        } else {
-
-            button.setSelected(false);
-            Snackbar
-                    .make(findMyView(activity), removed, Snackbar.LENGTH_LONG)
-                    .show();
+            sb.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addToLibrary(m, button, activity, false, adapter, position);
+                }
+            });
         }
+        sb.show();
         if (adapter != null) { // basically called from browse or library
             removeFromListUpdate(adapter.fragment, adapter, position);
         }
@@ -165,10 +109,9 @@ public class UserLibraryHelper {
     private static View findMyView(Activity activity) {
         View mView;
         if (activity instanceof MangaItemActivity) {
-            mView = activity.findViewById(R.id.tabbed_parent_layout);
-        }
-        else {
-            mView = activity.findViewById(R.id.parent_layout);
+            mView = activity.findViewById(R.id.manga_item_layout);
+        } else {
+            mView = activity.findViewById(R.id.drawer_layout);
         }
         return mView;
     }
@@ -181,11 +124,12 @@ public class UserLibraryHelper {
         }
     }
 
-    public static void addToListUpdate(MangaEdenMangaListItem m, Fragment fragment, CardLayoutAdapter adapter, int position) {
+    private static void addToListUpdate(Manga m, Fragment fragment, CardLayoutAdapter adapter, int position) {
         if (fragment instanceof LibraryPageFragment) {
             adapter.filteredManga.add(position, m);
             adapter.notifyItemInserted(position);
             adapter.notifyItemRangeChanged(position, adapter.filteredManga.size());
         }
     }
+
 }

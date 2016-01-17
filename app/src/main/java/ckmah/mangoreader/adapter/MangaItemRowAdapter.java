@@ -1,7 +1,6 @@
 package ckmah.mangoreader.adapter;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,41 +9,27 @@ import android.widget.TextView;
 
 import com.william.mangoreader.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ckmah.mangoreader.activity.MangaViewerActivity;
-import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
+import ckmah.mangoreader.database.Chapter;
 
 /**
  * Layout adapter for adding chapters
  */
 public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {// implements ItemTouchHelperAdapter{
 
-    public Fragment fragment;
-    List<MangaEdenMangaChapterItem> chapters = null;
-    private Activity activity;
     private static final String CHAPTER_PREFIX = "Chapter ";
+    List<Chapter> chapters = null;
+    private Activity activity;
     // In-memory list of ids and titles so we can go onto next/prev chapters
-    private ArrayList<String> chapterIds = new ArrayList<>();
-    private ArrayList<String> chapterNumbers = new ArrayList<>();
-    private String mangaTitle;
+    private String mangaId;
 
 
-    public MangaItemRowAdapter(Activity activity, Fragment fragment, List<MangaEdenMangaChapterItem> chapters, String mangaTitle) {
+    public MangaItemRowAdapter(Activity activity, List<Chapter> chapters, String mangaId) {
         this.activity = activity;
-        this.fragment = fragment;
         this.chapters = chapters;
-        this.mangaTitle = mangaTitle;
-
-        // Parse chapters to get chapterIds and chapterNumbers
-        chapterIds.clear();
-        chapterNumbers.clear();
-        for (MangaEdenMangaChapterItem item : chapters) {
-            chapterIds.add(item.getId());
-            chapterNumbers.add(item.getNumber());
-        }
-        notifyDataSetChanged();
+        this.mangaId = mangaId;
     }
 
     @Override
@@ -57,8 +42,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         chapterView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int chapterIndex = chapterIds.indexOf(chapterHolder.mangaEdenChapterId);
-                MangaViewerActivity.start(activity, mangaTitle, chapterIds, chapterNumbers, chapterIndex);
+                MangaViewerActivity.start(activity, mangaId, chapterHolder.chapterIndex);
             }
         });
         return chapterHolder;
@@ -66,12 +50,18 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ChapterViewHolder chapterHolder = (ChapterViewHolder) holder;
+        Chapter chapterItem = chapters.get(position);
 
-            ChapterViewHolder chapterHolder = (ChapterViewHolder) holder;
-            MangaEdenMangaChapterItem chapterItem = chapters.get(position);
-            chapterHolder.titleView.setText(chapterItem.getTitle());
-            chapterHolder.numberView.setText(CHAPTER_PREFIX + chapterItem.getNumber());
-            chapterHolder.mangaEdenChapterId = chapterItem.getId();
+        chapterHolder.titleView.setText(chapterItem.title);
+        chapterHolder.numberView.setText(CHAPTER_PREFIX + chapterItem.number);
+        if (chapterItem.read) {
+            chapterHolder.numberView.setTextColor(activity.getResources().getColor(R.color.colorPrimary));
+        }
+        else {
+            chapterHolder.numberView.setTextColor(activity.getResources().getColor(R.color.black));
+        }
+        chapterHolder.chapterIndex = position;
     }
 
     @Override
@@ -83,7 +73,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public TextView numberView;
         public TextView titleView;
-        public String mangaEdenChapterId;
+        public int chapterIndex;
 
         public ChapterViewHolder(View chapterView) {
             super(chapterView);
