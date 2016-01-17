@@ -4,7 +4,7 @@ public class Chapter {
     public String id;
     public String title;
     public String number; //LOL yes, number is a string. something to do with titles.
-    public double date;
+    public long date;
 
     public boolean read;
     public int mostRecentPage;
