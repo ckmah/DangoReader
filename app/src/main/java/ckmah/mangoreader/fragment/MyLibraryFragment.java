@@ -58,7 +58,7 @@ public class MyLibraryFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Snackbar
-                        .make(getActivity().findViewById(R.id.parent_layout), "Fetching manga...", Snackbar.LENGTH_SHORT)
+                        .make(getActivity().findViewById(R.id.drawer_layout), "Fetching manga...", Snackbar.LENGTH_SHORT)
                         .show();
                 // TODO check for recently updated
 

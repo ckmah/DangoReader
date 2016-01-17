@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 public class MangaEdenMangaChapterItem implements Serializable {
 
     private double number;
-    private double date;
+    private long date;
     private String title;
     private String id;
 
@@ -28,11 +28,11 @@ public class MangaEdenMangaChapterItem implements Serializable {
         this.number = number;
     }
 
-    public double getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(double date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -58,7 +58,7 @@ public class MangaEdenMangaChapterItem implements Serializable {
             MangaEdenMangaChapterItem chapter = new MangaEdenMangaChapterItem();
             JsonArray array = json.getAsJsonArray();
             chapter.setNumber(array.get(0).getAsDouble());
-            chapter.setDate(array.get(1).getAsDouble());
+            chapter.setDate(array.get(1).getAsLong());
             chapter.setTitle(array.get(2).isJsonNull() ? "" : array.get(2).getAsString());
             chapter.setId(array.get(3).getAsString());
             return chapter;

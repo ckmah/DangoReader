@@ -1,6 +1,7 @@
 package ckmah.mangoreader.adapter;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,11 @@ import android.widget.TextView;
 
 import com.william.mangoreader.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import ckmah.mangoreader.activity.MangaViewerActivity;
 import ckmah.mangoreader.database.Chapter;
@@ -53,13 +58,25 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ChapterViewHolder chapterHolder = (ChapterViewHolder) holder;
         Chapter chapterItem = chapters.get(position);
 
-        chapterHolder.titleView.setText(chapterItem.title);
-        chapterHolder.numberView.setText(CHAPTER_PREFIX + chapterItem.number);
+        // set chapter number
+        chapterHolder.numberView.setText(String.format("%s%s", CHAPTER_PREFIX, chapterItem.number));
+
+        // set chapter title
+//        if (chapterItem.title.compareTo(chapterItem.number) != 0) {
+//        chapterHolder.titleView.setText(String.format("%s%s", " — ", chapterItem.title));
+//        }
+
+        // set chapter date
+        Date chapterDate = new Date(chapterItem.date * 1000L);
+        DateFormat sdf = SimpleDateFormat.getDateInstance();
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT-8"));
+        chapterHolder.dateView.setText(sdf.format(chapterDate));
+
+        // visual indicator for read/unread
         if (chapterItem.read) {
-            chapterHolder.numberView.setTextColor(activity.getResources().getColor(R.color.colorPrimary));
-        }
-        else {
-            chapterHolder.numberView.setTextColor(activity.getResources().getColor(R.color.black));
+            chapterHolder.numberView.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimaryDark));
+        } else {
+            chapterHolder.numberView.setTextColor(ContextCompat.getColor(activity, R.color.black));
         }
         chapterHolder.chapterIndex = position;
     }
@@ -73,12 +90,15 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public TextView numberView;
         public TextView titleView;
+        public TextView dateView;
+
         public int chapterIndex;
 
         public ChapterViewHolder(View chapterView) {
             super(chapterView);
             numberView = (TextView) chapterView.findViewById(R.id.chapter_number);
-            titleView = (TextView) chapterView.findViewById(R.id.toolbar_chapter_title);
+            titleView = (TextView) chapterView.findViewById(R.id.chapter_title);
+            dateView = (TextView) chapterView.findViewById(R.id.chapter_date);
         }
     }
 }
