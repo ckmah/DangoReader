@@ -34,9 +34,7 @@ public class SortDialogFragment extends DialogFragment {
     private static String[] sortOptions;
     private static String[] genreList;
 
-    private static final String CARD_ADAPTER = "CARD_ADAPTER";
-
-    public static SortDialogFragment newInstance(CardLayoutAdapter cardAdapter) {
+    public static SortDialogFragment newInstance() {
 
         Bundle args = new Bundle();
         SortDialogFragment fragment = new SortDialogFragment();
