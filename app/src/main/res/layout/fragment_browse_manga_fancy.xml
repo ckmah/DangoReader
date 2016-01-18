@@ -7,41 +7,50 @@
 
     <include
         android:id="@+id/browse_placeholder"
-        android:visibility="gone"
-        layout="@layout/browse_placeholder" />
+        layout="@layout/browse_placeholder"
+        android:visibility="gone" />
 
-        <ScrollView
-            android:id="@+id/browse_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/browse_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:padding="4dp"
+        android:scrollbars="vertical"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/browse_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="68dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="68dp">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/genre_recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="64dp"
+                android:clipToPadding="false"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/genre_recycler_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="64dp"
-                    android:clipToPadding="false"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="8dp" />
+            <include
+                android:id="@+id/recently_updated_row"
+                layout="@layout/browse_manga_row" />
 
-                <include
-                    android:id="@+id/recently_updated_row"
-                    layout="@layout/browse_manga_row" />
+            <include
+                android:id="@+id/popular_row"
+                layout="@layout/browse_manga_row" />
 
-                <include
-                    android:id="@+id/popular_row"
-                    layout="@layout/browse_manga_row" />
+            <include
+                android:id="@+id/alphabet_row"
+                layout="@layout/browse_manga_row" />
 
-                <include
-                    android:id="@+id/alphabet_row"
-                    layout="@layout/browse_manga_row" />
-
-            </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
