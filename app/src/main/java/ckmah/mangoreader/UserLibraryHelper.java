@@ -18,7 +18,6 @@ import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.database.Chapter;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.fragment.LibraryPageFragment;
-import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.parse.MangaEden;
 import io.paperdb.Paper;
@@ -44,8 +43,8 @@ public class UserLibraryHelper {
         return response;
     }
 
-    public static void addToLibrary(final Manga m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
-
+    public static void addToLibrary(String mangaId, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
+        final Manga m = Paper.book(USER_LIBRARY_DB).read(mangaId);
         m.favorite = true;
         Paper.book(USER_LIBRARY_DB).write(m.id, m);
         button.setSelected(true);
@@ -55,15 +54,7 @@ public class UserLibraryHelper {
                 .enqueue(new Callback<MangaEdenMangaDetailItem>() {
                     @Override
                     public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
-                        MangaEdenMangaDetailItem r = response.body();
-                        List<MangaEdenMangaChapterItem> c = r.getChapters();
-                        m.author = r.getAuthor();
-                        m.dateCreated = r.getDateCreated();
-                        m.description = r.getDescription();
-                        m.language = r.getLanguage();
-                        m.numChapters = c.size();
-                        m.chaptersList = MangaEden.convertChapterItemstoChapters(c);
-                        Paper.book(USER_LIBRARY_DB).write(m.id, m);
+                        updateManga(m.id, response.body());
                     }
 
                     @Override
@@ -77,7 +68,7 @@ public class UserLibraryHelper {
             sb.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removeFromLibrary(m, button, activity, false, adapter, position);
+                    removeFromLibrary(m.id, button, activity, false, adapter, position);
                 }
             });
         }
@@ -88,8 +79,8 @@ public class UserLibraryHelper {
         }
     }
 
-    public static void removeFromLibrary(final Manga m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
-
+    public static void removeFromLibrary(String mangaId, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
+        final Manga m = Paper.book(USER_LIBRARY_DB).read(mangaId);
         m.favorite = false;
         Paper.book(USER_LIBRARY_DB).write(m.id, m);
         button.setSelected(false);
@@ -99,7 +90,7 @@ public class UserLibraryHelper {
             sb.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addToLibrary(m, button, activity, false, adapter, position);
+                    addToLibrary(m.id, button, activity, false, adapter, position);
                 }
             });
         }

@@ -77,9 +77,9 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             @Override
             public void onClick(View button) {
                 if (button.isSelected()) {
-                    UserLibraryHelper.removeFromLibrary(viewHolder.manga, button, activity, true, adapter, position);
+                    UserLibraryHelper.removeFromLibrary(viewHolder.manga.id, button, activity, true, adapter, position);
                 } else {
-                    UserLibraryHelper.addToLibrary(viewHolder.manga, button, activity, true, adapter, position);
+                    UserLibraryHelper.addToLibrary(viewHolder.manga.id, button, activity, true, adapter, position);
                 }
             }
         });
