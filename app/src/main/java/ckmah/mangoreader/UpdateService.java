@@ -43,9 +43,10 @@ public class UpdateService extends IntentService {
                     .body();
 
             // Start up user library
+            // TODO update Paper entries for all manga
             Paper.init(this);
 
-            List<MangaEdenMangaListItem> updated = new ArrayList<>();
+            List<Manga> updated = new ArrayList<>();
 
             for (MangaEdenMangaListItem item : list.manga) {
                 // Check whether manga was released in the last 24 hours. TODO longer window?
@@ -56,15 +57,17 @@ public class UpdateService extends IntentService {
                     // Check whether manga is in library
                     Manga m = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(item.id);
                     if (m != null && m.favorite) {
+                        m = UserLibraryHelper.updateManga(this, item.id);
 
                         // Check whether latest chapter was read
                         Chapter latest = m.chaptersList.get(m.chaptersList.size()-1);
                         if (latest.mostRecentPage == -1) {
-                            updated.add(item);
+                            updated.add(m);
                         }
                     }
                 }
             }
+            // TODO always run UpdateService, just skip notification
             notify(updated);
 
         } catch (IOException e) {
@@ -75,7 +78,7 @@ public class UpdateService extends IntentService {
     /**
      * Builds a notification from a list of updated manga
      */
-    private void notify(List<MangaEdenMangaListItem> updated) {
+    private void notify(List<Manga> updated) {
         // Create the notification title
         String title;
         switch (updated.size()) {
@@ -94,8 +97,8 @@ public class UpdateService extends IntentService {
 
         // Create a comma-separated string of manga titles
         String message = "";
-        for (MangaEdenMangaListItem item : updated) {
-            message += ", " + item.title;
+        for (Manga manga : updated) {
+            message += ", " + manga.title;
         }
         message = message.substring(2);
 
@@ -110,8 +113,10 @@ public class UpdateService extends IntentService {
         // Sets up the larger notification aka expanded layout
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         inboxStyle.setBigContentTitle(title);
-        for (MangaEdenMangaListItem item : updated) {
-            inboxStyle.addLine(newestChapter(item));
+        for (Manga manga : updated) {
+            String number = manga.chaptersList.get(manga.chaptersList.size()-1).number;
+            String line = String.format("Ch. %s — %s", number, manga.title);
+            inboxStyle.addLine(line);
         }
         mBuilder.setStyle(inboxStyle);
 
@@ -130,26 +135,5 @@ public class UpdateService extends IntentService {
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
-    }
-
-    /**
-     * Returns the title & newest chapter number
-     */
-    private String newestChapter(MangaEdenMangaListItem item) {
-        String result = item.title;
-        try {
-            String number = MangaEden
-                    .getMangaEdenService(this)
-                    .getMangaDetails(item.id)
-                    .execute()
-                    .body()
-                    .getChapters()
-                    .get(0)
-                    .getNumber();
-            result = String.format("Ch. %s — ", number) + result;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 }

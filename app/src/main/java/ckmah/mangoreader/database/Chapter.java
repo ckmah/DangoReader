@@ -11,4 +11,10 @@ public class Chapter {
 
     public Chapter() {
     }
+
+    @Override
+    public boolean equals(Object o) {
+        // Two chapters are equal if they share the same id
+        return (o instanceof Chapter) && id.equals(((Chapter) o).id);
+    }
 }
