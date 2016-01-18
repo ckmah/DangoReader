@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,8 +17,10 @@ import android.view.MenuItem;
 import com.william.mangoreader.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
 import ckmah.mangoreader.database.Manga;
@@ -95,6 +98,12 @@ public class SearchSortFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("SearchSortFragment", "Resumed.");
     }
 
     // Receive sort criteria from EventBus
