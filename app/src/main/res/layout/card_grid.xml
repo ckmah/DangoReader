@@ -5,14 +5,12 @@
 
     <ImageView
         android:id="@+id/empty_library_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
-        android:src="@drawable/empty_library"
-        android:visibility="gone"
-        android:paddingLeft="70dp"
-        android:paddingRight="70dp"
-        android:paddingBottom="100dp" />
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:paddingBottom="50dp"
+        android:visibility="invisible" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/browse_recycler_view"
