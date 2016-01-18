@@ -27,7 +27,9 @@ import java.util.List;
 import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.adapter.helper.ItemTouchHelperAdapter;
+import ckmah.mangoreader.database.Chapter;
 import ckmah.mangoreader.database.Manga;
+import ckmah.mangoreader.fragment.LibraryPageFragment;
 import ckmah.mangoreader.parse.MangaEden;
 
 /**
@@ -57,10 +59,15 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
     @Override
     public void onBindViewHolder(final CardViewHolder viewHolder, final int position) {
-        viewHolder.title.setText(filteredManga.get(position).title);
-        viewHolder.subtitle.setText("Placeholder");
-        MangaEden.setThumbnail(filteredManga.get(position).imageSrc, activity.getApplicationContext(), viewHolder.thumbnail);
-        viewHolder.manga = filteredManga.get(position);
+        Manga manga = filteredManga.get(position);
+        viewHolder.manga = manga;
+        viewHolder.title.setText(manga.title);
+        MangaEden.setThumbnail(manga.imageSrc, activity.getApplicationContext(), viewHolder.thumbnail);
+
+        if (fragment instanceof LibraryPageFragment) {
+            initUpdateIndicator(manga, viewHolder);
+        }
+
         viewHolder.bookmarkToggle.setSelected(viewHolder.manga.favorite);
         viewHolder.bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
 
@@ -76,6 +83,25 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                 }
             }
         });
+    }
+
+    private void initUpdateIndicator(Manga manga, CardViewHolder viewHolder) {
+        int unreadCount = 0;
+        // count unread chapters
+        for (Chapter c : manga.chaptersList) {
+            unreadCount += c.read ? 0 : 1;
+        }
+
+        // Display number of unread chapters
+        if (unreadCount > 0) {
+            viewHolder.indicatorView.setVisibility(View.VISIBLE);
+            if (unreadCount >= 99) { // Gets cut off if too long... precision not needed anyway
+                unreadCount = 99;
+                viewHolder.indicatorText.setText(String.format("%d+", unreadCount));
+            } else {
+                viewHolder.indicatorText.setText(String.format("%d", unreadCount));
+            }
+        }
     }
 
     @Override
@@ -133,6 +159,8 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         public ImageView thumbnail;
         public Manga manga;
         public ImageButton bookmarkToggle;
+        public View indicatorView;
+        public TextView indicatorText;
 
         public CardViewHolder(View itemView) {
             super(itemView);
@@ -140,6 +168,8 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
             thumbnail = (ImageView) itemView.findViewById(R.id.card_thumbnail);
             bookmarkToggle = (ImageButton) itemView.findViewById(R.id.card_bookmark_toggle);
+            indicatorView = itemView.findViewById(R.id.updated_indicator);
+            indicatorText = (TextView) itemView.findViewById(R.id.indicator_number);
         }
     }
 
