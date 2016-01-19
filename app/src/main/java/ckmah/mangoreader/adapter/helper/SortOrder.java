@@ -13,7 +13,7 @@ public enum SortOrder {
     public static SortOrder fromIndex(int index) {
         switch (index) {
             case 0:
-                return NONE;
+                return POPULARITY;
             case 1:
                 return LAST_UPDATED;
             case 2:
