@@ -5,43 +5,77 @@
     android:layout_height="match_parent"
     tools:context="ckmah.mangoreader.fragment.BrowseMangaFragment">
 
-    <include
+    <RelativeLayout
         android:id="@+id/browse_placeholder"
-        android:visibility="gone"
-        layout="@layout/browse_placeholder" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-        <ScrollView
-            android:id="@+id/browse_content"
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:indeterminate="true" />
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:paddingBottom="64dp">
+
+            <ImageView
+                android:id="@+id/placeholder_image"
+                android:layout_width="256dp"
+                android:layout_height="256dp"
+                android:layout_gravity="center" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="68dp">
+                android:layout_below="@id/placeholder_image"
+                android:gravity="center"
+                android:text="Loading..."
+                android:textAllCaps="true"
+                android:textSize="24sp" />
+        </LinearLayout>
+    </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/genre_recycler_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="64dp"
-                    android:clipToPadding="false"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="8dp" />
 
-                <include
-                    android:id="@+id/recently_updated_row"
-                    layout="@layout/browse_manga_row" />
+    <ScrollView
+        android:id="@+id/browse_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-                <include
-                    android:id="@+id/popular_row"
-                    layout="@layout/browse_manga_row" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="68dp">
 
-                <include
-                    android:id="@+id/alphabet_row"
-                    layout="@layout/browse_manga_row" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/genre_recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="64dp"
+                android:clipToPadding="false"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp" />
 
-            </LinearLayout>
-        </ScrollView>
+            <include
+                android:id="@+id/recently_updated_row"
+                layout="@layout/browse_manga_row" />
+
+            <include
+                android:id="@+id/popular_row"
+                layout="@layout/browse_manga_row" />
+
+            <include
+                android:id="@+id/alphabet_row"
+                layout="@layout/browse_manga_row" />
+
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
