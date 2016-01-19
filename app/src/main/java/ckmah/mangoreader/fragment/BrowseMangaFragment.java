@@ -18,11 +18,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.william.mangoreader.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ckmah.mangoreader.activity.BrowseMangaActivity;
@@ -31,6 +34,7 @@ import ckmah.mangoreader.adapter.GenreTextAdapter;
 import ckmah.mangoreader.adapter.helper.SortOrder;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.parse.MangaEden;
+import ckmah.mangoreader.parse.PaletteTransformation;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -74,6 +78,13 @@ public class BrowseMangaFragment extends Fragment {
         contentView = rootView.findViewById(R.id.browse_content);
         placeholder = rootView.findViewById(R.id.browse_placeholder);
         searchRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_search);
+
+        Picasso.with(getActivity())
+                .load(R.drawable.logo_placeholder)
+                .fit().centerCrop()
+                .transform(PaletteTransformation.instance())
+                .into((ImageView) placeholder.findViewById(R.id.placeholder_image));
+
         initRecyclerViews();
         initSearchRecyclerView();
 
