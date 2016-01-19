@@ -196,6 +196,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         private final SortOrder sortOrder;
         private final boolean isReverseOrder;
         private final List<Integer> selectedGenresIndices;
+        private final List<Manga> matches = new ArrayList<>();
 
         public CardLayoutFilter(SortOrder sortOrder, boolean isReverseOrder, List<Integer> selectedGenresIndices) {
             this.sortOrder = sortOrder;
@@ -205,36 +206,25 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
         @Override
         protected FilterResults performFiltering(CharSequence query) {
-            filteredManga.clear();
+            // Done in background thread.
+            // Find all matches for these genres and query, in a particular sort order
+            matchGenres();
+            matchQuery(query);
+            sortMatches();
+
+            // Return the matches to the parent CardLayoutAdapter
             FilterResults results = new FilterResults();
-
-            // sort and filter genres
-            dialogFilter();
-
-            // Filter out manga whose titles do not include query
-            // TODO replace with better fuzzy match algorithm
-            String filterPattern = query.toString().toLowerCase().trim();
-            for (Iterator<Manga> iterator = filteredManga.iterator(); iterator.hasNext(); ) {
-                Manga manga = iterator.next();
-                if (!manga.title.toLowerCase().contains(filterPattern)) {
-                    // Remove the current element from the iterator and the list.
-                    iterator.remove();
-                }
-            }
-
-            results.values = filteredManga;
-            results.count = filteredManga.size();
-
+            results.values = matches;
+            results.count = matches.size();
             return results;
         }
 
         /**
-         * Sort and filter by genre.
+         * Only keep manga matching specified genres (if any)
          */
-        private void dialogFilter() {
+        private void matchGenres() {
             String[] allGenres = activity.getResources().getStringArray(R.array.genre_list);
             Collection<String> selectedGenres = new ArrayList<>();
-
 
             if (selectedGenresIndices.size() > 0) {
                 // retrieve genre names to filter by
@@ -252,18 +242,22 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
                     genres.retainAll(selectedGenres); // removes genres not found in selected
                     if (genres.size() > 0) {
-                        filteredManga.add(manga);
+                        matches.add(manga);
                     }
                 }
             } else {
                 // No genres selected, skip filtering
-                filteredManga.addAll(allManga);
+                matches.addAll(allManga);
             }
+        }
 
-            // sort by specified order
+        /**
+         *  Sort matches by specified sortOrder
+         */
+        private void sortMatches() {
             switch (sortOrder) {
                 case POPULARITY: // sort by popularity
-                    Collections.sort(filteredManga, new Comparator<Manga>() {
+                    Collections.sort(matches, new Comparator<Manga>() {
                         @Override
                         public int compare(Manga lhs, Manga rhs) {
                             return ((Integer) rhs.hits).compareTo(lhs.hits);
@@ -271,7 +265,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                     });
                     break;
                 case LAST_UPDATED: // sort by recently updated
-                    Collections.sort(filteredManga, new Comparator<Manga>() {
+                    Collections.sort(matches, new Comparator<Manga>() {
                         @Override
                         public int compare(Manga lhs, Manga rhs) {
                             return ((Long) rhs.lastChapterDate).compareTo(lhs.lastChapterDate);
@@ -279,7 +273,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                     });
                     break;
                 case ALPHABETICAL: // sort alphabetically
-                    Collections.sort(filteredManga, new Comparator<Manga>() {
+                    Collections.sort(matches, new Comparator<Manga>() {
                         @Override // reverse comparison b/c default is Z to A
                         public int compare(Manga lhs, Manga rhs) {
                             return lhs.title.compareTo(rhs.title);
@@ -292,13 +286,30 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
             // reverse list
             if (isReverseOrder) {
-                Collections.reverse(filteredManga);
+                Collections.reverse(matches);
+            }
+        }
+
+        /**
+         * Only keep manga whose title matches query
+         */
+        private void matchQuery(CharSequence query) {
+            // TODO replace with better fuzzy match algorithm
+            String filterPattern = query.toString().toLowerCase().trim();
+            for (Iterator<Manga> iterator = matches.iterator(); iterator.hasNext(); ) {
+                Manga manga = iterator.next();
+                if (!manga.title.toLowerCase().contains(filterPattern)) {
+                    // Remove the current element from the iterator and the list.
+                    iterator.remove();
+                }
             }
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
+            // Tell CardLayoutAdapter to show the results of the filtering in the main UI thread
             Log.d("SORTING", "Published Results.");
+            filteredManga = (List<Manga>) results.values;
             notifyDataSetChanged();
         }
     }
