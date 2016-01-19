@@ -34,19 +34,17 @@ public class MangaItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_item);
-        manga = new Manga();
 
         findViewById(R.id.manga_item_pager).setVisibility(View.GONE);
         initToolBar();
 
         String mangaId = getIntent().getStringExtra("mangaId");
         manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
-        if (manga == null || manga.chaptersList == null) {
-            fetchMangaDetailFromMangaEden(mangaId);
-        } else {
+        if (manga != null && manga.chaptersList != null) {
             initViewPager();
             initMarqueeTitle();
         }
+        fetchMangaDetailFromMangaEden(mangaId);
     }
 
     private void initToolBar() {
@@ -111,8 +109,7 @@ public class MangaItemActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void fetchMangaDetailFromMangaEden(String mangaId) {
-        manga = new Manga();
+    private void fetchMangaDetailFromMangaEden(final String mangaId) {
         Log.d("MangaItemActivity", "Fetching manga details");
         MangaEden.getMangaEdenService(this)
                 .getMangaDetails(mangaId)
@@ -120,19 +117,7 @@ public class MangaItemActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
                         MangaEdenMangaDetailItem mangaDetailItem = response.body();
-                        manga.title = mangaDetailItem.getTitle();
-                        manga.imageSrc = mangaDetailItem.getImageUrl();
-                        manga.lastChapterDate = mangaDetailItem.getLastChapterDate();
-                        manga.genres = mangaDetailItem.getCategories();
-                        manga.hits = mangaDetailItem.getHits();
-                        manga.status = mangaDetailItem.getStatus();
-                        manga.author = mangaDetailItem.getAuthor();
-                        manga.dateCreated = mangaDetailItem.getDateCreated();
-                        manga.description = mangaDetailItem.getDescription();
-                        manga.language = mangaDetailItem.getLanguage();
-                        manga.numChapters = mangaDetailItem.getNumChapters();
-                        manga.chaptersList = MangaEden.convertChapterItemstoChapters(mangaDetailItem.getChapters());
-                        Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
+                        manga = UserLibraryHelper.updateManga(mangaId, mangaDetailItem);
 
                         initViewPager();
                         initMarqueeTitle();
