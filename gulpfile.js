@@ -50,8 +50,7 @@ gulp.task('build-js', function() {
         }) // process original sources
         .pipe(plugins.sourcemaps.init())
         .pipe(plugins.concat('bundle.js'))
-        // only uglify if gulp is ran with '--type production'
-        .pipe(plugins.util.env.type === 'production' ? plugins.uglify() : plugins.util.noop())
+        .pipe(plugins.uglify())
         .pipe(plugins.sourcemaps.write())
         .pipe(gulp.dest(bases.dist + 'scripts/'))
         .pipe(browserSync.stream());

@@ -11,6 +11,7 @@
     <script src="libs/material.min.js"></script>
     <script src="libs/ripples.min.js"></script>
     <script src="libs/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="libs/smoothscroll.js"></script>
     <!-- Customizations -->
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
@@ -27,56 +28,68 @@
 - Download Link
 -->
     <div id="home-wrapper" class="wrapper">
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#home" class="btn btn-primary btn-raised smoothScroll">Download</a></li>
-                    <li><a href="#team" class="btn btn-primary btn-raised smoothScroll">Contact</a></li>
-                    <li><a href="https://github.com/williamxu/MangoReader" target="_blank" class="btn btn-primary btn-raised">Github</a></li>
-                </ul>
-            </div>
+        <nav class="navbar navbar-fixed-top" role="navigation">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#home-wrapper" class="smoothScroll">
+                        <button class="mdl-button mdl-js-button  mdl-js-ripple-effect mdl-button--primary">Download</button>
+                    </a>
+                </li>
+                <li>
+                    <a href="#team" class="smoothScroll">
+                        <button class="mdl-button mdl-js-button  mdl-js-ripple-effect mdl-button--primary">Contact</button>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/williamxu/MangoReader" target="_blank">
+                        <button class="mdl-button mdl-js-button  mdl-js-ripple-effect mdl-button--primary">Github</button>
+                    </a>
+                </li>
+            </ul>
+            <!-- </div> -->
         </nav>
         <div class="container" id="home">
             <!-- Information -->
-            <div id="info-container" class="col-md-6">
+            <div id="info-container" class="col-md-7">
                 <!-- Title & Description -->
-                <img id="text-logo" src="assets/text_logo.svg" alt="MangoReader logo">
+                <img id="text-logo" src="assets/text_logo.png" alt="MangoReader logo">
                 <!-- TODO replace with svg -->
-                <p class="lead">A clean & modern app for reading manga.</p>
-                <p>Read and keep track of your favorite manga in one place. Browse, search, and filter to suit your tastes.</p>
+                <!-- <p class="lead">Clean & modern UI made for reading manga.</p> -->
+                <!-- <p>Read and keep track of your favorite manga in one place. Browse, search, and filter to suit your tastes.</p> -->
                 <br>
                 <!-- Download Icon -->
-                <div id="feature-buttons">
-                    <a href="" class="btn btn-primary">Browse</a>
-                    <a href="" class="btn btn-primary">Filter</a>
-                    <a href="" class="btn btn-primary">Library</a>
-                </div>
-                <a id="download-container" class="btn" href="https://github.com/williamxu/MangoReader/releases/download/v1.0/app-release.apk"><img src="assets/download_white.svg" class="img-responsive">
-                    <div id="dl-text">Get the app!</div>
+                <!--  <div id="feature-buttons">
+                    <a>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Browse</button>
+                    </a>
+                    <a>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Filter</button>
+                    </a>
+                    <a>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Library</button>
+                    </a>
+                </div> -->
+                <a id="download-container" href="https://github.com/williamxu/MangoReader/releases/download/v1.0/app-release.apk">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">DOWNLOAD</button>
+                    <!-- <div id="dl-text">DOWNLOAD</div> -->
                 </a>
             </div>
+            <div id="phone-screenshot" class="col-md-5"><img src="assets/phone_screenshot2.png" alt=""></div>
             <!-- Screenshots -->
-            <div id="video-container" class="col-md-6">
-                <video data-feature-type="browse">
-                    <source src="assets/browse.mp4" type="video/mp4">Your browser does not support the video tag.
-                </video>
-                <video data-feature-type="filter">
-                    <source src="assets/filter.mp4" type="video/mp4">Your browser does not support the video tag.
-                </video>
-                <video data-feature-type="library">
-                    <source src="assets/library.mp4" type="video/mp4">Your browser does not support the video tag.
-                </video>
-            </div>
+            <!--  <div id="phone-video">
+                <div id="phone-container"></div>
+                <div id="video-container">
+                    <video data-feature-type="browse">
+                        <source src="assets/browse.mp4" type="video/mp4">Your browser does not support the video tag.
+                    </video>
+                    <video data-feature-type="filter">
+                        <source src="assets/filter.mp4" type="video/mp4">Your browser does not support the video tag.
+                    </video>
+                    <video data-feature-type="library">
+                        <source src="assets/library.mp4" type="video/mp4">Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div> -->
         </div>
     </div>
     <!--
@@ -93,54 +106,136 @@
                 <!-- Clarence -->
                 <div class="profile">
                     <img src="assets/clarence.jpg" class="img-responsive profile-pic" alt="Clarence Mah" id="github-icon">
-                    <h2>Clarence Mah</h2>
-                    <h4 class="">Team Lead</h4>
-                    <div class="personal-links">
-                        <a href="https://www.linkedin.com/in/clarencemah" target="_blank" class="btn btn-primary icon-linkedin" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title="linkedin.com/in/clarencemah"><img src="assets/linkedin_white.svg" alt="linkedin"></a>
-                        <a href="https://github.com/ckmah" target="_blank" class="btn btn-primary icon-github" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title="github.com/ckmah"><img src="assets/github_white.svg" alt="github"></a>
-                        <a href="mailto: clarence.iyan@gmail.com" class="btn btn-primary icon-email" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title="clarence.iyan@gmail.com"><img src="assets/email_black.svg" alt="github"></a>
+                    <div class="profile_info">
+                        <h3>Clarence Mah</h3>
+                        <h4>Programmer</h4>
+                        <div class="personal-links">
+                            <a id="linkedin_clarence" href="https://www.linkedin.com/in/clarencemah" target="_blank" class="icon-linkedin">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/linkedin_white.svg" alt="linkedin"></button>
+                            </a>
+                            <a id="github_clarence" href="https://github.com/ckmah" target="_blank" class="icon-github">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/github_white.svg" alt="github"></button>
+                            </a>
+                            <a id="email_clarence" href="mailto: clarence.iyan@gmail.com" class="icon-email">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/email_black.svg" alt="github"></button>
+                            </a>
+                            <div class="mdl-tooltip" for="linkedin_clarence">LinkedIn</div>
+                            <div class="mdl-tooltip" for="github_clarence">Github</div>
+                            <div class="mdl-tooltip" for="email_clarence">Email</div>
+                        </div>
                     </div>
                 </div>
                 <!-- Austin -->
                 <div class="profile">
                     <img src="assets/austin.jpg" class="img-responsive profile-pic" alt="Austin Chen">
-                    <h2>Austin Chen</h2>
-                    <h4 class="">Programmer</h4>
-                    <div class="personal-links">
-                        <a href="https://www.linkedin.com/in/austinch" target="_blank" class="btn btn-primary icon-linkedin" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title="linkedin.com/in/austinch"><img src="assets/linkedin_white.svg" alt="linkedin"></a>
-                        <a href="https://github.com/akrolsmir" target="_blank" class="btn btn-primary icon-github" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title="github.com/akrolsmir"><img src="assets/github_white.svg" alt="github"></a>
-                        <a href="mailto: akrolsmir@gmail.com" class="btn btn-primary icon-email" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title="akrolsmir@gmail.com"><img src="assets/email_black.svg" alt="github"></a>
+                    <div class="profile_info">
+                        <h3>Austin Chen</h3>
+                        <h4>Programmer</h4>
+                        <div class="personal-links">
+                            <a id="linkedin_austin" href="https://www.linkedin.com/in/austinch" target="_blank" class="icon-linkedin">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/linkedin_white.svg" alt="linkedin"></button>
+                            </a>
+                            <a id="github_austin" href="https://github.com/akrolsmir" target="_blank" class="icon-github">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/github_white.svg" alt="github"></button>
+                            </a>
+                            <a id="email_austin" href="mailto: akrolsmir@gmail.com" class="icon-email">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/email_black.svg" alt="github"></button>
+                            </a>
+                            <div class="mdl-tooltip" for="linkedin_austin">LinkedIn</div>
+                            <div class="mdl-tooltip" for="github_austin">Github</div>
+                            <div class="mdl-tooltip" for="email_austin">Email</div>
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-xs-12 team-row">
                 <!-- William -->
                 <div class="profile">
                     <img src="https://avatars3.githubusercontent.com/u/1775721?v=3&s=460" class="img-responsive profile-pic" alt="William Xu">
-                    <h2>William Xu</h2>
-                    <h4 class="">Programmer</h4>
-                    <div class="personal-links">
-                        <a href="#" target="_blank" class="btn btn-primary icon-linkedin" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title=""><img src="assets/linkedin_white.svg" alt="linkedin"></a>
-                        <a href="https://github.com/williamxu" target="_blank" class="btn btn-primary icon-github" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title="github.com/williamxu"><img src="assets/github_white.svg" alt="github"></a>
-                        <a href="mailto: xu.will94@gmail.com" class="btn btn-primary icon-email" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title="xu.will94@gmail.com"><img src="assets/email_black.svg" alt="github"></a>
+                    <div class="profile_info">
+                        <h3>William Xu</h3>
+                        <h4>Programmer</h4>
+                        <div class="personal-links">
+                            <a id="linkedin_william" href="#" target="_blank" class="icon-linkedin">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/linkedin_white.svg" alt="linkedin"></button>
+                            </a>
+                            <a id="github_william" href="https://github.com/williamxu" target="_blank" class="icon-github">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/github_white.svg" alt="github"></button>
+                            </a>
+                            <a id="email_william" href="mailto: xu.will94@gmail.com" class="icon-email">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/email_black.svg" alt="github"></button>
+                            </a>
+                            <div class="mdl-tooltip" for="linkedin_william">LinkedIn</div>
+                            <div class="mdl-tooltip" for="github_william">Github</div>
+                            <div class="mdl-tooltip" for="email_william">Email</div>
+                        </div>
                     </div>
                 </div>
                 <!-- Michelle -->
                 <div class="profile">
                     <img src="assets/michelle.jpg" class="img-responsive profile-pic" alt="Michelle Ragsac">
-                    <h2>Michelle Ragsac</h2>
-                    <h4 class="">Designer</h4>
-                    <div class="personal-links">
-                        <a href="https://www.linkedin.com/in/michelleragsac" target="_blank" class="btn btn-primary icon-linkedin" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title="linkedin.com/in/michelleragsac"><img src="assets/linkedin_white.svg" alt="linkedin"></a>
-                        <a href="https://github.com/mragsac" target="_blank" class="btn btn-primary icon-github" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title="github.com/mragsac"><img src="assets/github_white.svg" alt="github"></a>
-                        <a href="mailto: michelle.ragsac@gmail.com" class="btn btn-primary icon-email" data-toggle="tooltip" data-delay="0" data-animation="true" data-placement="bottom" title="michelle.ragsac@gmail.com"><img src="assets/email_black.svg" alt="github"></a>
+                    <div class="profile_info">
+                        <h3>Michelle Ragsac</h3>
+                        <h4>UI Designer</h4>
+                        <div class="personal-links">
+                            <a id="linkedin_michelle" href="https://www.linkedin.com/in/michelleragsac" target="_blank" class="icon-linkedin">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/linkedin_white.svg" alt="linkedin"></button>
+                            </a>
+                            <a id="github_michelle" href="https://github.com/mragsac" target="_blank" class="icon-github">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/github_white.svg" alt="github"></button>
+                            </a>
+                            <a id="email_michelle" href="mailto: michelle.ragsac@gmail.com" class="icon-email">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/email_black.svg" alt="github"></button>
+                            </a>
+                            <div class="mdl-tooltip" for="linkedin_michelle">LinkedIn</div>
+                            <div class="mdl-tooltip" for="github_michelle">Github</div>
+                            <div class="mdl-tooltip" for="email_michelle">Email</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Shawn -->
+                <div class="profile">
+                    <img src="assets/shawn.jpg" class="img-responsive profile-pic" alt="Michelle Ragsac">
+                    <div class="profile_info">
+                        <h3>Shawn Xie</h3>
+                        <h4>Programmer</h4>
+                        <div class="personal-links">
+                            <a id="linkedin_shawn" href="https://www.linkedin.com/in/yifeixie" target="_blank" class="icon-linkedin">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/linkedin_white.svg" alt="linkedin"></button>
+                            </a>
+                            <a id="github_shawn" href="https://github.com/xxH150KAxx" target="_blank" class="icon-github">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/github_white.svg" alt="github"></button>
+                            </a>
+                            <a id="email_shawn" href="mailto:shawn.y.xie@gmail.com" class="icon-email">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><img src="assets/email_black.svg" alt="github"></button>
+                            </a>
+                            <div class="mdl-tooltip" for="linkedin_shawn">LinkedIn</div>
+                            <div class="mdl-tooltip" for="github_shawn">Github</div>
+                            <div class="mdl-tooltip" for="email_shawn">Email</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
     <footer>
-        <script type="text/javascript">
-        document.write("&copy;" + new Date().getFullYear() + " Clarence Mah, All Rights Reserved.");
-        </script>
+        <div>
+            <a href="#home-wrapper" class="smoothScroll">
+                <button class="mdl-button mdl-js-button mdl-js-ripple-effect">Home</button>
+            </a>
+            <a href="#team" class="smoothScroll">
+                <button class="mdl-button mdl-js-button mdl-js-ripple-effect">Contact</button>
+            </a>
+            <a href="https://github.com/williamxu/MangoReader" target="_blank">
+                <button class="mdl-button mdl-js-button mdl-js-ripple-effect">Github</button>
+            </a>
+        </div>
+        <div id="footer-text">
+            <script type="text/javascript">
+            document.write("Copyright &copy; " + new Date().getFullYear() + " Clarence Mah, All rights reserved.");
+            </script>
+        </div>
     </footer>
 </body>
 
