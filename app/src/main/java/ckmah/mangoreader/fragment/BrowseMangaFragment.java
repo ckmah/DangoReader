@@ -23,12 +23,12 @@ import android.widget.TextView;
 import com.william.mangoreader.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ckmah.mangoreader.activity.BrowseMangaActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.adapter.GenreTextAdapter;
+import ckmah.mangoreader.adapter.helper.SortOrder;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.parse.MangaEden;
 import retrofit.Callback;
@@ -214,11 +214,11 @@ public class BrowseMangaFragment extends Fragment {
 
     private void sortAdapterData() {
         // Sort by recently updated
-        updatesCardAdapter.getFilter(1, false, Collections.<Integer>emptyList()).filter("");
+        updatesCardAdapter.getFilter(SortOrder.LAST_UPDATED).filter("");
         // Sort by popularity
-        popularCardAdapter.getFilter(0, false, Collections.<Integer>emptyList()).filter("");
+        popularCardAdapter.getFilter(SortOrder.POPULARITY).filter("");
         // Sort alphabetical
-        alphabetCardAdapter.getFilter(2, false, Collections.<Integer>emptyList()).filter("");
+        alphabetCardAdapter.getFilter(SortOrder.ALPHABETICAL).filter("");
     }
 
     private void showContent() {
@@ -249,13 +249,13 @@ public class BrowseMangaFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchCardAdapter.getFilter(0, false, Collections.<Integer>emptyList()).filter(query);
+                searchCardAdapter.getFilter(SortOrder.POPULARITY).filter(query);
                 return true; // The listener has handled the query
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchCardAdapter.getFilter(0, false, Collections.<Integer>emptyList()).filter(newText);
+                searchCardAdapter.getFilter(SortOrder.POPULARITY).filter(newText);
                 return false; // The searchview should show suggestions
             }
         });
