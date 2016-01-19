@@ -35,15 +35,16 @@ public class MangaItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_item);
 
+        Paper.init(this);
         findViewById(R.id.manga_item_pager).setVisibility(View.GONE);
         initToolBar();
 
         String mangaId = getIntent().getStringExtra("mangaId");
         manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
-        if (manga != null && manga.chaptersList != null) {
-            initViewPager();
-            initMarqueeTitle();
-        }
+//        if (manga != null && manga.chaptersList != null) {
+//            initViewPager();
+//            initMarqueeTitle();
+//        }
         fetchMangaDetailFromMangaEden(mangaId);
     }
 
