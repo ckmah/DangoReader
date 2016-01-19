@@ -94,9 +94,9 @@ public class MangaItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (bookmarkToggle.isSelected()) {
-                    UserLibraryHelper.removeFromLibrary(manga.id, bookmarkToggle, activity, true, null, -1);
+                    UserLibraryHelper.removeFromLibrary(manga, bookmarkToggle, activity, true, null, -1);
                 } else {
-                    UserLibraryHelper.addToLibrary(manga.id, bookmarkToggle, activity, true, null, -1);
+                    UserLibraryHelper.addToLibrary(manga, bookmarkToggle, activity, true, null, -1);
                 }
             }
         });
