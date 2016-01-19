@@ -241,7 +241,7 @@ public class BrowseMangaFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuinflator) {
-        menuinflator.inflate(R.menu.menu_browse_manga, menu);
+        menuinflator.inflate(R.menu.menu_browse_search, menu);
 
         // Configure the SearchView to filter the cards
         MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -274,16 +274,6 @@ public class BrowseMangaFragment extends Fragment {
                 return true; // Continue collapsing the search bar
             }
         });
-
-//        MenuItem sortItem = menu.findItem(R.id.action_sort);
-//        sortItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                DialogFragment dialog = SortDialogFragment.newInstance(popularCardAdapter);
-//                dialog.show(getActivity().getSupportFragmentManager(), "SortDialogFragment");
-//                return false;
-//            }
-//        });
     }
 
     @Override
