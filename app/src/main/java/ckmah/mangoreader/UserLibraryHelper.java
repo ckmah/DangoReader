@@ -3,7 +3,6 @@ package ckmah.mangoreader;
 import android.app.Activity;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 
@@ -14,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ckmah.mangoreader.activity.MangaItemActivity;
+import ckmah.mangoreader.activity.MangoReaderActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.database.Chapter;
 import ckmah.mangoreader.database.Manga;
-import ckmah.mangoreader.fragment.LibraryPageFragment;
 import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.parse.MangaEden;
@@ -84,7 +83,7 @@ public class UserLibraryHelper {
         sb.show();
 
         if (adapter != null) { // basically called from browse or library
-            addToListUpdate(m, adapter.fragment, adapter, position);
+            addToListUpdate(m, adapter, position);
         }
     }
 
@@ -105,7 +104,7 @@ public class UserLibraryHelper {
         }
         sb.show();
         if (adapter != null) { // basically called from browse or library
-            removeFromListUpdate(adapter.fragment, adapter, position);
+            removeFromListUpdate(adapter, position);
         }
     }
 
@@ -113,22 +112,24 @@ public class UserLibraryHelper {
         View mView;
         if (activity instanceof MangaItemActivity) {
             mView = activity.findViewById(R.id.manga_item_layout);
-        } else {
+        } else if (activity instanceof MangoReaderActivity) {
             mView = activity.findViewById(R.id.drawer_layout);
+        } else { // Bookmarked in browse sub-page
+            mView = activity.findViewById(R.id.browse_activity_layout);
         }
         return mView;
     }
 
-    public static void removeFromListUpdate(Fragment fragment, CardLayoutAdapter adapter, int position) {
-        if (fragment instanceof LibraryPageFragment) {
+    public static void removeFromListUpdate( CardLayoutAdapter adapter, int position) {
+        if (!adapter.isBrowsing) {
             adapter.filteredManga.remove(position);
             adapter.notifyItemRemoved(position);
             adapter.notifyItemRangeChanged(position, adapter.filteredManga.size());
         }
     }
 
-    private static void addToListUpdate(Manga m, Fragment fragment, CardLayoutAdapter adapter, int position) {
-        if (fragment instanceof LibraryPageFragment) {
+    private static void addToListUpdate(Manga m, CardLayoutAdapter adapter, int position) {
+        if (!adapter.isBrowsing) {
             adapter.filteredManga.add(position, m);
             adapter.notifyItemInserted(position);
             adapter.notifyItemRangeChanged(position, adapter.filteredManga.size());

@@ -43,7 +43,7 @@ public class MyLibraryFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
 
         setHasOptionsMenu(true);
-//         Inflate the layout for this fragment
+//         Inflate the layout for this isBrowsing
         return rootView;
     }
 
