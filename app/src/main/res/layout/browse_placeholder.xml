@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:id="@+id/progressBar"
+        android:layout_gravity="center_horizontal|top" />
+
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="108dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp">
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@color/grey" />
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@color/grey" />
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@color/grey" />
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@color/grey" />
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@color/grey" />
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@color/grey" />
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@color/grey" />
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@color/grey" />
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@color/grey" />
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@color/grey" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="11dp"
+                    android:background="@color/grey" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="top|right"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/grey" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/browseRowHeight"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="11dp"
+                    android:background="@color/grey" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="top|right"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/grey" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/browseRowHeight"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="11dp"
+                    android:background="@color/grey" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="top|right"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/grey" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/browseRowHeight"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+
+                <View
+                    android:layout_width="125dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/grey"
+                    android:paddingBottom="4dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</FrameLayout>
+</LinearLayout>

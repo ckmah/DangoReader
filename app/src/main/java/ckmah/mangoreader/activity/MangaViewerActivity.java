@@ -257,7 +257,7 @@ public class MangaViewerActivity extends AppCompatActivity {
                 mangaViewPager.setCurrentItem(currentPage, false);
                 mangaViewPager.setPageIndex(currentPage);
 
-                Log.d("DisplayChapter", "showing fragment " + currentPage);
+                Log.d("DisplayChapter", "showing isBrowsing " + currentPage);
 
                 seekBar.refresh();
                 mangaViewPagerSeekBarChangeListener.setTotalPages(images.size());

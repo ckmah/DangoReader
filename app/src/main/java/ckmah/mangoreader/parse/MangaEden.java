@@ -135,6 +135,7 @@ public class MangaEden {
     }
 
     public static List<Manga> convertMangaListItemsToManga(List<MangaEdenMangaListItem> mangaListItems) {
+        Log.d("MangaEden", "Converting manga models...");
         Manga manga;
         List<Manga> result = new ArrayList<>();
         for (MangaEdenMangaListItem mangaListItem : mangaListItems) {
@@ -151,6 +152,7 @@ public class MangaEden {
             }
             result.add(manga);
         }
+        Log.d("MangaEden", "Finished converting manga models...");
         return result;
     }
 

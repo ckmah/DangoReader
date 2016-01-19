@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/row_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/sectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:paddingLeft="11dp"
+            android:paddingBottom="4dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Section Title"
+            android:textColor="@color/black"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/moreText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:paddingBottom="2dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp"
+            android:textColor="?attr/colorPrimary"
+            android:text="MORE"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/row_recycler_view"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/browseRowHeight"
+        android:clipToPadding="false"
+        android:paddingBottom="4dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp" />
+
+</LinearLayout>

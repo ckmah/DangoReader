@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ckmah.mangoreader.fragment.BrowseMangaFragment">
+    tools:context="ckmah.mangoreader.fragment.BrowsePageFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/browse_swipe_refresh"
+        android:id="@+id/browse_page_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/browse_recycler_view"
+            android:id="@+id/browse_page_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"

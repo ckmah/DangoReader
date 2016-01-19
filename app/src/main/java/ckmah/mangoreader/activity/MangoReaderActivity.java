@@ -100,14 +100,14 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
             startActivity(settingsIntent);
             return false;
         } else {
-            // Switch to the corresponding fragment, and keep selected in the drawer
+            // Switch to the corresponding isBrowsing, and keep selected in the drawer
             displayView(menuItem.getItemId());
             return true;
         }
     }
 
     /**
-     * Handles what fragment to display based on navdrawer selection.
+     * Handles what isBrowsing to display based on navdrawer selection.
      *
      * @param id Position of clicked view in navdrawer.
      */
@@ -115,7 +115,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         Fragment fragment = null;
         String title = getString(R.string.app_name);
 
-        // create corresponding fragment
+        // create corresponding isBrowsing
         switch (id) {
             case R.id.library_nav_item: // library
 //                findViewById(R.id.spinner_browse_sources).setVisibility(View.GONE);
@@ -132,7 +132,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
             default:
                 break;
         }
-        // add fragment to MangoReaderActivity #container_body
+        // add isBrowsing to MangoReaderActivity #container_body
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

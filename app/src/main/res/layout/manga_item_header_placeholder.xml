@@ -3,8 +3,7 @@
     android:id="@+id/manga_item_header_placeholder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="80dp">
+    android:orientation="vertical">
 
     <LinearLayout
         style="@style/MangaItemDetails"
@@ -47,37 +46,36 @@
 
                 <View style="@style/MangaItemPlaceholderProperty" />
             </LinearLayout>
-            <View style="@style/MangaItemPlaceholderImage"/>
+
+            <View style="@style/MangaItemPlaceholderImage" />
         </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-                <View
-                    style="@style/MangaItemPlaceholderDescription"
-                    android:layout_width="330dp" />
+            <View
+                style="@style/MangaItemPlaceholderDescription"
+                android:layout_width="330dp" />
 
-                <View
-                    style="@style/MangaItemPlaceholderDescription"
-                    android:layout_width="280dp" />
+            <View
+                style="@style/MangaItemPlaceholderDescription"
+                android:layout_width="280dp" />
 
-                <View
-                    style="@style/MangaItemPlaceholderDescription"
-                    android:layout_width="320dp" />
+            <View
+                style="@style/MangaItemPlaceholderDescription"
+                android:layout_width="320dp" />
 
+            <View
+                style="@style/MangaItemPlaceholderDescription"
+                android:layout_width="340dp" />
 
-                <View
-                    style="@style/MangaItemPlaceholderDescription"
-                    android:layout_width="340dp" />
+            <View
+                style="@style/MangaItemPlaceholderDescription"
+                android:layout_width="240dp" />
 
-
-                <View
-                    style="@style/MangaItemPlaceholderDescription"
-                    android:layout_width="240dp" />
-
-            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
