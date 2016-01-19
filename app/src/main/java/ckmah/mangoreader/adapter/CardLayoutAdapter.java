@@ -27,10 +27,9 @@ import java.util.List;
 import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.adapter.helper.ItemTouchHelperAdapter;
-import ckmah.mangoreader.database.Chapter;
 import ckmah.mangoreader.adapter.helper.SortOrder;
+import ckmah.mangoreader.database.Chapter;
 import ckmah.mangoreader.database.Manga;
-import ckmah.mangoreader.fragment.LibraryPageFragment;
 import ckmah.mangoreader.parse.MangaEden;
 
 /**
@@ -38,8 +37,8 @@ import ckmah.mangoreader.parse.MangaEden;
  */
 public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable {
 
-    private final boolean useMiniCards;
     public final boolean isBrowsing;
+    private final boolean useMiniCards;
     public List<Manga> filteredManga;
     public Activity activity;
     private List<Manga> allManga;
@@ -100,6 +99,8 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             } else {
                 viewHolder.indicatorText.setText(String.format("%d", unreadCount));
             }
+        } else {
+            viewHolder.indicatorView.setVisibility(View.GONE);
         }
     }
 
@@ -158,9 +159,9 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     }
 
     /**
-     * @param sortOrder 0 = popularity, 1 = recently updated, 2 = alphabetically
-     * @param isReverseOrder  true = reversed, false = as is
-     * @param selectedGenres  indices of genres to filter for (intersection)
+     * @param sortOrder      0 = popularity, 1 = recently updated, 2 = alphabetically
+     * @param isReverseOrder true = reversed, false = as is
+     * @param selectedGenres indices of genres to filter for (intersection)
      * @return
      */
     public Filter getFilter(SortOrder sortOrder, boolean isReverseOrder, List<Integer> selectedGenres) {
@@ -213,7 +214,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             // Filter out manga whose titles do not include query
             // TODO replace with better fuzzy match algorithm
             String filterPattern = query.toString().toLowerCase().trim();
-            for (Iterator<Manga> iterator = filteredManga.iterator(); iterator.hasNext();) {
+            for (Iterator<Manga> iterator = filteredManga.iterator(); iterator.hasNext(); ) {
                 Manga manga = iterator.next();
                 if (!manga.title.toLowerCase().contains(filterPattern)) {
                     // Remove the current element from the iterator and the list.
