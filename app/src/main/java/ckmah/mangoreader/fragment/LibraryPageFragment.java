@@ -1,22 +1,18 @@
 package ckmah.mangoreader.fragment;
 
-
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Filter;
 
 import com.squareup.picasso.Picasso;
 import com.william.mangoreader.R;
 
-import java.util.Collections;
-import java.util.List;
-
 import ckmah.mangoreader.UserLibraryHelper;
-import ckmah.mangoreader.database.Manga;
+import ckmah.mangoreader.adapter.helper.SortOrder;
 import ckmah.mangoreader.parse.PaletteTransformation;
 
 public class LibraryPageFragment extends SearchSortFragment {
@@ -45,10 +41,11 @@ public class LibraryPageFragment extends SearchSortFragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_recycler_view);
         allManga = UserLibraryHelper.findAllFavoritedManga();
         loadLibraryPlaceholder();
-        super.init();
+        super.init(false);
 
         // Sort My Library by most recently updated first, by default
-        cardAdapter.getFilter(1, false, Collections.<Integer>emptyList()).filter("");
+        getFilter().filter("");
+
         return rootView;
     }
 
@@ -71,8 +68,12 @@ public class LibraryPageFragment extends SearchSortFragment {
         super.onResume();
         allManga = UserLibraryHelper.findAllFavoritedManga();
         cardAdapter.setAllManga(allManga);
-        cardAdapter.showAllManga();
-        cardAdapter.getFilter(1, false, Collections.<Integer>emptyList()).filter("");
+        getFilter().filter("");
+    }
 
+    @Override
+    public Filter getFilter() {
+        // Sort My Library by most recently updated first, by default
+        return cardAdapter.getFilter(SortOrder.LAST_UPDATED);
     }
 }

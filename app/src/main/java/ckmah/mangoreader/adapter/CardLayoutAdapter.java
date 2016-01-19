@@ -2,7 +2,6 @@ package ckmah.mangoreader.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,12 +21,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.adapter.helper.ItemTouchHelperAdapter;
 import ckmah.mangoreader.database.Chapter;
+import ckmah.mangoreader.adapter.helper.SortOrder;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.fragment.LibraryPageFragment;
 import ckmah.mangoreader.parse.MangaEden;
@@ -37,24 +38,21 @@ import ckmah.mangoreader.parse.MangaEden;
  */
 public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.CardViewHolder> implements ItemTouchHelperAdapter, Filterable {
 
-    public Fragment fragment;
+    private final boolean useMiniCards;
+    public final boolean isBrowsing;
     public List<Manga> filteredManga;
     public Activity activity;
     private List<Manga> allManga;
 
-    public CardLayoutAdapter(Activity activity, Fragment fragment) {
+    public CardLayoutAdapter(Activity activity, boolean isBrowsing, boolean useMiniCards) {
         filteredManga = new ArrayList<>();
         this.activity = activity;
-        this.fragment = fragment;
-        // Pass context or other static stuff that will be needed.
+        this.isBrowsing = isBrowsing;
+        this.useMiniCards = useMiniCards;
     }
 
     public void setAllManga(List<Manga> allManga) {
         this.allManga = allManga;
-    }
-
-    public void showAllManga() {
-        getFilter().filter("");
     }
 
     @Override
@@ -64,7 +62,8 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         viewHolder.title.setText(manga.title);
         MangaEden.setThumbnail(manga.imageSrc, activity.getApplicationContext(), viewHolder.thumbnail);
 
-        if (fragment instanceof LibraryPageFragment) {
+        if (!isBrowsing) {
+            // Only show update indicators in My Library
             initUpdateIndicator(manga, viewHolder);
         }
 
@@ -107,7 +106,13 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.manga_card, parent, false);
+        View itemView;
+        if (useMiniCards) {
+            itemView = inflater.inflate(R.layout.manga_card_mini, parent, false);
+        } else {
+            itemView = inflater.inflate(R.layout.manga_card, parent, false);
+
+        }
         final CardViewHolder holder = new CardViewHolder(itemView);
 
         final CardView cardView = (CardView) itemView.findViewById(R.id.card_view);
@@ -144,12 +149,22 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
     @Override
     public Filter getFilter() {
-        return new CardLayoutFilter();
+        return getFilter(SortOrder.NONE);
     }
 
     // mimics filter
-    public Filter getFilter(int sortOptionIndex, boolean isReverseOrder, List<Integer> selectedGenres) {
-        return new CardLayoutFilter(sortOptionIndex, isReverseOrder, selectedGenres);
+    public Filter getFilter(SortOrder sortOrder) {
+        return getFilter(sortOrder, false, Collections.<Integer>emptyList());
+    }
+
+    /**
+     * @param sortOrder 0 = popularity, 1 = recently updated, 2 = alphabetically
+     * @param isReverseOrder  true = reversed, false = as is
+     * @param selectedGenres  indices of genres to filter for (intersection)
+     * @return
+     */
+    public Filter getFilter(SortOrder sortOrder, boolean isReverseOrder, List<Integer> selectedGenres) {
+        return new CardLayoutFilter(sortOrder, isReverseOrder, selectedGenres);
     }
 
     public static class CardViewHolder extends RecyclerView.ViewHolder {
@@ -177,18 +192,12 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
      * Performs the filtering of the cards by the query term
      */
     private class CardLayoutFilter extends Filter {
-        private final int sortOptionIndex;
+        private final SortOrder sortOrder;
         private final boolean isReverseOrder;
         private final List<Integer> selectedGenresIndices;
 
-        public CardLayoutFilter() {
-            sortOptionIndex = -1;
-            isReverseOrder = false;
-            selectedGenresIndices = null;
-        }
-
-        public CardLayoutFilter(int sortOptionIndex, boolean isReverseOrder, List<Integer> selectedGenresIndices) {
-            this.sortOptionIndex = sortOptionIndex;
+        public CardLayoutFilter(SortOrder sortOrder, boolean isReverseOrder, List<Integer> selectedGenresIndices) {
+            this.sortOrder = sortOrder;
             this.isReverseOrder = isReverseOrder;
             this.selectedGenresIndices = selectedGenresIndices;
         }
@@ -198,29 +207,29 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             filteredManga.clear();
             FilterResults results = new FilterResults();
 
-            // dialogFragment sorting
-            if (sortOptionIndex != -1) {
-                dialogFilter();
-            } else if (query.length() == 0) {
-                // If search term empty, show all manga
-                filteredManga.addAll(allManga);
-            } else {
-                // Otherwise, do a case-blind search
-                // TODO replace with better fuzzy match algorithm
-                String filterPattern = query.toString().toLowerCase().trim();
+            // sort and filter genres
+            dialogFilter();
 
-                for (Manga item : allManga) {
-                    if (item.title.toLowerCase().contains(filterPattern)) {
-                        filteredManga.add(item);
-                    }
+            // Filter out manga whose titles do not include query
+            // TODO replace with better fuzzy match algorithm
+            String filterPattern = query.toString().toLowerCase().trim();
+            for (Iterator<Manga> iterator = filteredManga.iterator(); iterator.hasNext();) {
+                Manga manga = iterator.next();
+                if (!manga.title.toLowerCase().contains(filterPattern)) {
+                    // Remove the current element from the iterator and the list.
+                    iterator.remove();
                 }
             }
+
             results.values = filteredManga;
             results.count = filteredManga.size();
 
             return results;
         }
 
+        /**
+         * Sort and filter by genre.
+         */
         private void dialogFilter() {
             String[] allGenres = activity.getResources().getStringArray(R.array.genre_list);
             Collection<String> selectedGenres = new ArrayList<>();
@@ -251,8 +260,8 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             }
 
             // sort by specified order
-            switch (sortOptionIndex) {
-                case 0: // sort by popularity
+            switch (sortOrder) {
+                case POPULARITY: // sort by popularity
                     Collections.sort(filteredManga, new Comparator<Manga>() {
                         @Override
                         public int compare(Manga lhs, Manga rhs) {
@@ -260,7 +269,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                         }
                     });
                     break;
-                case 1: // sort by recently updated
+                case LAST_UPDATED: // sort by recently updated
                     Collections.sort(filteredManga, new Comparator<Manga>() {
                         @Override
                         public int compare(Manga lhs, Manga rhs) {
@@ -268,7 +277,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                         }
                     });
                     break;
-                case 2: // sort alphabetically
+                case ALPHABETICAL: // sort alphabetically
                     Collections.sort(filteredManga, new Comparator<Manga>() {
                         @Override // reverse comparison b/c default is Z to A
                         public int compare(Manga lhs, Manga rhs) {
@@ -276,7 +285,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                         }
                     });
                     break;
-                default:
+                default: // NONE
                     Log.d("SORTING", "Did not dialog sort by genres properly.");
             }
 
@@ -288,6 +297,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
+            Log.d("SORTING", "Published Results.");
             notifyDataSetChanged();
         }
     }
