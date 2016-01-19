@@ -1,13 +1,16 @@
 package ckmah.mangoreader.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Filter;
+import android.widget.ImageView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.william.mangoreader.R;
 
@@ -50,16 +53,22 @@ public class LibraryPageFragment extends SearchSortFragment {
     }
 
     public void loadLibraryPlaceholder() {
-        ImageView emptyLibraryView = (ImageView) rootView.findViewById(R.id.empty_library_image);
+        final ImageView emptyLibraryView = (ImageView) rootView.findViewById(R.id.empty_library_image);
 
         // Manipulates bitmap off main thread
         if (allManga.isEmpty()) {
-            rootView.findViewById(R.id.empty_library_image).setVisibility(View.VISIBLE);
             Picasso.with(getActivity())
                     .load(R.drawable.empty_library)
                     .fit().centerCrop()
                     .transform(PaletteTransformation.instance())
-                    .into(emptyLibraryView);
+                    .into(emptyLibraryView, new Callback.EmptyCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Bitmap bitmap = ((BitmapDrawable) emptyLibraryView.getDrawable()).getBitmap();
+                            emptyLibraryView.setImageBitmap(bitmap);
+                            rootView.findViewById(R.id.library_page_placeholder).setVisibility(View.VISIBLE);
+                        }
+                    });
         }
     }
 

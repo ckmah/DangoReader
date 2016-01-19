@@ -100,7 +100,7 @@ public class MangaEden {
         url = MANGAEDEN_IMAGE_CDN + url;
         Picasso.with(context)
                 .load(url)
-                .placeholder(R.drawable.ic_image_white)
+                .placeholder(R.drawable.image_placeholder)
                 .fit().centerCrop()
                 .transform(PaletteTransformation.instance())
                 .into(imageView);
@@ -112,7 +112,7 @@ public class MangaEden {
         Picasso.with(activity)
                 .load(url)
                 .fit().centerCrop()
-                .placeholder(R.drawable.ic_image_white)
+                .placeholder(R.drawable.image_placeholder)
                 .transform(PaletteTransformation.instance())
                 .into(imageView, new Callback.EmptyCallback() {
                     @Override
@@ -130,7 +130,7 @@ public class MangaEden {
                 .load(url)
                 .fit().centerInside()
                 .noFade()
-                .placeholder(R.drawable.ic_image_white)
+                .placeholder(R.drawable.image_placeholder)
                 .into(imageView);
     }
 

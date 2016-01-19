@@ -3,14 +3,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/empty_library_image"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+    <LinearLayout
+        android:id="@+id/library_page_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:paddingBottom="50dp"
-        android:visibility="invisible" />
+        android:orientation="vertical"
+        android:layout_marginBottom="50dp"
+        android:visibility="invisible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            android:text="Your library is empty..."
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/empty_library_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:singleLine="false"
+            android:text="Save your favorite manga here!"
+            android:textSize="18sp"
+            android:layout_weight="3.74"
+            android:linksClickable="false"
+            android:lines="2" />
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/browse_recycler_view"
