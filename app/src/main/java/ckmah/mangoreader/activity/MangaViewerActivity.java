@@ -100,6 +100,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_viewer);
 
+        Paper.init(this);
         // read in manga and chapter data
         String mangaId = getIntent().getExtras().getString(KEY_MANGA_ID);
         manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);

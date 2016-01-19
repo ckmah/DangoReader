@@ -31,6 +31,10 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
 
+    private final static String MYLIBRARY = "mylibrary";
+    private final static String BROWSE = "browse";
+    private final static String SAVED_FRAGMENT = "fragment";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,21 +43,31 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         // init layout
         initToolbar();
         initNavigation();
-//        initSpinner();
 
         // load user library
         Paper.init(this);
-
-        if (UserLibraryHelper.findAllFavoritedManga().size() > 0) {
-            // Show library as first page, if any manga are favorited
-            displayView(R.id.library_nav_item);
-            navigationView.setCheckedItem(R.id.library_nav_item);
-        } else {
-            // Show browse as first page otherwise
-            displayView(R.id.browse_nav_item);
-            navigationView.setCheckedItem(R.id.browse_nav_item);
+        String savedFragment;
+        if (savedInstanceState != null && (savedFragment = savedInstanceState.getString(SAVED_FRAGMENT)) != null) {
+            if (savedFragment.equals(MYLIBRARY)) {
+                displayView(R.id.library_nav_item);
+                navigationView.setCheckedItem(R.id.library_nav_item);
+            }
+            else if (savedFragment.equals(BROWSE)){
+                displayView(R.id.browse_nav_item);
+                navigationView.setCheckedItem(R.id.browse_nav_item);
+            }
         }
-
+        else {
+            if (UserLibraryHelper.findAllFavoritedManga().size() > 0) {
+                // Show library as first page, if any manga are favorited
+                displayView(R.id.library_nav_item);
+                navigationView.setCheckedItem(R.id.library_nav_item);
+            } else {
+                // Show browse as first page otherwise
+                displayView(R.id.browse_nav_item);
+                navigationView.setCheckedItem(R.id.browse_nav_item);
+            }
+        }
 
         // Start polling for chapter updates if this is the first launch
         if (!BootReceiver.RefreshService.isStarted(this)) {
@@ -75,15 +89,6 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
-    }
-
-    private void initSpinner() {
-        // spinner for source selection
-//        Spinner spinner = (Spinner) findViewById(R.id.spinner_browse_sources);
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
-//                R.array.browse_sources, R.layout.simple_spinner_item);
-//        adapter.setDropDownViewResource(R.layout.drop_list);
-//        spinner.setAdapter(adapter);
     }
 
     @Override
@@ -142,5 +147,17 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.container_body);
+        if (f instanceof LibraryPageFragment){
+            outState.putString(SAVED_FRAGMENT, MYLIBRARY);
+        }
+        else if (f instanceof BrowseMangaFragment) {
+            outState.putString(SAVED_FRAGMENT, BROWSE);
+        }
+
+    }
 
 }

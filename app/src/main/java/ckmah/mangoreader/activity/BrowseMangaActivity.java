@@ -13,6 +13,7 @@ import android.view.View;
 import com.william.mangoreader.R;
 
 import ckmah.mangoreader.adapter.BrowsePagerAdapter;
+import io.paperdb.Paper;
 
 public class BrowseMangaActivity extends AppCompatActivity {
 
@@ -23,6 +24,7 @@ public class BrowseMangaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_browse);
+        Paper.init(this);
         initToolbar();
         initTabLayout();
     }
