@@ -28,8 +28,9 @@
 
             <ImageView
                 android:id="@+id/placeholder_image"
-                android:layout_width="256dp"
-                android:layout_height="256dp"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_marginBottom="12dp"
                 android:layout_gravity="center" />
 
             <TextView
@@ -39,7 +40,7 @@
                 android:gravity="center"
                 android:text="Loading..."
                 android:textAllCaps="true"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
         </LinearLayout>
     </RelativeLayout>
 
