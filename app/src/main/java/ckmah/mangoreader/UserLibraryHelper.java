@@ -17,8 +17,6 @@ import ckmah.mangoreader.activity.MangoReaderActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.database.Chapter;
 import ckmah.mangoreader.database.Manga;
-import ckmah.mangoreader.fragment.LibraryPageFragment;
-import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
 import ckmah.mangoreader.parse.MangaEden;
 import io.paperdb.Paper;
@@ -45,25 +43,25 @@ public class UserLibraryHelper {
     }
 
     public static void addToLibrary(final Manga m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
+        // Update the existing entry if possible
+        Manga current = Paper.book(USER_LIBRARY_DB).read(m.id);
+        if (current == null) {
+            current = m;
+        }
+        current.favorite = true;
+        Paper.book(USER_LIBRARY_DB).write(m.id, current);
 
-        m.favorite = true;
-        Paper.book(USER_LIBRARY_DB).write(m.id, m);
+        // Set the button accordingly
         button.setSelected(true);
 
+        // In the background, download and save the manga details to Paper
         MangaEden.getMangaEdenService(activity)
                 .getMangaDetails(m.id)
                 .enqueue(new Callback<MangaEdenMangaDetailItem>() {
                     @Override
                     public void onResponse(Response<MangaEdenMangaDetailItem> response, Retrofit retrofit) {
                         MangaEdenMangaDetailItem r = response.body();
-                        List<MangaEdenMangaChapterItem> c = r.getChapters();
-                        m.author = r.getAuthor();
-                        m.dateCreated = r.getDateCreated();
-                        m.description = r.getDescription();
-                        m.language = r.getLanguage();
-                        m.numChapters = c.size();
-                        m.chaptersList = MangaEden.convertChapterItemstoChapters(c);
-                        Paper.book(USER_LIBRARY_DB).write(m.id, m);
+                        updateManga(m.id, r);
                     }
 
                     @Override
@@ -72,6 +70,7 @@ public class UserLibraryHelper {
                     }
                 });
 
+        // Make and show an undo bar
         Snackbar sb = Snackbar.make(findMyView(activity), String.format(added, m.title), Snackbar.LENGTH_LONG);
         if (showUndo) {
             sb.setAction("UNDO", new View.OnClickListener() {
@@ -89,10 +88,17 @@ public class UserLibraryHelper {
     }
 
     public static void removeFromLibrary(final Manga m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
+        // Update the existing entry if possible
+        Manga current = Paper.book(USER_LIBRARY_DB).read(m.id);
+        if (current == null) {
+            current = m;
+        }
+        current.favorite = false;
+        Paper.book(USER_LIBRARY_DB).write(m.id, current);
 
-        m.favorite = false;
-        Paper.book(USER_LIBRARY_DB).write(m.id, m);
+        // Set the button accordingly
         button.setSelected(false);
+
         // show undo option only if not called from add undo
         Snackbar sb = Snackbar.make(findMyView(activity), String.format(removed, m.title), Snackbar.LENGTH_LONG);
         if (showUndo) {
@@ -104,6 +110,7 @@ public class UserLibraryHelper {
             });
         }
         sb.show();
+
         if (adapter != null) { // basically called from browse or library
             removeFromListUpdate(adapter, position);
         }
