@@ -15,7 +15,7 @@
     <dimen name="card_base_empty_height">0dp</dimen>
 
     <dimen name="card_text_margin">8dp</dimen>
-    <dimen name="card_text_right_margin">24dp</dimen>
+    <dimen name="card_text_right_margin">40dp</dimen>
     <dimen name="card_bottom_margin">12dp</dimen>
 
     <!-- Manga Item Styles -->
@@ -38,12 +38,12 @@
 
     <dimen name="manga_item_placeholder_total_line_spacing">10sp</dimen>
 
-    <dimen name="chapter_row_padding_top">16dp</dimen>
-    <dimen name="chapter_row_padding_bottom">20dp</dimen>
+    <dimen name="chapter_row_padding_top">12dp</dimen>
+    <dimen name="chapter_row_padding_bottom">16dp</dimen>
     <dimen name="chapter_row_padding_side">16dp</dimen>
     <dimen name="chapter_number_textsize">16sp</dimen>
     <dimen name="chapter_number_padding_right">10sp</dimen>
-    <dimen name="chapter_title_textsize">13sp</dimen>
+    <dimen name="chapter_date_textsize">13sp</dimen>
     <dimen name="chapters_padding_bottom">80dp</dimen>
 
     <dimen name="manga_image_margin">50px</dimen>

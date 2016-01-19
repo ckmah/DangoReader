@@ -72,7 +72,7 @@ public class BootReceiver extends BroadcastReceiver {
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
 //            long period = SettingsActivity.getRefreshSeconds(this) * 1000;
-            long period = AlarmManager.INTERVAL_HOUR; // TODO make configurable
+            long period = 12 * AlarmManager.INTERVAL_HOUR; // Every 12 hours right now. TODO make configurable
             alarmManager.cancel(pendingIntent); //Cancels any past refresh
 
             if (intent.getAction().equals(BOOT)) {

@@ -19,12 +19,12 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginTop="24dp"
-            android:background="@color/translucent_black"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:title="">
+            android:title=""
+            android:background="@drawable/toolbar_gradient_top_down">
 
             <TextView
-                android:id="@+id/toolbar_chapter_title"
+                android:id="@+id/chapter_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dp"
@@ -77,7 +77,7 @@
             android:layout_height="@dimen/seekbar_height"
             android:layout_gravity="bottom"
             android:layout_marginBottom="48dp"
-            android:background="@color/translucent_black">
+            android:background="@drawable/toolbar_gradient_bottom_up">
 
             <LinearLayout
                 android:layout_width="match_parent"

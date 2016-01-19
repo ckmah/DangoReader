@@ -35,6 +35,7 @@ public class SortDialogFragment extends DialogFragment {
     private static String[] genreList;
 
     public static SortDialogFragment newInstance() {
+
         Bundle args = new Bundle();
         SortDialogFragment fragment = new SortDialogFragment();
         fragment.setArguments(args);

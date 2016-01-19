@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,8 +22,8 @@ import java.util.List;
 
 import ckmah.mangoreader.SortEvent;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
-import ckmah.mangoreader.adapter.helper.SortOrder;
 import ckmah.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
+import ckmah.mangoreader.adapter.helper.SortOrder;
 import ckmah.mangoreader.database.Manga;
 import de.greenrobot.event.EventBus;
 
@@ -97,6 +98,12 @@ public abstract class SearchSortFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("SearchSortFragment", "Resumed.");
     }
 
     // In subclasses, getFilter should specify the default sort order and genres
