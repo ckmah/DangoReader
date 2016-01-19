@@ -15,9 +15,9 @@ import com.william.mangoreader.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+import ckmah.mangoreader.adapter.helper.SortOrder;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.parse.MangaEden;
 import retrofit.Callback;
@@ -153,21 +153,17 @@ public class BrowsePageFragment extends SearchSortFragment {
 
     @Override
     public Filter getFilter() {
-        // sort by order only
-        if (sortIndex != -1) {
-            Log.d("BrowsePageFragment", "sortIndex: " + sortIndex);
-            return cardAdapter.getFilter(sortIndex, false, Collections.<Integer>emptyList());
-        }
-        // sort by genre and order
-        else if (genreIndex != -1) {
+        if (genreIndex != -1) {
+            // sort by genre and order
             Log.d("BrowsePageFragment", "genreIndex: " + genreIndex);
             Log.d("BrowsePageFragment", "pageNumber: " + pageNumber);
             List<Integer> selectedGenre = new ArrayList<>();
             selectedGenre.add(genreIndex);
-            return cardAdapter.getFilter(pageNumber, false, selectedGenre);
+            return cardAdapter.getFilter(SortOrder.fromIndex(pageNumber), false, selectedGenre);
         } else {
-            Log.d("BrowsePageFragment", "genreIndex and sortIndex = -1");
-            return cardAdapter.getFilter();
+            // sort by order only
+            Log.d("BrowsePageFragment", "sortIndex: " + sortIndex);
+            return cardAdapter.getFilter(SortOrder.fromIndex(sortIndex));
         }
     }
 }

@@ -27,6 +27,7 @@ import java.util.List;
 import ckmah.mangoreader.UserLibraryHelper;
 import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.adapter.helper.ItemTouchHelperAdapter;
+import ckmah.mangoreader.adapter.helper.SortOrder;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.parse.MangaEden;
 
@@ -121,19 +122,22 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
     @Override
     public Filter getFilter() {
-        return new CardLayoutFilter();
+        return getFilter(SortOrder.NONE);
     }
 
     // mimics filter
+    public Filter getFilter(SortOrder sortOrder) {
+        return getFilter(sortOrder, false, Collections.<Integer>emptyList());
+    }
 
     /**
-     * @param sortOptionIndex 0 = popularity, 1 = recently updated, 2 = alphabetically
+     * @param sortOrder 0 = popularity, 1 = recently updated, 2 = alphabetically
      * @param isReverseOrder  true = reversed, false = as is
      * @param selectedGenres  indices of genres to filter for (intersection)
      * @return
      */
-    public Filter getFilter(int sortOptionIndex, boolean isReverseOrder, List<Integer> selectedGenres) {
-        return new CardLayoutFilter(sortOptionIndex, isReverseOrder, selectedGenres);
+    public Filter getFilter(SortOrder sortOrder, boolean isReverseOrder, List<Integer> selectedGenres) {
+        return new CardLayoutFilter(sortOrder, isReverseOrder, selectedGenres);
     }
 
     public static class CardViewHolder extends RecyclerView.ViewHolder {
@@ -157,18 +161,12 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
      * Performs the filtering of the cards by the query term
      */
     private class CardLayoutFilter extends Filter {
-        private final int sortOptionIndex;
+        private final SortOrder sortOrder;
         private final boolean isReverseOrder;
         private final List<Integer> selectedGenresIndices;
 
-        public CardLayoutFilter() {
-            sortOptionIndex = -1;
-            isReverseOrder = false;
-            selectedGenresIndices = null;
-        }
-
-        public CardLayoutFilter(int sortOptionIndex, boolean isReverseOrder, List<Integer> selectedGenresIndices) {
-            this.sortOptionIndex = sortOptionIndex;
+        public CardLayoutFilter(SortOrder sortOrder, boolean isReverseOrder, List<Integer> selectedGenresIndices) {
+            this.sortOrder = sortOrder;
             this.isReverseOrder = isReverseOrder;
             this.selectedGenresIndices = selectedGenresIndices;
         }
@@ -231,8 +229,8 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
             }
 
             // sort by specified order
-            switch (sortOptionIndex) {
-                case 0: // sort by popularity
+            switch (sortOrder) {
+                case POPULARITY: // sort by popularity
                     Collections.sort(filteredManga, new Comparator<Manga>() {
                         @Override
                         public int compare(Manga lhs, Manga rhs) {
@@ -240,7 +238,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                         }
                     });
                     break;
-                case 1: // sort by recently updated
+                case LAST_UPDATED: // sort by recently updated
                     Collections.sort(filteredManga, new Comparator<Manga>() {
                         @Override
                         public int compare(Manga lhs, Manga rhs) {
@@ -248,7 +246,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                         }
                     });
                     break;
-                case 2: // sort alphabetically
+                case ALPHABETICAL: // sort alphabetically
                     Collections.sort(filteredManga, new Comparator<Manga>() {
                         @Override // reverse comparison b/c default is Z to A
                         public int compare(Manga lhs, Manga rhs) {
@@ -256,7 +254,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                         }
                     });
                     break;
-                default:
+                default: // NONE
                     Log.d("SORTING", "Did not dialog sort by genres properly.");
             }
 

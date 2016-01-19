@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -29,6 +31,7 @@ import java.util.List;
 import ckmah.mangoreader.activity.BrowseMangaActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
 import ckmah.mangoreader.adapter.GenreTextAdapter;
+import ckmah.mangoreader.adapter.helper.SortOrder;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.parse.MangaEden;
 import ckmah.mangoreader.parse.PaletteTransformation;
@@ -39,10 +42,12 @@ import retrofit.Retrofit;
 public class BrowseMangaFragment extends Fragment {
     private View rootView;
     private View contentView;
+    private RecyclerView searchRecyclerView;
     private View placeholder;
     private CardLayoutAdapter updatesCardAdapter;
     private CardLayoutAdapter popularCardAdapter;
     private CardLayoutAdapter alphabetCardAdapter;
+    private CardLayoutAdapter searchCardAdapter;
 
     // In-memory list of all manga, period
     public static List<Manga> allManga = new ArrayList<>();
@@ -71,8 +76,8 @@ public class BrowseMangaFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_browse_manga_fancy, container, false);
         contentView = rootView.findViewById(R.id.browse_content);
-
         placeholder = rootView.findViewById(R.id.browse_placeholder);
+        searchRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_search);
 
         Picasso.with(getActivity())
                 .load(R.drawable.logo_placeholder)
@@ -81,13 +86,14 @@ public class BrowseMangaFragment extends Fragment {
                 .into((ImageView) placeholder.findViewById(R.id.placeholder_image));
 
         initRecyclerViews();
+        initSearchRecyclerView();
 
         // If allManga is already populated, just display them
         if (allManga.size() > 0) {
             sortAdapterData();
             showContent();
         } else {
-            hideContent();
+            showPlaceholder();
             // Repopulate the list with an API call, relying on cache if possible
             fetchMangaListFromMangaEden(false);
         }
@@ -95,6 +101,16 @@ public class BrowseMangaFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.title_browse);
         setHasOptionsMenu(true);
         return rootView;
+    }
+
+    private void initSearchRecyclerView() {
+        // Mostly duplicate of SearchSortFragment code -- TODO possible to refactor?
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        searchRecyclerView.setLayoutManager(gridLayoutManager);
+
+        searchCardAdapter = new CardLayoutAdapter(getActivity(), true, false);
+        searchCardAdapter.setAllManga(allManga);
+        searchRecyclerView.setAdapter(searchCardAdapter);
     }
 
     private void initRecyclerViews() {
@@ -209,26 +225,34 @@ public class BrowseMangaFragment extends Fragment {
 
     private void sortAdapterData() {
         // Sort by recently updated
-        updatesCardAdapter.getFilter(1, false, Collections.<Integer>emptyList()).filter("");
+        updatesCardAdapter.getFilter(SortOrder.LAST_UPDATED).filter("");
         // Sort by popularity
-        popularCardAdapter.getFilter(0, false, Collections.<Integer>emptyList()).filter("");
+        popularCardAdapter.getFilter(SortOrder.POPULARITY).filter("");
         // Sort alphabetical
-        alphabetCardAdapter.getFilter(2, false, Collections.<Integer>emptyList()).filter("");
+        alphabetCardAdapter.getFilter(SortOrder.ALPHABETICAL).filter("");
     }
 
     private void showContent() {
-        rootView.findViewById(R.id.browse_placeholder).setVisibility(View.GONE);
+        placeholder.setVisibility(View.GONE);
         contentView.setVisibility(View.VISIBLE);
+        searchRecyclerView.setVisibility(View.GONE);
     }
 
-    private void hideContent() {
+    private void showPlaceholder() {
         placeholder.setVisibility(View.VISIBLE);
         contentView.setVisibility(View.GONE);
+        searchRecyclerView.setVisibility(View.GONE);
+    }
+
+    private void showSearch() {
+        placeholder.setVisibility(View.GONE);
+        contentView.setVisibility(View.GONE);
+        searchRecyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuinflator) {
-        menuinflator.inflate(R.menu.menu_browse_manga, menu);
+        menuinflator.inflate(R.menu.menu_browse_search, menu);
 
         // Configure the SearchView to filter the cards
         MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -236,36 +260,31 @@ public class BrowseMangaFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-//                if (query.isEmpty()) {
-//                    swipeRefreshLayout.setEnabled(true);
-//                } else {
-//                    swipeRefreshLayout.setEnabled(false);
-//                }
-                popularCardAdapter.getFilter().filter(query);
+                searchCardAdapter.getFilter(SortOrder.POPULARITY).filter(query);
                 return true; // The listener has handled the query
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//                if (newText.isEmpty()) {
-//                    swipeRefreshLayout.setEnabled(true);
-//                } else {
-//                    swipeRefreshLayout.setEnabled(false);
-//                }
-                popularCardAdapter.getFilter().filter(newText);
+                searchCardAdapter.getFilter(SortOrder.POPULARITY).filter(newText);
                 return false; // The searchview should show suggestions
             }
         });
 
-//        MenuItem sortItem = menu.findItem(R.id.action_sort);
-//        sortItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                DialogFragment dialog = SortDialogFragment.newInstance(popularCardAdapter);
-//                dialog.show(getActivity().getSupportFragmentManager(), "SortDialogFragment");
-//                return false;
-//            }
-//        });
+        // Show and hide the view for searches where appropriate
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                showSearch();
+                return true; // Continue showing the search bar
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                showContent();
+                return true; // Continue collapsing the search bar
+            }
+        });
     }
 
     @Override

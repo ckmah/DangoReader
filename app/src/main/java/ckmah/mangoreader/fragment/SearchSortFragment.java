@@ -21,6 +21,7 @@ import java.util.List;
 
 import ckmah.mangoreader.SortEvent;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
+import ckmah.mangoreader.adapter.helper.SortOrder;
 import ckmah.mangoreader.adapter.helper.SimpleItemTouchHelperCallback;
 import ckmah.mangoreader.database.Manga;
 import de.greenrobot.event.EventBus;
@@ -109,7 +110,8 @@ public abstract class SearchSortFragment extends Fragment {
     }
 
     public void onEvent(SortEvent sortEvent) {
-        cardAdapter.getFilter(sortEvent.sortOrder, sortEvent.reverse, sortEvent.genres).filter("");
+        SortOrder sortOrder = SortOrder.fromIndex(sortEvent.sortOrder);
+        cardAdapter.getFilter(sortOrder, sortEvent.reverse, sortEvent.genres).filter("");
         mRecyclerView.scrollToPosition(0);
     }
 

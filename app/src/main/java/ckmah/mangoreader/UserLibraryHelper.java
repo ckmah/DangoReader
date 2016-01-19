@@ -1,18 +1,21 @@
 package ckmah.mangoreader;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 
 import com.william.mangoreader.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import ckmah.mangoreader.activity.MangaItemActivity;
 import ckmah.mangoreader.activity.MangoReaderActivity;
 import ckmah.mangoreader.adapter.CardLayoutAdapter;
+import ckmah.mangoreader.database.Chapter;
 import ckmah.mangoreader.database.Manga;
 import ckmah.mangoreader.model.MangaEdenMangaChapterItem;
 import ckmah.mangoreader.model.MangaEdenMangaDetailItem;
@@ -131,6 +134,60 @@ public class UserLibraryHelper {
             adapter.notifyItemInserted(position);
             adapter.notifyItemRangeChanged(position, adapter.filteredManga.size());
         }
+    }
+
+    /**
+     * Synchronously get manga details and put into Paper
+     */
+    public static Manga updateManga(Context context, String mangaId) {
+        try {
+            MangaEdenMangaDetailItem mangaDetailItem =
+                    MangaEden.getMangaEdenService(context, true).getMangaDetails(mangaId).execute().body();
+            return updateManga(mangaId, mangaDetailItem);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Manga updateManga(String mangaId, MangaEdenMangaDetailItem mangaDetailItem) {
+        Manga manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
+        if (manga == null) {
+            manga = new Manga();
+            manga.id = mangaId;
+        }
+
+        // No need to update Paper if entry is already up to date
+        // TODO corner case: updated entry with lastChapterDate but no chapters
+//            if (manga.lastChapterDate >= mangaDetailItem.getLastChapterDate()) {
+//                return manga;
+//            }
+
+        // Copy over fields
+        manga.title = mangaDetailItem.getTitle();
+        manga.imageSrc = mangaDetailItem.getImageUrl();
+        manga.lastChapterDate = mangaDetailItem.getLastChapterDate();
+        manga.genres = mangaDetailItem.getCategories();
+        manga.hits = mangaDetailItem.getHits();
+        manga.status = mangaDetailItem.getStatus();
+        manga.author = mangaDetailItem.getAuthor();
+        manga.dateCreated = mangaDetailItem.getDateCreated();
+        manga.description = mangaDetailItem.getDescription();
+        manga.language = mangaDetailItem.getLanguage();
+        manga.numChapters = mangaDetailItem.getNumChapters();
+
+        // Add in any new chapters
+        List<Chapter> newChapters = MangaEden.convertChapterItemstoChapters(mangaDetailItem.getChapters());
+        if (manga.chaptersList == null) {
+            manga.chaptersList = newChapters;
+        } else {
+            newChapters.removeAll(manga.chaptersList);
+            manga.chaptersList.addAll(newChapters);
+        }
+
+        // Save the manga in Paper
+        Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
+        return manga;
     }
 
 }
