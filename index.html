@@ -3,6 +3,7 @@
 
 <head>
     <title>Dangoreader</title>
+    <meta name="description" content="Reading manga built for Android. A clean & modern interface for reading manga.">
     <!-- Importing Bootstrap Elements -->
     <script src="libs/jquery-2.1.4.min.js"></script>
     <link rel="stylesheet" type="text/css" href="libs/bootstrap.min.css">
@@ -54,7 +55,7 @@
                 <img id="text-logo" src="assets/text_logo.png" alt="Dangoreader logo">
                 <br>
                 <a id="download-container" href="https://github.com/williamxu/MangoReader/releases/download/v1.0.1/dangoreader-v1.0.apk">
-                    <button id="download-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">DOWNLOAD<img id="dl-android"src="assets/android.png" alt=""></button>
+                    <button id="download-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">DOWNLOAD<img id="dl-android" src="assets/android.png" alt=""></button>
                     <div class="mdl-tooltip" for="download-button">Allow "Unknown Sources" under Settings > Security</div>
                 </a>
             </div>
@@ -216,5 +217,21 @@
         </div>
     </footer>
 </body>
+<script>
+(function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+ga('create', 'UA-72694308-1', 'auto');
+ga('send', 'pageview');
+</script>
 
 </html>
