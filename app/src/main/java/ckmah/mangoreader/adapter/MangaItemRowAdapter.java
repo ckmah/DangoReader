@@ -12,6 +12,7 @@ import com.william.mangoreader.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -35,6 +36,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.activity = activity;
         this.chapters = chapters;
         this.mangaId = mangaId;
+        Collections.reverse(chapters); //TODO Sorts chapters in descending number. may consider adding setting/toggle
     }
 
     @Override
@@ -61,11 +63,6 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // set chapter number
         chapterHolder.numberView.setText(String.format("%s%s", CHAPTER_PREFIX, chapterItem.number));
 
-        // set chapter title
-//        if (chapterItem.title.compareTo(chapterItem.number) != 0) {
-//        chapterHolder.titleView.setText(String.format("%s%s", " — ", chapterItem.title));
-//        }
-
         // set chapter date
         Date chapterDate = new Date(chapterItem.date * 1000L);
         DateFormat sdf = SimpleDateFormat.getDateInstance();
@@ -78,7 +75,9 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else {
             chapterHolder.numberView.setTextColor(ContextCompat.getColor(activity, R.color.black));
         }
-        chapterHolder.chapterIndex = position;
+        // chapterHolder.chapterIndex = position;
+        // TODO Sorts chapters in descending number. may consider adding setting/toggle
+        chapterHolder.chapterIndex = chapters.size() - position - 1;
     }
 
     @Override
