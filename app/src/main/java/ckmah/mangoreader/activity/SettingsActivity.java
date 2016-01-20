@@ -1,9 +1,12 @@
 package ckmah.mangoreader.activity;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -16,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.william.mangoreader.R;
 
@@ -65,6 +69,55 @@ public class SettingsActivity extends PreferenceActivity {
                 }
             }
         });
+
+        preferenceFragment.findPreference(getString(R.string.PREF_WEBSITE))
+                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        // Launch our website
+                        String url = "http://www.mango.moe";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                        return false;
+                    }
+                });
+
+        preferenceFragment.findPreference(getString(R.string.PREF_MANGAEDEN))
+                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        // Launch mangaeden.com
+                        String url = "http://www.mangaeden.com/en/";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                        return false;
+                    }
+                });
+
+        preferenceFragment.findPreference(getString(R.string.PREF_EMAIL))
+                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        // Compose an email to the developers
+                        Intent i = new Intent(Intent.ACTION_SEND);
+                        i.setType("message/rfc822");
+                        i.putExtra(Intent.EXTRA_EMAIL, new String[]{
+                                "clarence.iyan@gmail.com",
+                                "akrolsmir@gmail.com",
+                                "xu.will94@gmail.com",
+                                "michelle.ragsac@gmail.com"
+                        });
+                        i.putExtra(Intent.EXTRA_SUBJECT, "DangoReader");
+                        try {
+                            startActivity(Intent.createChooser(i, "Send mail..."));
+                        } catch (android.content.ActivityNotFoundException ex) {
+                            Toast.makeText(SettingsActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                        }
+                        return false;
+                    }
+                });
     }
 
     @Override
