@@ -24,7 +24,7 @@ import moe.dangoreader.fragment.LibraryPageFragment;
 /**
  * Main activity screen. Displays various fragments.
  */
-public class MangoReaderActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
@@ -37,7 +37,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mango_reader);
+        setContentView(R.layout.activity_main);
 
         // init layout
         initToolbar();
@@ -100,7 +100,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
         drawerLayout.closeDrawers();
         if (menuItem.getItemId() == R.id.settings_nav_item) {
             // Launch settings activity, but don't keep selected in the drawer
-            Intent settingsIntent = new Intent(MangoReaderActivity.this, SettingsActivity.class);
+            Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(settingsIntent);
             return false;
         } else {
@@ -136,7 +136,7 @@ public class MangoReaderActivity extends AppCompatActivity implements Navigation
             default:
                 break;
         }
-        // add isBrowsing to MangoReaderActivity #container_body
+        // add isBrowsing to MainActivity #container_body
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.paperdb.Paper;
-import moe.dangoreader.activity.MangoReaderActivity;
+import moe.dangoreader.activity.MainActivity;
 import moe.dangoreader.database.Chapter;
 import moe.dangoreader.database.Manga;
 import moe.dangoreader.model.MangaEdenMangaListItem;
@@ -119,8 +119,8 @@ public class UpdateService extends IntentService {
         }
         mBuilder.setStyle(inboxStyle);
 
-        // Launch MangoReaderActivity when notification is clicked
-        Intent resultIntent = new Intent(this, MangoReaderActivity.class);
+        // Launch MainActivity when notification is clicked
+        Intent resultIntent = new Intent(this, MainActivity.class);
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
         PendingIntent resultPendingIntent =

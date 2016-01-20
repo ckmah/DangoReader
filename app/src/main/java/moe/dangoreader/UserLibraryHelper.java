@@ -12,7 +12,7 @@ import java.util.List;
 
 import io.paperdb.Paper;
 import moe.dangoreader.activity.MangaItemActivity;
-import moe.dangoreader.activity.MangoReaderActivity;
+import moe.dangoreader.activity.MainActivity;
 import moe.dangoreader.adapter.CardLayoutAdapter;
 import moe.dangoreader.database.Chapter;
 import moe.dangoreader.database.Manga;
@@ -118,7 +118,7 @@ public class UserLibraryHelper {
         View mView;
         if (activity instanceof MangaItemActivity) {
             mView = activity.findViewById(R.id.manga_item_layout);
-        } else if (activity instanceof MangoReaderActivity) {
+        } else if (activity instanceof MainActivity) {
             mView = activity.findViewById(R.id.drawer_layout);
         } else { // Bookmarked in browse sub-page
             mView = activity.findViewById(R.id.browse_activity_layout);
