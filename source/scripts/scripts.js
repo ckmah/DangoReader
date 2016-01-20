@@ -1,3 +1,18 @@
+// simple phone slideshow
+$(document).ready(function() {
+    $("#phone-screenshot > div:gt(0)").hide();
+
+    setInterval(function() {
+        $('#phone-screenshot > div:first')
+            .fadeOut(500)
+            .next()
+            .fadeIn(500)
+            .end()
+            .appendTo('#phone-screenshot');
+    }, 4000);
+});
+
+
 // // autoplay next video using
 // function nextVideo(index) {
 //     var nextIndex = (index + 1) % 3;
