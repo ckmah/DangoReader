@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/preference_fragment"
-        android:name="ckmah.mangoreader.activity.SettingsActivity$SettingsFragment"
+        android:name="moe.dangoreader.activity.SettingsActivity$SettingsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start" />

@@ -17,4 +17,17 @@
             android:key="@string/PREF_KEY_CHECK_FOR_UPDATES"
             android:title="New chapter notifications" />
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="About">
+        <Preference
+            android:title="Email us"
+            android:key="@string/PREF_EMAIL" />
+        <Preference
+            android:title="Website"
+            android:key="@string/PREF_WEBSITE" />
+        <Preference
+            android:title="Images &amp; API courtesy of MangaEden"
+            android:key="@string/PREF_MANGAEDEN" />
+
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ckmah.mangoreader.viewpager.MangaViewPager
+    <moe.dangoreader.viewpager.MangaViewPager
         android:id="@+id/manga_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -92,7 +92,7 @@
                     android:background="@color/transparent"
                     android:src="@drawable/left_page_arrow_white" />
 
-                <ckmah.mangoreader.seekbar.ReversibleSeekBar
+                <moe.dangoreader.seekbar.ReversibleSeekBar
                     android:id="@+id/seekBar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
