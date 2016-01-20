@@ -321,12 +321,3 @@ footer #footer-text {
   font-size: 12px;
   color: #90a4ae;
 }
-body div {
-  outline: 1px red solid;
-}
-a {
-  outline: 1px green solid;
-}
-video {
-  outline: 1px blue solid;
-}
