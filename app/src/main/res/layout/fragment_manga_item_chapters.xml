@@ -4,7 +4,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ckmah.mangoreader.fragment.MangaItemChapterFragment">
+    tools:context="moe.dangoreader.fragment.MangaItemChapterFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chapter_recycler_view"

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ckmah.mangoreader.fragment.BrowsePageFragment">
+    tools:context="moe.dangoreader.fragment.BrowsePageFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/browse_page_swipe_refresh"
