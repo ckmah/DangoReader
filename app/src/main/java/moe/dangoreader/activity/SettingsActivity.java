@@ -74,7 +74,7 @@ public class SettingsActivity extends PreferenceActivity {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
                         // Launch our website
-                        String url = "http://www.mango.moe";
+                        String url = "http://www.dangoreader.moe";
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);
@@ -103,10 +103,12 @@ public class SettingsActivity extends PreferenceActivity {
                         Intent i = new Intent(Intent.ACTION_SEND);
                         i.setType("message/rfc822");
                         i.putExtra(Intent.EXTRA_EMAIL, new String[]{
-                                "clarence.iyan@gmail.com",
-                                "akrolsmir@gmail.com",
-                                "xu.will94@gmail.com",
-                                "michelle.ragsac@gmail.com"
+                                "clarence@dangoreader.moe",
+                                "austin@dangoreader.moe",
+                                "will@dangoreader.moe",
+                                "michelle@dangoreader.moe",
+                                "shawn@dangoreader.moe",
+                                "akrolsmir@gmail.com", // Just in case
                         });
                         i.putExtra(Intent.EXTRA_SUBJECT, "DangoReader");
                         try {
