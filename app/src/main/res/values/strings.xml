@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MangoReader</string>
+    <string name="app_name">DangoReader</string>
 
     <!-- menu items -->
     <string name="action_settings">Settings</string>
