@@ -21,7 +21,8 @@ var paths = {
     images: ['assets/*.{png,jpg,svg}'],
     videos: ['assets/*.mp4'],
     svgs: ['assets/*.svg'],
-    libs: ['libs/**/*', '!libs/**/*.less', '!libs/**/_*']
+    libs: ['libs/**/*', '!libs/**/*.less', '!libs/**/_*'],
+    misc: ['CNAME']
 };
 
 // create default task and add watch task to it
@@ -142,8 +143,17 @@ gulp.task('copy-libs', function() {
     .pipe(browserSync.stream());
 });
 
+gulp.task('copy-misc', function() {
+    return gulp.src(paths.misc, {
+        cwd: bases.source,
+        base: bases.source
+    })
+    .pipe(gulp.dest(bases.dist))
+    .pipe(browserSync.stream());
+    })
+
 // build task
-gulp.task('build', ['jshint', 'build-js', 'build-css', 'imagemin', 'copy-html', 'copy-fonts', 'copy-css', 'copy-svgs', 'copy-videos', 'copy-libs']);
+gulp.task('build', ['jshint', 'build-js', 'build-css', 'imagemin', 'copy-html', 'copy-fonts', 'copy-css', 'copy-svgs', 'copy-videos', 'copy-libs', 'copy-misc']);
 
 // configure which files to watch and what tasks to use on file changes
 gulp.task('serve', function(gulpCallback) {
@@ -163,6 +173,7 @@ gulp.task('serve', function(gulpCallback) {
         gulp.watch(bases.source + paths.svgs, ['copy-svgs']);
         gulp.watch(bases.source + paths.videos, ['copy-videos']);
         gulp.watch(bases.source + paths.libs, ['copy-libs']);
+        gulp.watch(bases.source + paths.misc, ['copy-misc']);
         gulpCallback();
     });
 })
