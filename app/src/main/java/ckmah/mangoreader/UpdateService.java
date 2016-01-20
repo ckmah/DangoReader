@@ -105,7 +105,8 @@ public class UpdateService extends IntentService {
         // Sets up the notification
         android.support.v4.app.NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.mipmap.dango_silhoutte)
+                        .setColor(getResources().getColor(R.color.colorPrimary))
                         .setContentTitle(title)
                         .setContentText(message)
                         .setAutoCancel(true); // Dismiss notification when clicked
