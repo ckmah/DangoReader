@@ -22,7 +22,7 @@ var paths = {
     videos: ['assets/*.mp4'],
     svgs: ['assets/*.svg'],
     libs: ['libs/**/*', '!libs/**/*.less', '!libs/**/_*'],
-    misc: ['CNAME']
+    misc: ['CNAME', 'favicon.ico']
 };
 
 // create default task and add watch task to it
