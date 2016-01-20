@@ -1,3 +1,4 @@
+/** material color codes **/
 /** MIXINS **/
 .center-all {
   display: -webkit-flex;
@@ -15,9 +16,11 @@
   transform: scale(1.1);
 }
 .navbar {
-  background-color: transparent !important;
   background: transparent !important;
   border-color: transparent !important;
+}
+.navbar a {
+  background: transparent !important;
 }
 .navbar-right {
   margin-right: 1em;
@@ -28,13 +31,17 @@
   background-color: white !important;
 }
 #home-wrapper {
-  background-color: #FF9800;
+  background-color: #00796b;
 }
 p {
   color: #212121;
 }
 .container {
   padding: 0;
+}
+.mdl-button--primary {
+  background-color: #004d40 !important;
+  color: #b2dfdb !important;
 }
 @media only screen and (min-width: 992px) {
   #home {
@@ -48,23 +55,50 @@ p {
     -ms-flex-align: center;
     align-items: center;
     height: 100vh;
-    min-height: 600px;
+    min-height: 800px;
     max-height: 1000px;
   }
 }
 #home #text-logo {
   max-width: 100%;
 }
+.nav {
+  margin: 0.3em;
+}
 .nav a {
-  padding: 0.7em 1em !important;
-  margin-left: 0.2em;
-  margin-right: 0.2em;
+  padding: 0 !important;
+  margin: 0.3em;
+}
+.nav li {
+  display: inline-block;
 }
 #info-container {
   -webkit-order: 2;
   -ms-flex-order: 2;
   order: 2;
-  margin-top: 10em;
+  margin-top: 25em;
+  margin-bottom: 20em;
+}
+#phone-screenshot {
+  -webkit-order: 1;
+  -ms-flex-order: 1;
+  order: 1;
+  height: 89vh;
+  max-height: 800px;
+  min-height: 600px;
+  position: relative;
+  margin-bottom: 2em;
+}
+#phone-screenshot > div {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
+#phone-screenshot img {
+  height: 89vh;
+  min-height: 600px;
+  max-height: 800px;
 }
 #download-container {
   display: -webkit-flex;
@@ -76,72 +110,28 @@ p {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  border-radius: 2px;
-  background-color: #F57C00 !important;
-  transition: all 0.2s ease-out;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  color: white;
-  height: 60px;
-  width: 190px;
-  margin: 1em 0;
-  text-decoration: none !important;
+  margin-top: 3em;
+  text-decoration: none;
 }
-#download-container:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-}
-#download-container * {
-  display: inline-block;
-}
-#download-container img {
-  margin-left: -1em;
-}
-#download-container #dl-text {
+#download-container button {
+  height: 54px;
   font-size: 18px;
-  margin-left: 0.5em;
-}
-#phone-container {
-  -webkit-order: 1;
-  -ms-flex-order: 1;
-  order: 1;
-  overflow: hidden;
-  padding: 0;
-  height: 100px;
 }
 #video-container {
-  position: relative;
-  max-height: 100%;
+  position: absolute;
+  width: 417px;
+  height: 745px;
   overflow: hidden;
-}
-#video-container:hover > .js-play-button {
-  opacity: 0.8;
+  margin: 99px 17px;
 }
 #video-container .video-active {
   display: block !important;
   visibility: visible !important;
   width: 100%;
-  padding: 5em;
-  padding-top: 3em;
 }
 #video-container video {
   display: none;
   visibility: hidden;
-}
-.js-play-button {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  border-radius: 100px;
-  margin: 50% auto;
-  left: 0;
-  right: 0;
-  border: 0;
-  background-color: black;
-  outline: none;
-  z-index: 2;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.2s ease-out;
 }
 #team-wrapper {
   background-color: white;
@@ -163,104 +153,127 @@ p {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-justify-content: space-around;
-  -ms-flex-pack: distribute;
-  justify-content: space-around;
-  padding: 0;
+  -webkit-justify-content: space-raound;
+  -ms-flex-pack: space-raound;
+  justify-content: space-raound;
 }
 .profile {
-  display: inline-block;
-  text-align: center;
-  margin: 5em 0;
+  width: 450px;
+  margin: 3em 0;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: flex-start;
+  -ms-flex-align: start;
+  align-items: flex-start;
 }
 .profile .profile-pic {
-  transition: all 0.1s ease-out;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   border-radius: 2px;
   background-color: white !important;
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
+  border-radius: 100px;
+  margin-right: 2em;
+  transition: all 0.1s ease-out;
 }
 .profile .profile-pic:hover {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
+.profile .profile-info {
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+}
+.profile h3 {
+  margin: 0;
+  margin-top: 0.2em;
+}
+.profile h4 {
+  margin-left: 0.1em;
+  margin-top: .5em;
+  color: #727272;
+}
 .profile .icon {
-  width: 48px;
-  height: 48px;
-  padding: 14px;
   margin: 0 0.5em;
   display: inline-block;
   transition: all 0.1s ease-out;
 }
-.profile .icon:active {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
+.profile .icon button {
+  padding: 6px !important;
+  width: 48px !important;
+  min-width: 48px !important;
+  height: 48px !important;
 }
 .profile .icon img {
-  width: 100%;
+  width: 24px;
+  height: 24px;
   -webkit-filter: invert(100%);
   filter: invert(100%);
 }
 .profile .icon-linkedin {
-  width: 48px;
-  height: 48px;
-  padding: 14px;
   margin: 0 0.5em;
   display: inline-block;
   transition: all 0.1s ease-out;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  border-radius: 2px;
-  background-color: #4fc3ff !important;
 }
-.profile .icon-linkedin:active {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
+.profile .icon-linkedin button {
+  padding: 6px !important;
+  width: 48px !important;
+  min-width: 48px !important;
+  height: 48px !important;
 }
 .profile .icon-linkedin img {
-  width: 100%;
+  width: 24px;
+  height: 24px;
   -webkit-filter: invert(100%);
   filter: invert(100%);
+}
+.profile .icon-linkedin button {
+  background: #4fc3ff;
 }
 .profile .icon-github {
-  width: 48px;
-  height: 48px;
-  padding: 14px;
   margin: 0 0.5em;
   display: inline-block;
   transition: all 0.1s ease-out;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  border-radius: 2px;
-  background-color: #774976 !important;
 }
-.profile .icon-github:active {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
+.profile .icon-github button {
+  padding: 6px !important;
+  width: 48px !important;
+  min-width: 48px !important;
+  height: 48px !important;
 }
 .profile .icon-github img {
-  width: 100%;
+  width: 24px;
+  height: 24px;
   -webkit-filter: invert(100%);
   filter: invert(100%);
 }
+.profile .icon-github button {
+  background: #774976;
+}
 .profile .icon-email {
-  width: 48px;
-  height: 48px;
-  padding: 14px;
   margin: 0 0.5em;
   display: inline-block;
   transition: all 0.1s ease-out;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  border-radius: 2px;
-  background-color: #ff5555 !important;
 }
-.profile .icon-email:active {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
+.profile .icon-email button {
+  padding: 6px !important;
+  width: 48px !important;
+  min-width: 48px !important;
+  height: 48px !important;
 }
 .profile .icon-email img {
-  width: 100%;
+  width: 24px;
+  height: 24px;
   -webkit-filter: invert(100%);
   filter: invert(100%);
+}
+.profile .icon-email button {
+  background: #ff5555;
 }
 #contact-wrapper {
   background-color: white;
@@ -286,5 +299,34 @@ p {
   top: 0;
 }
 footer {
-  background: transparent !important;
+  padding: 1.5em;
+  background: #263238 !important;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+footer button {
+  color: #cfd8dc !important;
+  text-decoration: none !important;
+  font-size: 16px !important;
+}
+footer #footer-text {
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #90a4ae;
+}
+body div {
+  outline: 1px red solid;
+}
+a {
+  outline: 1px green solid;
+}
+video {
+  outline: 1px blue solid;
 }
