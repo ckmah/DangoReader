@@ -83,24 +83,24 @@ public class MangaItemActivity extends AppCompatActivity {
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_manga_item, menu);
-        MenuItem bookmarkItem = menu.findItem(R.id.manga_item_bookmark_button);
+        MenuItem favoriteItem = menu.findItem(R.id.manga_item_bookmark_button);
         final MangaItemActivity activity = this;
-        final ImageButton bookmarkToggle = new ImageButton(this);
+        final ImageButton favoriteToggle = new ImageButton(this);
 
-        bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
-        bookmarkToggle.setSelected(manga != null && manga.favorite);
-        bookmarkToggle.setBackgroundResource(R.color.transparent);
-        bookmarkToggle.setOnClickListener(new View.OnClickListener() {
+        favoriteToggle.setImageResource(R.drawable.favorite_toggle);
+        favoriteToggle.setSelected(manga != null && manga.favorite);
+        favoriteToggle.setBackgroundResource(R.color.transparent);
+        favoriteToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bookmarkToggle.isSelected()) {
-                    UserLibraryHelper.removeFromLibrary(manga, bookmarkToggle, activity, true, null, -1);
+                if (favoriteToggle.isSelected()) {
+                    UserLibraryHelper.removeFromLibrary(manga, favoriteToggle, activity, true, null, -1);
                 } else {
-                    UserLibraryHelper.addToLibrary(manga, bookmarkToggle, activity, true, null, -1);
+                    UserLibraryHelper.addToFavorites(manga, favoriteToggle, activity, true, null, -1);
                 }
             }
         });
-        bookmarkItem.setActionView(bookmarkToggle);
+        favoriteItem.setActionView(favoriteToggle);
         return true;
     }
 

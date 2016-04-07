@@ -66,7 +66,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
         }
 
         viewHolder.bookmarkToggle.setSelected(viewHolder.manga.favorite);
-        viewHolder.bookmarkToggle.setImageResource(R.drawable.bookmark_toggle);
+        viewHolder.bookmarkToggle.setImageResource(R.drawable.favorite_toggle);
 
         final CardLayoutAdapter adapter = this;
         // add/remove methods take care of toggling bookmark icon
@@ -76,7 +76,7 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
                 if (button.isSelected()) {
                     UserLibraryHelper.removeFromLibrary(viewHolder.manga, button, activity, true, adapter, position);
                 } else {
-                    UserLibraryHelper.addToLibrary(viewHolder.manga, button, activity, true, adapter, position);
+                    UserLibraryHelper.addToFavorites(viewHolder.manga, button, activity, true, adapter, position);
                 }
             }
         });

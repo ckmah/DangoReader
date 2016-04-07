@@ -156,8 +156,8 @@ public class MangaEden {
         return result;
     }
 
-    public static List<Chapter> convertChapterItemstoChapters(List<MangaEdenMangaChapterItem> c) {
-        List<Chapter> chapters = new ArrayList<Chapter>();
+    public static List<Chapter> convertChapterItemsToChapters(List<MangaEdenMangaChapterItem> c) {
+        List<Chapter> chapters = new ArrayList<>();
         for (MangaEdenMangaChapterItem ch : c) {
             Chapter temp = new Chapter();
             temp.id = ch.getId();

@@ -42,7 +42,7 @@ public class LibraryPageFragment extends SearchSortFragment {
 
         rootView = inflater.inflate(R.layout.card_grid, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.browse_recycler_view);
-        allManga = UserLibraryHelper.findAllFavoritedManga();
+        allManga = UserLibraryHelper.findAllFavoriteManga();
         loadLibraryPlaceholder();
         super.init(false);
 
@@ -75,7 +75,7 @@ public class LibraryPageFragment extends SearchSortFragment {
     @Override
     public void onResume() {
         super.onResume();
-        allManga = UserLibraryHelper.findAllFavoritedManga();
+        allManga = UserLibraryHelper.findAllFavoriteManga();
         cardAdapter.setAllManga(allManga);
         getFilter().filter("");
     }

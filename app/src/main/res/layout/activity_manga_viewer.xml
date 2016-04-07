@@ -19,9 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginTop="24dp"
+            android:background="@drawable/toolbar_gradient_top_down"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:title=""
-            android:background="@drawable/toolbar_gradient_top_down">
+            android:title="">
 
             <TextView
                 android:id="@+id/chapter_title"
@@ -90,7 +90,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="start"
                     android:background="@color/transparent"
-                    android:src="@drawable/left_page_arrow_white" />
+                    android:src="@drawable/ic_chevron_left_white_24dp" />
 
                 <moe.dangoreader.seekbar.ReversibleSeekBar
                     android:id="@+id/seekBar"
@@ -106,7 +106,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
                     android:background="@color/transparent"
-                    android:src="@drawable/right_page_arrow_white" />
+                    android:src="@drawable/ic_chevron_right_white_24dp" />
 
             </LinearLayout>
         </android.support.v7.widget.Toolbar>

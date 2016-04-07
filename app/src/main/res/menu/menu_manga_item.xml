@@ -4,7 +4,7 @@
     tools:context="moe.dangoreader.activity.MangaItemActivity">
     <item
         android:id="@+id/manga_item_bookmark_button"
-        android:icon="@drawable/bookmark_outline"
+        android:icon="@drawable/ic_favorite_border_white_24dp"
         android:orderInCategory="100"
         android:title="@string/add_to_lib"
         app:showAsAction="ifRoom|withText" />

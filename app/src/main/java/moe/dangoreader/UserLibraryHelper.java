@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.paperdb.Paper;
-import moe.dangoreader.activity.MangaItemActivity;
 import moe.dangoreader.activity.MainActivity;
+import moe.dangoreader.activity.MangaItemActivity;
 import moe.dangoreader.adapter.CardLayoutAdapter;
 import moe.dangoreader.database.Chapter;
 import moe.dangoreader.database.Manga;
@@ -25,10 +25,8 @@ import retrofit.Retrofit;
 public class UserLibraryHelper {
 
     public static final String USER_LIBRARY_DB = "user-library";
-    private static String added = "\"%s\" added to your library.";
-    private static String removed = "\"%s\" removed from your library.";
 
-    public static List<Manga> findAllFavoritedManga() {
+    public static List<Manga> findAllFavoriteManga() {
         List<Manga> response = new ArrayList<>();
         for (String key : Paper.book(USER_LIBRARY_DB).getAllKeys()) {
             Manga m = Paper.book(USER_LIBRARY_DB).read(key);
@@ -40,7 +38,7 @@ public class UserLibraryHelper {
         return response;
     }
 
-    public static void addToLibrary(final Manga m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
+    public static void addToFavorites(final Manga m, final View button, final Activity activity, boolean showUndo, final CardLayoutAdapter adapter, final int position) {
         // Update the existing entry if possible
         Manga current = Paper.book(USER_LIBRARY_DB).read(m.id);
         if (current == null) {
@@ -69,6 +67,7 @@ public class UserLibraryHelper {
                 });
 
         // Make and show an undo bar
+        String added = "\"%s\" added to your library.";
         Snackbar sb = Snackbar.make(findMyView(activity), String.format(added, m.title), Snackbar.LENGTH_LONG);
         if (showUndo) {
             sb.setAction("UNDO", new View.OnClickListener() {
@@ -98,12 +97,13 @@ public class UserLibraryHelper {
         button.setSelected(false);
 
         // show undo option only if not called from add undo
+        String removed = "\"%s\" removed from your library.";
         Snackbar sb = Snackbar.make(findMyView(activity), String.format(removed, m.title), Snackbar.LENGTH_LONG);
         if (showUndo) {
             sb.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addToLibrary(m, button, activity, false, adapter, position);
+                    addToFavorites(m, button, activity, false, adapter, position);
                 }
             });
         }
@@ -183,7 +183,7 @@ public class UserLibraryHelper {
         manga.numChapters = mangaDetailItem.getNumChapters();
 
         // Add in any new chapters
-        List<Chapter> newChapters = MangaEden.convertChapterItemstoChapters(mangaDetailItem.getChapters());
+        List<Chapter> newChapters = MangaEden.convertChapterItemsToChapters(mangaDetailItem.getChapters());
         if (manga.chaptersList == null) {
             manga.chaptersList = newChapters;
         } else {

@@ -26,13 +26,12 @@ import moe.dangoreader.fragment.LibraryPageFragment;
  */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private NavigationView navigationView;
-    private DrawerLayout drawerLayout;
-    private Toolbar toolbar;
-
     private final static String MYLIBRARY = "mylibrary";
     private final static String BROWSE = "browse";
     private final static String SAVED_FRAGMENT = "fragment";
+    private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         else {
-            if (UserLibraryHelper.findAllFavoritedManga().size() > 0) {
+            if (UserLibraryHelper.findAllFavoriteManga().size() > 0) {
                 // Show library as first page, if any manga are favorited
                 displayView(R.id.library_nav_item);
                 navigationView.setCheckedItem(R.id.library_nav_item);
