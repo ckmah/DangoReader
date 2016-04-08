@@ -87,7 +87,6 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public class ChapterViewHolder extends RecyclerView.ViewHolder {
 
         public TextView numberView;
-        public TextView titleView;
         public TextView dateView;
 
         public int chapterIndex;
@@ -95,7 +94,6 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public ChapterViewHolder(View chapterView) {
             super(chapterView);
             numberView = (TextView) chapterView.findViewById(R.id.chapter_number);
-            titleView = (TextView) chapterView.findViewById(R.id.chapter_title);
             dateView = (TextView) chapterView.findViewById(R.id.chapter_date);
         }
     }

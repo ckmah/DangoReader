@@ -32,9 +32,7 @@
             <FrameLayout
                 style="@style/CardBookmarkToggle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true">
+                android:layout_height="wrap_content">
 
                 <ImageButton
                     android:id="@+id/card_bookmark_toggle"
