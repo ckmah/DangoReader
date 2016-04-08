@@ -67,7 +67,7 @@
             android:layout_height="20dp"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="112dp"
-            android:background="@drawable/card_rounded_corner"
+            android:background="@drawable/page_number_indicator"
             android:gravity="center"
             android:textColor="@color/white" />
 
@@ -94,7 +94,7 @@
 
                 <moe.dangoreader.seekbar.ReversibleSeekBar
                     android:id="@+id/seekBar"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:maxHeight="@dimen/seekbar_height"

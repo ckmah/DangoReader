@@ -48,14 +48,14 @@ public class UpdateService extends IntentService {
 
             for (MangaEdenMangaListItem item : list.manga) {
                 // Check whether manga was released in the last 24 hours. TODO longer window?
-                DateTime lastChapterDate = new DateTime(item.lastChapterDate * 1000L); // Convert ms to sec
+                DateTime lastChapterDate = new DateTime(item.getLastChapterDate() * 1000L); // Convert ms to sec
                 DateTime yesterday = new DateTime().minusDays(1);
                 if (lastChapterDate.isAfter(yesterday)) {
 
                     // Check whether manga is in library
-                    Manga m = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(item.id);
+                    Manga m = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(item.getId());
                     if (m != null && m.favorite) {
-                        m = UserLibraryHelper.updateManga(this, item.id);
+                        m = UserLibraryHelper.updateManga(this, item.getId());
 
                         // Check whether latest chapter was read
                         Chapter latest = m.chaptersList.get(m.chaptersList.size()-1);

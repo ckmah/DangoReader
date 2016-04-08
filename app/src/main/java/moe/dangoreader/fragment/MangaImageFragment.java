@@ -45,10 +45,7 @@ public class MangaImageFragment extends Fragment {
                 ((MangaViewerActivity) getActivity()).handleTap(view, x, y);
             }
         });
-        final MangaViewerActivity activity = (MangaViewerActivity) getActivity();
-        String imageUrl = activity.getImages().get(itemIndex).getUrl();
-
-        MangaEden.setMangaImage(imageUrl, activity, imageView);
+        MangaEden.setMangaImage((MangaViewerActivity) getActivity(), itemIndex, imageView);
         return root;
     }
 }

@@ -195,5 +195,4 @@ public class UserLibraryHelper {
         Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
         return manga;
     }
-
 }

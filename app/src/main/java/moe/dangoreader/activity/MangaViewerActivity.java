@@ -71,12 +71,10 @@ public class MangaViewerActivity extends AppCompatActivity {
     private MangaImagePagerAdapter imageAdapter;
     private MangaViewPagerSeekBarChangeListener mangaViewPagerSeekBarChangeListener;
     private SharedPreferences sharedPref;
-
     // Actual data
     private Manga manga;
     private List<MangaEdenImageItem> images; // holds requested images for single chapter
     private List<Chapter> chapters;
-
     // Flags and other state
     private boolean isUIVisible;
     private int chapterTotalSize;
@@ -92,6 +90,14 @@ public class MangaViewerActivity extends AppCompatActivity {
         intent.putExtra(KEY_MANGA_ID, mangaId);
         intent.putExtra(KEY_CHAPTER_INDEX, chapterIndex);
         context.startActivity(intent);
+    }
+
+    public String getMangaId() {
+        return manga.id;
+    }
+
+    public String getChapterId() {
+        return chapters.get(chapterIndex).id;
     }
 
     @Override

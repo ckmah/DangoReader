@@ -1,8 +1,6 @@
 package moe.dangoreader.model;
 
 
-import android.graphics.Bitmap;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -13,17 +11,16 @@ import java.lang.reflect.Type;
 
 public class MangaEdenImageItem implements Serializable {
 
-    private int pageNumber;
+    //    private int pageNumber;
     private String url;
-    private Bitmap bitmap;
 
-    public int getPageNumber() {
-        return pageNumber;
-    }
+//    public int getPageNumber() {
+//        return pageNumber;
+//    }
 
-    public void setPageNumber(int page) {
-        this.pageNumber = page;
-    }
+//    public void setPageNumber(int page) {
+//        this.pageNumber = page;
+//    }
 
     public String getUrl() {
         return url;
@@ -33,19 +30,11 @@ public class MangaEdenImageItem implements Serializable {
         this.url = url;
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
-
     public static class ImageDeserializer implements JsonDeserializer<MangaEdenImageItem> {
         @Override
         public MangaEdenImageItem deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             MangaEdenImageItem item = new MangaEdenImageItem();
-            item.setPageNumber(json.getAsJsonArray().get(0).getAsInt());
+//            item.setPageNumber(json.getAsJsonArray().get(0).getAsInt());
             item.setUrl(json.getAsJsonArray().get(1).getAsString());
             return item;
         }

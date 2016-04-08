@@ -25,6 +25,7 @@ import io.paperdb.Paper;
 import moe.dangoreader.R;
 import moe.dangoreader.UserLibraryHelper;
 import moe.dangoreader.activity.MangaItemActivity;
+import moe.dangoreader.activity.MangaViewerActivity;
 import moe.dangoreader.database.Chapter;
 import moe.dangoreader.database.Manga;
 import moe.dangoreader.model.MangaEdenImageItem;
@@ -123,10 +124,27 @@ public class MangaEden {
                 });
     }
 
-    static public void setMangaImage(String url, Context context, final ImageView imageView) {
-        url = MANGAEDEN_IMAGE_CDN + url;
+    static public void setMangaImage(MangaViewerActivity activity, int itemIndex, final ImageView imageView) {
+        File EXT_DIR = activity.getExternalFilesDir("Manga");
+        if (EXT_DIR != null) {
+            String CHAPTER_PATH = EXT_DIR.getPath() + "/" + activity.getMangaId() + "/" + activity.getChapterId();
+            String filename = CHAPTER_PATH + "/" + String.format("%1$04d", itemIndex) + ".png";
+            File file = new File(filename);
 
-        Picasso.with(context)
+            //check local storage first
+            if (file.exists()) {
+                Log.d("SetMangaImage", "Found page " + itemIndex + " locally.");
+                Picasso.with(activity)
+                        .load(file)
+                        .fit().centerInside()
+                        .noFade()
+                        .placeholder(R.drawable.image_placeholder)
+                        .into(imageView);
+                return;
+            }
+        }
+        String url = MANGAEDEN_IMAGE_CDN + activity.getImages().get(itemIndex).getUrl();
+        Picasso.with(activity)
                 .load(url)
                 .fit().centerInside()
                 .noFade()
@@ -139,16 +157,16 @@ public class MangaEden {
         Manga manga;
         List<Manga> result = new ArrayList<>();
         for (MangaEdenMangaListItem mangaListItem : mangaListItems) {
-            manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaListItem.id);
+            manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaListItem.getId());
             if (manga == null) {
                 manga = new Manga();
-                manga.id = mangaListItem.id;
-                manga.title = mangaListItem.title;
-                manga.imageSrc = mangaListItem.imageUrl;
-                manga.lastChapterDate = mangaListItem.lastChapterDate;
-                manga.genres = mangaListItem.genres;
-                manga.status = Integer.parseInt(mangaListItem.status);
-                manga.hits = mangaListItem.hits;
+                manga.id = mangaListItem.getId();
+                manga.title = mangaListItem.getTitle();
+                manga.imageSrc = mangaListItem.getImageUrl();
+                manga.lastChapterDate = mangaListItem.getLastChapterDate();
+                manga.genres = mangaListItem.getGenres();
+                manga.status = Integer.parseInt(mangaListItem.getStatus());
+                manga.hits = mangaListItem.getHits();
             }
             result.add(manga);
         }
