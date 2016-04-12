@@ -8,20 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
+
 import io.paperdb.Paper;
 import moe.dangoreader.DividerItemDecoration;
 import moe.dangoreader.R;
 import moe.dangoreader.UserLibraryHelper;
 import moe.dangoreader.adapter.MangaItemRowAdapter;
 import moe.dangoreader.database.Manga;
-import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 public class MangaItemChapterFragment extends Fragment {
     private static final String CHAPTER_FRAGMENT_KEY = "chapter_fragment_key";
 
     private Manga manga;
     private String mangaId;
-    private RecyclerView mRecyclerView;
+    private FastScrollRecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     //private MangaItemAdapter chapterAdapter;
 
@@ -56,7 +57,7 @@ public class MangaItemChapterFragment extends Fragment {
     private void initRecycler(View rootView) {
         // retrieve chapters
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.chapter_recycler_view);
+        mRecyclerView = (FastScrollRecyclerView) rootView.findViewById(R.id.chapter_recycler_view);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(
@@ -67,12 +68,6 @@ public class MangaItemChapterFragment extends Fragment {
                 DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(itemDecoration);
 
-        VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) rootView.findViewById(R.id.fast_scroller);
-
-        // Connect the recycler to the scroller (to let the scroller scroll the list)
-        fastScroller.setRecyclerView(mRecyclerView);
-        // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
-        mRecyclerView.addOnScrollListener(fastScroller.getOnScrollListener());
     }
 
     @Override
