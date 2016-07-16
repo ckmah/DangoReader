@@ -9,7 +9,7 @@ android {
     buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "moe.dangoreader"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"

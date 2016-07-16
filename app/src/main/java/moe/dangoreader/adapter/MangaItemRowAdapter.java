@@ -1,22 +1,15 @@
 package moe.dangoreader.adapter;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -24,14 +17,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import moe.dangoreader.DownloadHelper;
 import moe.dangoreader.R;
 import moe.dangoreader.activity.MangaViewerActivity;
 import moe.dangoreader.database.Chapter;
-import moe.dangoreader.model.MangaEdenImageItem;
-import moe.dangoreader.parse.MangaEden;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 
 /**
  * Layout adapter for adding chapters
@@ -70,7 +59,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ChapterViewHolder chapterHolder = (ChapterViewHolder) holder;
+        final ChapterViewHolder chapterHolder = (ChapterViewHolder) holder;
         final Chapter chapterItem = chapters.get(position);
 
         // set chapter number
@@ -92,60 +81,18 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // TODO Sorts chapters in descending number. may consider adding setting/toggle
         chapterHolder.chapterIndex = chapters.size() - position - 1;
 
-        //TODO move out of here
-        chapterHolder.downloadButton.setOnClickListener(new ImageButton.OnClickListener() {
+        final ProgressBar progress = chapterHolder.downloadProgress;
+        progress.setVisibility(View.INVISIBLE);
+
+        // download on click, let DownloadHelper handle checks and errors
+        chapterHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //check if external storage available
-                if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-
-                    String EXT_DIR_PATH = activity.getExternalFilesDir("Manga").getPath();
-                    final String CHAPTER_PATH = EXT_DIR_PATH + "/" + mangaId + "/" + chapterItem.id;
-                    //get chapter directory
-                    File chapterDir = new File(CHAPTER_PATH);
-                    chapterDir.mkdirs();
-                    MangaEden.getMangaEdenService(activity).getMangaImages(chapterItem.id).enqueue(new Callback<MangaEden.MangaEdenChapter>() {
-                        @Override
-                        public void onResponse(final Response<MangaEden.MangaEdenChapter> response, Retrofit retrofit) {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    List<MangaEdenImageItem> images = response.body().images;
-                                    for (int i = 0; i < images.size(); i++) {
-                                        try {
-                                            Bitmap bitmap = Picasso.with(activity).load(MangaEden.MANGAEDEN_IMAGE_CDN + images.get(i).getUrl()).get();
-                                            File file = new File(CHAPTER_PATH + "/" + String.format("%1$04d", i) + ".png");
-                                            try {
-                                                file.createNewFile();
-                                                FileOutputStream ostream = new FileOutputStream(file);
-                                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, ostream);
-                                                ostream.close();
-                                                Log.d("Downloading", "page " + i + " downloaded.");
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            }).start();
-                        }
-
-                        @Override
-                        public void onFailure(Throwable t) {
-                            Log.e("MangaItemRowAdapter", "Could not get image urls");
-                            // TODO make failure more verbose/user interactive
-                        }
-                    });
-                } else {
-                    Log.e("MangaItemRowAdapter", "External storage not mounted");
-                }
-
-
+                DownloadHelper.downloadChapter(mangaId, chapterItem.id, activity, progress);
             }
         });
     }
+
 
     @Override
     public int getItemCount() {
@@ -156,6 +103,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public TextView numberView;
         public TextView dateView;
+        public ProgressBar downloadProgress;
         public ImageButton downloadButton;
 
         public int chapterIndex;
@@ -164,6 +112,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(chapterView);
             numberView = (TextView) chapterView.findViewById(R.id.chapter_number);
             dateView = (TextView) chapterView.findViewById(R.id.chapter_date);
+            downloadProgress = (ProgressBar) chapterView.findViewById(R.id.chapter_download_progress);
             downloadButton = (ImageButton) chapterView.findViewById(R.id.chapter_download_button);
         }
     }
