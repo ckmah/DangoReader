@@ -21,8 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import moe.dangoreader.BootReceiver;
 import moe.dangoreader.R;
+import moe.dangoreader.updates.BootReceiver;
 
 public class SettingsActivity extends PreferenceActivity {
 

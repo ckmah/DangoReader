@@ -18,7 +18,6 @@ public class Manga {
     public int numChapters;
 
     public boolean favorite = false;
-    public String offlineLocation;
     public List<Chapter> chaptersList;
 
     public Manga() {

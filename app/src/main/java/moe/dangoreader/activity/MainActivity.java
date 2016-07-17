@@ -15,11 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import io.paperdb.Paper;
-import moe.dangoreader.BootReceiver;
 import moe.dangoreader.R;
 import moe.dangoreader.UserLibraryHelper;
 import moe.dangoreader.fragment.BrowseMangaFragment;
 import moe.dangoreader.fragment.LibraryPageFragment;
+import moe.dangoreader.updates.BootReceiver;
 
 /**
  * Main activity screen. Displays various fragments.

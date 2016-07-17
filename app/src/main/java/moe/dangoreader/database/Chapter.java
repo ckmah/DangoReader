@@ -8,6 +8,7 @@ public class Chapter {
 
     public boolean read;
     public int mostRecentPage;
+    public String offlineLocation;
 
     public Chapter() {
     }

@@ -75,14 +75,18 @@
             </intent-filter>
         </activity>
 
+
         <service
-            android:name=".UpdateService"
+            android:name=".DownloadService"
             android:exported="false" />
         <service
-            android:name=".BootReceiver$RefreshService"
+            android:name=".updates.UpdateService"
+            android:exported="false" />
+        <service
+            android:name=".updates.BootReceiver$RefreshService"
             android:exported="false" />
 
-        <receiver android:name=".BootReceiver">
+        <receiver android:name=".updates.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

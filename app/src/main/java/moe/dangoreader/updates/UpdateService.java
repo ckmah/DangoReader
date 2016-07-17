@@ -1,4 +1,4 @@
-package moe.dangoreader;
+package moe.dangoreader.updates;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.paperdb.Paper;
+import moe.dangoreader.R;
+import moe.dangoreader.UserLibraryHelper;
 import moe.dangoreader.activity.MainActivity;
 import moe.dangoreader.database.Chapter;
 import moe.dangoreader.database.Manga;

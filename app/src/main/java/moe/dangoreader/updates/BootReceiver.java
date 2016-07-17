@@ -1,4 +1,4 @@
-package moe.dangoreader;
+package moe.dangoreader.updates;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -28,20 +28,14 @@ public class BootReceiver extends BroadcastReceiver {
 //    }
 
     public static class RefreshService extends IntentService {
-        public RefreshService() {
-            super("RefreshService");
-        }
-
+        private final static String TOGGLE = "moe.dangoreader.TOGGLE";
+        private final static String BOOT = "moe.dangoreader.BOOT";
+        private final static String UPDATE = "moe.dangoreader.UPDATE";
         private static String KEY_CYCLING = "moe.dangoreader.cycling";
         private static String KEY_STARTED = "moe.dangoreader.started";
 
-        // Helper functions
-        private boolean isCycling() {
-            return getSharedPreferences(KEY_CYCLING, 0).getBoolean(KEY_CYCLING, false);
-        }
-
-        private void setCycling(boolean value) {
-            getSharedPreferences(KEY_CYCLING, 0).edit().putBoolean(KEY_CYCLING, value).commit();
+        public RefreshService() {
+            super("RefreshService");
         }
 
         public static boolean isStarted(Context context) {
@@ -60,9 +54,14 @@ public class BootReceiver extends BroadcastReceiver {
             context.startService(intent.setAction(RefreshService.TOGGLE));
         }
 
-        private final static String TOGGLE = "moe.dangoreader.TOGGLE";
-        private final static String BOOT = "moe.dangoreader.BOOT";
-        private final static String UPDATE = "moe.dangoreader.UPDATE";
+        // Helper functions
+        private boolean isCycling() {
+            return getSharedPreferences(KEY_CYCLING, 0).getBoolean(KEY_CYCLING, false);
+        }
+
+        private void setCycling(boolean value) {
+            getSharedPreferences(KEY_CYCLING, 0).edit().putBoolean(KEY_CYCLING, value).commit();
+        }
 
         @Override
         protected void onHandleIntent(Intent intent) {
