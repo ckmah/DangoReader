@@ -88,7 +88,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         chapterHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadHelper.downloadChapter(mangaId, chapterItem.id, activity, progress);
+                DownloadHelper.queueChapter(mangaId, chapterItem.id, activity, progress);
             }
         });
     }
