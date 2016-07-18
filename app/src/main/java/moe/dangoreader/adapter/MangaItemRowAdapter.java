@@ -3,8 +3,10 @@ package moe.dangoreader.adapter;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import io.paperdb.Paper;
+import moe.dangoreader.DownloadReceiver;
 import moe.dangoreader.DownloadService;
 import moe.dangoreader.R;
 import moe.dangoreader.UserLibraryHelper;
@@ -49,6 +52,21 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.mangaId = mangaId;
         Collections.reverse(chapters); //TODO Sorts chapters in descending number. may consider adding setting/toggle
         Paper.init(activity);
+
+        // The filter's action is BROADCAST_ACTION
+        IntentFilter mStatusIntentFilter = new IntentFilter(
+                DownloadService.Constants.WORKING_ACTION);
+
+        // Adds a data filter for the HTTP scheme
+        mStatusIntentFilter.addDataScheme("http");
+
+        // Instantiates a new DownloadStateReceiver
+        DownloadReceiver mDownloadStateReceiver =
+                new DownloadReceiver();
+        // Registers the DownloadStateReceiver and its intent filters
+        LocalBroadcastManager.getInstance(activity).registerReceiver(
+                mDownloadStateReceiver,
+                mStatusIntentFilter);
     }
 
     @Override
@@ -110,13 +128,13 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             public void onClick(View v) {
                 // download manga
                 if (chapter.offlineLocation == null) {
+                    chapterHolder.downloadButton.setVisibility(View.INVISIBLE);
+                    chapterHolder.downloadProgress.setVisibility(View.VISIBLE);
                     Intent dlIntent = new Intent(activity, DownloadService.class);
                     dlIntent.putExtra("mangaId", mangaId);
                     dlIntent.putExtra("chapterId", chapterItem.id);
-                    // Starts the IntentService
                     activity.startService(dlIntent);
                     Snackbar.make(activity.findViewById(R.id.manga_item_layout), "Downloading \"" + manga.title + "\" chapter " + chapterHolder.chapterIndex + "...", Snackbar.LENGTH_LONG).show();
-
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setMessage("Remove saved chapter?");

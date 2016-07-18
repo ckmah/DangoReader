@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,16 +23,23 @@ import moe.dangoreader.parse.MangaEden;
 import retrofit.Call;
 
 public class DownloadService extends IntentService {
+
+    Intent localIntent;
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
     public DownloadService() {
         super("DownloadService");
+
+        // broadcast start download status
+        localIntent = new Intent(Constants.START_ACTION);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(localIntent);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
+        // unable to write to disk
         if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             String msg = "External storage is not mounted. Unable to save offline.";
             Log.e("MangaItemRowAdapter", "External storage not mounted");
@@ -44,7 +52,14 @@ public class DownloadService extends IntentService {
         String EXT_DIR_PATH = getApplication().getExternalFilesDir("Manga").getPath();
         final String CHAPTER_PATH = EXT_DIR_PATH + "/" + mangaId + "/" + chapterId;
         Log.d("Download", CHAPTER_PATH);
-        //get chapter directory
+
+        // broadcast working status
+        localIntent.setAction(Constants.WORKING_ACTION);
+        localIntent.putExtra("mangaId", mangaId);
+        localIntent.putExtra("chapterId", chapterId);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(localIntent);
+
+        // get chapter directory
         File chapterDir = new File(CHAPTER_PATH);
         chapterDir.mkdirs();
         List<MangaEdenImageItem> images = new ArrayList<>();
@@ -92,5 +107,12 @@ public class DownloadService extends IntentService {
             }
         }
         Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
+    }
+
+    public final class Constants {
+        // Defines a custom Intent action
+        public static final String START_ACTION = "moe.dangoreader.download.START";
+        public static final String WORKING_ACTION = "moe.dangoreader.download.WORKING";
+        public static final String DONE_ACTION = "moe.dangoreader.download.DONE";
     }
 }
