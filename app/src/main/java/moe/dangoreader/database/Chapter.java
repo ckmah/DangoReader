@@ -9,6 +9,10 @@ public class Chapter {
     public boolean read;
     public int mostRecentPage;
     public String offlineLocation;
+    /**
+     * 0 = not downloaded, 1 = working, 2 = downloaded
+     */
+    public int downloadStatus;
 
     public Chapter() {
     }

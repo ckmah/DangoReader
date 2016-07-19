@@ -1,6 +1,8 @@
 package moe.dangoreader.adapter;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -26,7 +28,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import io.paperdb.Paper;
-import moe.dangoreader.DownloadReceiver;
 import moe.dangoreader.DownloadService;
 import moe.dangoreader.R;
 import moe.dangoreader.UserLibraryHelper;
@@ -53,26 +54,22 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         Collections.reverse(chapters); //TODO Sorts chapters in descending number. may consider adding setting/toggle
         Paper.init(activity);
 
-        // The filter's action is BROADCAST_ACTION
-        IntentFilter mStatusIntentFilter = new IntentFilter(
-                DownloadService.Constants.WORKING_ACTION);
-
-        // Adds a data filter for the HTTP scheme
-        mStatusIntentFilter.addDataScheme("http");
+        // Define filters for Receiver to look for.
+        IntentFilter startIntentFilter = new IntentFilter(DownloadService.Constants.START_ACTION);
+        IntentFilter workingIntentFilter = new IntentFilter(DownloadService.Constants.WORKING_ACTION);
+        IntentFilter doneIntentFilter = new IntentFilter(DownloadService.Constants.DONE_ACTION);
 
         // Instantiates a new DownloadStateReceiver
-        DownloadReceiver mDownloadStateReceiver =
-                new DownloadReceiver();
+        DownloadReceiver downloadReceiver = new DownloadReceiver();
         // Registers the DownloadStateReceiver and its intent filters
-        LocalBroadcastManager.getInstance(activity).registerReceiver(
-                mDownloadStateReceiver,
-                mStatusIntentFilter);
+        LocalBroadcastManager.getInstance(activity).registerReceiver(downloadReceiver, startIntentFilter);
+        LocalBroadcastManager.getInstance(activity).registerReceiver(downloadReceiver, workingIntentFilter);
+        LocalBroadcastManager.getInstance(activity).registerReceiver(downloadReceiver, doneIntentFilter);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
         View chapterView = inflater.inflate(R.layout.chapter_row, parent, false);
         final ChapterViewHolder chapterHolder = new ChapterViewHolder(chapterView);
 
@@ -86,7 +83,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final ChapterViewHolder chapterHolder = (ChapterViewHolder) holder;
         final Chapter chapterItem = chapters.get(position);
 
@@ -115,10 +112,17 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final Manga manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
         // TODO subtraction only because list is reversed
         final Chapter chapter = manga.chaptersList.get(chapterHolder.chapterIndex);
-        if (chapter.offlineLocation == null) {
-            chapterHolder.downloadButton.setImageResource(R.drawable.download_grey);
-        } else {
-            chapterHolder.downloadButton.setImageResource(R.drawable.download_amber);
+
+        switch (chapter.downloadStatus) {
+            case 1:
+                chapterHolder.downloadButton.setImageResource(R.drawable.ic_refresh_white_24dp);
+                break;
+            case 2:
+                chapterHolder.downloadButton.setImageResource(R.drawable.download_amber);
+                break;
+            default:
+                chapterHolder.downloadButton.setImageResource(R.drawable.download_grey);
+                break;
         }
 
         // TODO update icon when finished downloading
@@ -126,18 +130,20 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         chapterHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Intent dlIntent = new Intent(activity, DownloadService.class);
+                dlIntent.putExtra("mangaId", mangaId);
+                dlIntent.putExtra("chapterId", chapterItem.id);
+                dlIntent.putExtra("isDelete", false);
                 // download manga
                 if (chapter.offlineLocation == null) {
                     chapterHolder.downloadButton.setVisibility(View.INVISIBLE);
                     chapterHolder.downloadProgress.setVisibility(View.VISIBLE);
-                    Intent dlIntent = new Intent(activity, DownloadService.class);
-                    dlIntent.putExtra("mangaId", mangaId);
-                    dlIntent.putExtra("chapterId", chapterItem.id);
                     activity.startService(dlIntent);
-                    Snackbar.make(activity.findViewById(R.id.manga_item_layout), "Downloading \"" + manga.title + "\" chapter " + chapterHolder.chapterIndex + "...", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(activity.findViewById(R.id.manga_item_layout), "Downloading \"" + manga.title + "\" chapter " + chapter.number + "...", Snackbar.LENGTH_LONG).show();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setMessage("Remove saved chapter?");
+
                     // Delete chapter folder after confirming with
                     builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -153,7 +159,13 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 Snackbar.make(activity.findViewById(R.id.manga_item_layout), "Unable to find saved chapter folder.", Snackbar.LENGTH_LONG).show();
                             }
                             chapter.offlineLocation = null;
+                            manga.chaptersList.get(chapterHolder.chapterIndex).offlineLocation = null;
+                            manga.chaptersList.get(chapterHolder.chapterIndex).downloadStatus = 0;
+                            Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
                             chapterHolder.downloadButton.setImageResource(R.drawable.download_grey);
+                            notifyItemChanged(position);
+                            Snackbar.make(activity.findViewById(R.id.manga_item_layout), "\"" + manga.title + "\" chapter " + chapterHolder.chapterIndex + " deleted.", Snackbar.LENGTH_LONG).show();
+
                         }
                     });
                     builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -168,10 +180,31 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
 
-
     @Override
     public int getItemCount() {
         return chapters.size();
+    }
+
+    // Broadcast receiver for receiving status updates from the IntentService
+    public class DownloadReceiver extends BroadcastReceiver {
+        // Prevents instantiation
+        public DownloadReceiver() {
+        }
+
+        // Called when the BroadcastReceiver gets an Intent it's registered to receive
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int chapterIndex = 0;
+            for (int index = 0; index < chapters.size(); index++) {
+                if (chapters.get(index).id.compareTo(intent.getStringExtra("chapterId")) == 0) {
+                    chapterIndex = index;
+                    break;
+                }
+            }
+            Manga manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
+            chapters.set(chapterIndex, manga.chaptersList.get(chapters.size() - chapterIndex - 1));
+            notifyItemChanged(chapterIndex);
+        }
     }
 
     public class ChapterViewHolder extends RecyclerView.ViewHolder {

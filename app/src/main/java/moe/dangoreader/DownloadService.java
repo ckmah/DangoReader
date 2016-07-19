@@ -24,17 +24,13 @@ import retrofit.Call;
 
 public class DownloadService extends IntentService {
 
-    Intent localIntent;
+    Intent localIntent = new Intent();
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
     public DownloadService() {
         super("DownloadService");
-
-        // broadcast start download status
-        localIntent = new Intent(Constants.START_ACTION);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(localIntent);
     }
 
     @Override
@@ -49,9 +45,19 @@ public class DownloadService extends IntentService {
 
         String mangaId = intent.getStringExtra("mangaId");
         String chapterId = intent.getStringExtra("chapterId");
-        String EXT_DIR_PATH = getApplication().getExternalFilesDir("Manga").getPath();
-        final String CHAPTER_PATH = EXT_DIR_PATH + "/" + mangaId + "/" + chapterId;
-        Log.d("Download", CHAPTER_PATH);
+
+        Manga manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
+        int chapterIndex = 0;
+        for (int index = 0; index < manga.chaptersList.size(); index++) {
+            if (manga.chaptersList.get(index).id.compareTo(chapterId) == 0) {
+                chapterIndex = index;
+                break;
+            }
+        }
+
+        // write download status to db (working)
+        manga.chaptersList.get(chapterIndex).downloadStatus = 1;
+        Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
 
         // broadcast working status
         localIntent.setAction(Constants.WORKING_ACTION);
@@ -60,6 +66,10 @@ public class DownloadService extends IntentService {
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(localIntent);
 
         // get chapter directory
+        String EXT_DIR_PATH = getApplication().getExternalFilesDir("Manga").getPath();
+        final String CHAPTER_PATH = EXT_DIR_PATH + "/" + mangaId + "/" + chapterId;
+        Log.d("Download", CHAPTER_PATH);
+
         File chapterDir = new File(CHAPTER_PATH);
         chapterDir.mkdirs();
         List<MangaEdenImageItem> images = new ArrayList<>();
@@ -98,15 +108,24 @@ public class DownloadService extends IntentService {
             }
         }
 
-        Manga manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
+        // broadcast finished download
+        Intent doneIntent = new Intent(Constants.DONE_ACTION);
+        doneIntent.putExtra("mangaId", mangaId);
+        doneIntent.putExtra("chapterId", chapterId);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(doneIntent);
+
+        // write download status to db (downloaded)
+        manga.chaptersList.get(chapterIndex).downloadStatus = 2;
+        Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
+
         // TODO optimize manga chapter db lookup
         for (int index = 0; index < manga.chaptersList.size(); index++) {
             if (manga.chaptersList.get(index).id.compareTo(chapterId) == 0) {
                 manga.chaptersList.get(index).offlineLocation = CHAPTER_PATH;
+                Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
                 break;
             }
         }
-        Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
     }
 
     public final class Constants {
