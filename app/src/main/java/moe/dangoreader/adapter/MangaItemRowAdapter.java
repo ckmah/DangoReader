@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -23,6 +25,7 @@ import com.github.lzyzsd.circleprogress.DonutProgress;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -46,13 +49,19 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private String mangaId;
     private List<Chapter> chaptersList;
     private Activity activity;
+    private boolean isDescendingOrder;
 
     public MangaItemRowAdapter(Activity activity, Manga manga) {
         this.activity = activity;
         this.manga = manga;
         this.mangaId = manga.id;
         chaptersList = manga.chaptersList;
-//        updateChapterList(manga.chaptersList);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+        isDescendingOrder = sharedPref.getBoolean(activity.getString(R.string.PREF_KEY_CHAPTER_ORDER), false);
+        if (isDescendingOrder) {
+            Collections.reverse(chaptersList);
+        }
+
         Paper.init(activity);
 
         // Define filters for Receiver to look for.
@@ -76,7 +85,9 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         chapterView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MangaViewerActivity.start(activity, mangaId, chapterHolder.getAdapterPosition());
+                int pos;
+                pos = isDescendingOrder ? chaptersList.size() - chapterHolder.getAdapterPosition() - 1 : chapterHolder.getAdapterPosition();
+                MangaViewerActivity.start(activity, mangaId, pos);
             }
         });
         return chapterHolder;
@@ -87,23 +98,18 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final ChapterViewHolder chapterHolder = (ChapterViewHolder) holder;
         final Chapter chapterItem = chaptersList.get(position);
 
-        // set chapter number
+        // set chapter info
         chapterHolder.numberView.setText(String.format("%s%s", CHAPTER_PREFIX, chapterItem.number));
-
-        // set chapter date
         Date chapterDate = new Date(chapterItem.date * 1000L);
         DateFormat sdf = SimpleDateFormat.getDateInstance();
         sdf.setTimeZone(TimeZone.getDefault());
         chapterHolder.dateView.setText(sdf.format(chapterDate));
-
-        // set read/unread indicator
         if (chapterItem.read) {
             chapterHolder.numberView.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimaryDark));
         } else {
             chapterHolder.numberView.setTextColor(ContextCompat.getColor(activity, R.color.black));
         }
 
-        // TODO Sorts chaptersList in descending number. may consider adding setting/toggle
         if (chapterItem.getDlStatus() != 2) {
             chapterHolder.downloadButton.setVisibility(View.VISIBLE);
             chapterHolder.downloadProgress.setVisibility(View.INVISIBLE);
@@ -183,8 +189,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             Log.d("Download", "deleted");
                             Snackbar.make(activity.findViewById(R.id.manga_item_layout), "\"" + manga.title + "\" chapter " + chapterItem.number + " deleted.", Snackbar.LENGTH_LONG).show();
                             chaptersList.set(holder.getAdapterPosition(), chapterItem);
-//                            updateChapterList(manga.chaptersList);
-                            Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
+                            writeChapterListToDB();
                             notifyItemChanged(holder.getAdapterPosition());
                         }
                     });
@@ -207,13 +212,18 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     // TODO Sorts chaptersList in descending number. may consider adding setting/toggle
 
     /**
-     * Update chaptersList respective to RecyclerView list order.
-     *
-     * @param chaptersList
+     * Update manga.chaptersList by checking order before writing it back to the db.
      */
-    public void updateChapterList(List<Chapter> chaptersList) {
-        this.chaptersList = chaptersList;
-//        Collections.reverse(this.chaptersList);
+    public void writeChapterListToDB() {
+        // flip as necessary to update db
+        if (isDescendingOrder) {
+            Collections.reverse(chaptersList);
+        }
+        Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
+        // flip it back (for RecyclerView order) if it was flipped
+        if (isDescendingOrder) {
+            Collections.reverse(chaptersList);
+        }
     }
 
     // Broadcast receiver for receiving status updates from the IntentService
@@ -225,13 +235,12 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // Called when the BroadcastReceiver gets an Intent it's registered to receive
         @Override
         public void onReceive(Context context, Intent intent) {
-            // find chapter
             int chapterIndex = 0;
             // prevents mixing download status across multiple adapter instances
             if (!Objects.equals(intent.getStringExtra("mangaId"), manga.id)) {
                 return;
             }
-            for (int index = 0; index < chaptersList.size(); index++) {
+            for (int index = 0; index < chaptersList.size(); index++) { // find chapter
                 if (chaptersList.get(index).id.compareTo(intent.getStringExtra("chapterId")) == 0) {
                     chapterIndex = index;
                     break;
@@ -253,24 +262,20 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 case DownloadService.Constants.DONE_ACTION:
                     Log.d("Broadcast", "Download finished.");
                     chapter.setDlStatus(3);
-                    // TODO optimize manga chapter db lookup
                     chaptersList.set(chapterIndex, chapter);
-//                    updateChapterList(manga.chaptersList);
+//                    writeChapterListToDB(manga.chaptersList);
                     Log.d("Download", "Offline location saved.");
-                    Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
                     break;
                 default:
                     break;
             }
             chaptersList.set(chapterIndex, chapter);
-//            updateChapterList(manga.chaptersList);
-            Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
+            writeChapterListToDB();
             notifyItemChanged(chapterIndex);
         }
     }
 
     public class ChapterViewHolder extends RecyclerView.ViewHolder {
-
         public TextView numberView;
         public TextView dateView;
         public DonutProgress downloadProgress;

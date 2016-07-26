@@ -156,6 +156,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="PREF_KEY_READ_DIRECTION">read_direction</string>
     <string name="PREF_KEY_CHECK_FOR_UPDATES">check_for_updates</string>
+    <string name="PREF_KEY_CHAPTER_ORDER">chapter_order</string>
     <string name="PREF_EMAIL">email</string>
     <string name="PREF_WEBSITE">website</string>
     <string name="PREF_MANGAEDEN">mangaeden</string>

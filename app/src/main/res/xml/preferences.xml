@@ -18,16 +18,24 @@
             android:title="New chapter notifications" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="Interface">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/PREF_KEY_CHAPTER_ORDER"
+            android:title="List latest chapters first" />
+    </PreferenceCategory>
+
+
     <PreferenceCategory android:title="About">
         <Preference
-            android:title="Email us"
-            android:key="@string/PREF_EMAIL" />
+            android:key="@string/PREF_EMAIL"
+            android:title="Email us" />
         <Preference
-            android:title="Website"
-            android:key="@string/PREF_WEBSITE" />
+            android:key="@string/PREF_WEBSITE"
+            android:title="Website" />
         <Preference
-            android:title="Images &amp; API courtesy of MangaEden"
-            android:key="@string/PREF_MANGAEDEN" />
+            android:key="@string/PREF_MANGAEDEN"
+            android:title="Images &amp; API courtesy of MangaEden" />
 
     </PreferenceCategory>
 </PreferenceScreen>
