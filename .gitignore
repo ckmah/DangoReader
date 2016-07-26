@@ -1,15 +1,8 @@
 .gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
-/.idea/misc.xml
-/.idea/gradle.xml
+/.idea
 .DS_Store
 /build
 /captures
+DangoReader.iml
 app/app.iml
-
-.idea/codeStyleSettings.xml
-greendao/greendao.iml
-MangoReader.iml
-/node_modules
