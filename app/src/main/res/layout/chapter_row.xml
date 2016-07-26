@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     style="@style/ChapterRow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,7 +32,7 @@
 
     <RelativeLayout
         android:id="@+id/chapter_download_layout"
-        android:layout_width="36dp"
+        android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -46,11 +47,20 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/download_grey" />
 
-        <ProgressBar
+        <com.github.lzyzsd.circleprogress.DonutProgress
             android:id="@+id/chapter_download_progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"
+            android:padding="4dp"
+            custom:donut_finished_color="@color/colorPrimaryDark"
+            custom:donut_finished_stroke_width="4dp"
+            custom:donut_text_color="@color/grey"
+            custom:donut_text_size="12sp"
+            custom:donut_unfinished_stroke_width="4dp"
+
+            />
+
     </RelativeLayout>
 
 

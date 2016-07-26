@@ -84,12 +84,12 @@ public class CardLayoutAdapter extends RecyclerView.Adapter<CardLayoutAdapter.Ca
 
     private void initUpdateIndicator(Manga manga, CardViewHolder viewHolder) {
         int unreadCount = 0;
-        // count unread chapters
+        // count unread chaptersList
         for (Chapter c : manga.chaptersList) {
             unreadCount += c.read ? 0 : 1;
         }
 
-        // Display number of unread chapters
+        // Display number of unread chaptersList
         if (unreadCount > 0) {
             viewHolder.indicatorView.setVisibility(View.VISIBLE);
             if (unreadCount >= 99) { // Gets cut off if too long... precision not needed anyway

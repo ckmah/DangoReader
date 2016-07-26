@@ -10,9 +10,11 @@ public class Chapter {
     public int mostRecentPage;
     public String offlineLocation;
     /**
-     * 0 = not downloaded, 1 = working, 2 = downloaded
+     * 0 = not downloaded, 1 = queued, 2 = downloading, 3 = downloaded
      */
-    public int downloadStatus;
+    private int dlStatus;
+    private int dlProgress;
+    private int numPages;
 
     public Chapter() {
     }
@@ -21,5 +23,29 @@ public class Chapter {
     public boolean equals(Object o) {
         // Two chapters are equal if they share the same id
         return (o instanceof Chapter) && id.equals(((Chapter) o).id);
+    }
+
+    public int getDlStatus() {
+        return dlStatus;
+    }
+
+    public void setDlStatus(int dlStatus) {
+        this.dlStatus = dlStatus;
+    }
+
+    public int getDlProgress() {
+        return dlProgress;
+    }
+
+    public void setDlProgress(int dlProgress) {
+        this.dlProgress = dlProgress;
+    }
+
+    public int getNumPages() {
+        return numPages;
+    }
+
+    public void setNumPages(int numPages) {
+        this.numPages = numPages;
     }
 }

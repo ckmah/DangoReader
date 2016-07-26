@@ -1,8 +1,6 @@
 package moe.dangoreader.parse;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -12,7 +10,6 @@ import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Response;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -115,20 +112,14 @@ public class MangaEden {
                 .fit().centerCrop()
                 .placeholder(R.drawable.image_placeholder)
                 .transform(PaletteTransformation.instance())
-                .into(imageView, new Callback.EmptyCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                        imageView.setImageBitmap(bitmap);
-                    }
-                });
+                .into(imageView);
     }
 
     static public void setMangaImage(MangaViewerActivity activity, int itemIndex, final ImageView imageView) {
         File EXT_DIR = activity.getExternalFilesDir("Manga");
         if (EXT_DIR != null) {
-            String CHAPTER_PATH = EXT_DIR.getPath() + "/" + activity.getMangaId() + "/" + activity.getChapterId();
-            String filename = CHAPTER_PATH + "/" + String.format("%1$04d", itemIndex) + ".png";
+            String CHAPTER_PATH = String.format("%s/%s/%s", EXT_DIR.getPath(), activity.getMangaId(), activity.getChapterId());
+            String filename = String.format("%s/%s.png", CHAPTER_PATH, String.format("%1$04d", itemIndex));
             File file = new File(filename);
 
             //check local storage first

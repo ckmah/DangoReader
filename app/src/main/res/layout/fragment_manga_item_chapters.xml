@@ -17,7 +17,7 @@
         android:id="@+id/fast_scroller"
         android:layout_width="20dp"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         recyclerviewfastscroller:rfs_barBackground="@color/transparent"
         recyclerviewfastscroller:rfs_handleBackground="@drawable/fast_scroll_bg"/>
 

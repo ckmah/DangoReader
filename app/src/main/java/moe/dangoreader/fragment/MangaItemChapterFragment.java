@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,6 @@ public class MangaItemChapterFragment extends Fragment {
     private static final String CHAPTER_FRAGMENT_KEY = "chapter_fragment_key";
 
     private Manga manga;
-    private String mangaId;
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager linearLayoutManager;
-    //private MangaItemAdapter chapterAdapter;
 
     public MangaItemChapterFragment() {
         // required empty constructor
@@ -46,7 +43,6 @@ public class MangaItemChapterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         String mangaId = getArguments().getString(CHAPTER_FRAGMENT_KEY);
-        this.mangaId = mangaId;
         manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
         final View rootView = inflater.inflate(R.layout.fragment_manga_item_chapters, container, false);
         initRecycler(rootView);
@@ -54,13 +50,14 @@ public class MangaItemChapterFragment extends Fragment {
     }
 
     private void initRecycler(View rootView) {
-        // retrieve chapters
-
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.chapter_recycler_view);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
+        Log.d("MangaItemChapterFrag", "init RecyclerView");
+        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.chapter_recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+//        linearLayoutManager.setReverseLayout(true); // MAGIC
+//        linearLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(
-                getActivity(), manga.chaptersList, manga.id);
+
+        MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(getActivity(), manga);
         mRecyclerView.setAdapter(itemRowAdapter);
 
         RecyclerView.ItemDecoration itemDecoration = new
@@ -68,19 +65,12 @@ public class MangaItemChapterFragment extends Fragment {
         mRecyclerView.addItemDecoration(itemDecoration);
 
         VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) rootView.findViewById(R.id.fast_scroller);
-
-        // Connect the recycler to the scroller (to let the scroller scroll the list)
-        fastScroller.setRecyclerView(mRecyclerView);
-        // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
-        mRecyclerView.addOnScrollListener(fastScroller.getOnScrollListener());
+        fastScroller.setRecyclerView(mRecyclerView); // let scroller scroll list
+        mRecyclerView.addOnScrollListener(fastScroller.getOnScrollListener()); // let recycler scroll scroller handle
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
-        MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(
-                getActivity(), manga.chaptersList, manga.id);
-        mRecyclerView.setAdapter(itemRowAdapter);
     }
 }
