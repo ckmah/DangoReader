@@ -15,7 +15,6 @@ import moe.dangoreader.R;
 import moe.dangoreader.UserLibraryHelper;
 import moe.dangoreader.adapter.MangaItemRowAdapter;
 import moe.dangoreader.database.Manga;
-import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 public class MangaItemChapterFragment extends Fragment {
     private static final String CHAPTER_FRAGMENT_KEY = "chapter_fragment_key";
@@ -53,8 +52,6 @@ public class MangaItemChapterFragment extends Fragment {
         Log.d("MangaItemChapterFrag", "init RecyclerView");
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.chapter_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-//        linearLayoutManager.setReverseLayout(true); // MAGIC
-//        linearLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
         MangaItemRowAdapter itemRowAdapter = new MangaItemRowAdapter(getActivity(), manga);
@@ -63,10 +60,6 @@ public class MangaItemChapterFragment extends Fragment {
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(itemDecoration);
-
-        VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) rootView.findViewById(R.id.fast_scroller);
-        fastScroller.setRecyclerView(mRecyclerView); // let scroller scroll list
-        mRecyclerView.addOnScrollListener(fastScroller.getOnScrollListener()); // let recycler scroll scroller handle
     }
 
     @Override

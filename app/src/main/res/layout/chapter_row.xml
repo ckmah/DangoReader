@@ -3,17 +3,15 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     style="@style/ChapterRow"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
 
     <LinearLayout
         android:id="@+id/chapter_row_title_and_date"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/chapter_download_layout"
         android:layout_toStartOf="@+id/chapter_download_layout"
         android:orientation="vertical">
 
