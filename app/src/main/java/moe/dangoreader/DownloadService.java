@@ -48,10 +48,10 @@ public class DownloadService extends IntentService {
         String chapterId = intent.getStringExtra("chapterId");
 
         // broadcast put in queue
-        localIntent.setAction(Constants.QUEUED_ACTION);
+//        localIntent.setAction(Constants.QUEUED_ACTION);
         localIntent.putExtra("mangaId", mangaId);
         localIntent.putExtra("chapterId", chapterId);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(localIntent);
+//        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(localIntent);
 
         // get chapter directory
         String EXT_DIR_PATH = getApplication().getExternalFilesDir("Manga").getPath();

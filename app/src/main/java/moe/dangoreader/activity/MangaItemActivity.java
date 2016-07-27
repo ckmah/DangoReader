@@ -27,6 +27,7 @@ import retrofit.Retrofit;
  * Activity that displays a single manga, and shows manga info and chapters
  */
 public class MangaItemActivity extends AppCompatActivity {
+    MangaItemPageAdapter mangaItemPageAdapter;
     private Manga manga;
 
     @Override
@@ -40,10 +41,8 @@ public class MangaItemActivity extends AppCompatActivity {
 
         String mangaId = getIntent().getStringExtra("mangaId");
         manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
-//        if (manga != null && manga.chaptersList != null) {
-//            initViewPager();
-//            initMarqueeTitle();
-//        }
+
+
         fetchMangaDetailFromMangaEden(mangaId);
     }
 
@@ -62,7 +61,7 @@ public class MangaItemActivity extends AppCompatActivity {
 
     private void initViewPager() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.manga_item_pager);
-        MangaItemPageAdapter mangaItemPageAdapter = new MangaItemPageAdapter(this, getSupportFragmentManager(), manga.id);
+        mangaItemPageAdapter = new MangaItemPageAdapter(this, getSupportFragmentManager(), manga.id);
         viewPager.setAdapter(mangaItemPageAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.manga_item_tabs);
         tabLayout.setupWithViewPager(viewPager);

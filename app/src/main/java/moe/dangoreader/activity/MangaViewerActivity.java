@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -43,6 +44,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MangaViewerActivity extends AppCompatActivity {
+    public static final String EXIT_READING = "exit_reading";
     // Constants
     private static final float LEFT_SIDE = 0.33f;
     private static final float RIGHT_SIDE = 0.66f;
@@ -50,7 +52,6 @@ public class MangaViewerActivity extends AppCompatActivity {
             KEY_IMAGES = "images",
             KEY_MANGA_ID = "manga_title",
             KEY_CHAPTER_INDEX = "chapter_index";
-
     // Constants for animating toolbar positions.
     private static float LAYOUT_HEIGHT;
     private static float SEEKBAR_YPOS;
@@ -199,10 +200,10 @@ public class MangaViewerActivity extends AppCompatActivity {
         displayChapter();
     }
 
-    @Override
     /**
      * Change layout responding to orientation change.
      */
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
@@ -214,7 +215,6 @@ public class MangaViewerActivity extends AppCompatActivity {
 
         }
     }
-
 
     private void displayChapter() {
         // chapter title set to manga name and chapter #. Example: "Ch. 1 - Naruto"
@@ -294,8 +294,7 @@ public class MangaViewerActivity extends AppCompatActivity {
         } else {
             if (readLeftToRight) {
                 mangaViewPager.setPageIndex(images.size() - 1);
-            }
-            else {
+            } else {
                 mangaViewPager.setPageIndex(0);
             }
             saveMostRecentPage();
@@ -426,10 +425,13 @@ public class MangaViewerActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         saveMostRecentPage();
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(EXIT_READING));
     }
 
     public void saveMostRecentPage() {
-        manga.chaptersList.get(chapterIndex).mostRecentPage = mangaViewPager.getPageIndex();
+        Chapter chapter = manga.chaptersList.get(chapterIndex);
+        chapter.mostRecentPage = mangaViewPager.getPageIndex();
+        chapter.setNumPages(images.size());
         Paper.book(UserLibraryHelper.USER_LIBRARY_DB).write(manga.id, manga);
     }
 

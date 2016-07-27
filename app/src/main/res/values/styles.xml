@@ -232,7 +232,6 @@
     <style name="ChapterNumber">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/chapter_number_textsize</item>
-        <!--<item name="android:paddingRight">@dimen/chapter_number_padding_right</item>-->
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>

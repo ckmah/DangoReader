@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.ArcShape;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.DonutProgress;
@@ -46,21 +49,17 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private static final String CHAPTER_PREFIX = "Chapter ";
     private Manga manga;
-    private String mangaId;
     private List<Chapter> chaptersList;
     private Activity activity;
     private boolean isDescendingOrder;
+    private SharedPreferences sharedPref;
 
-    public MangaItemRowAdapter(Activity activity, Manga manga) {
+    public MangaItemRowAdapter(Activity activity, String mangaId) {
         this.activity = activity;
-        this.manga = manga;
-        this.mangaId = manga.id;
-        chaptersList = manga.chaptersList;
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+        manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(mangaId);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
         isDescendingOrder = sharedPref.getBoolean(activity.getString(R.string.PREF_KEY_CHAPTER_ORDER), false);
-        if (isDescendingOrder) {
-            Collections.reverse(chaptersList);
-        }
+        updateLocalManga();
 
         Paper.init(activity);
 
@@ -68,12 +67,14 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         IntentFilter queueIntentFilter = new IntentFilter(DownloadService.Constants.QUEUED_ACTION);
         IntentFilter workingIntentFilter = new IntentFilter(DownloadService.Constants.WORKING_ACTION);
         IntentFilter doneIntentFilter = new IntentFilter(DownloadService.Constants.DONE_ACTION);
+        IntentFilter readingIntentFilter = new IntentFilter(MangaViewerActivity.EXIT_READING);
 
         // Registers BroadcastReceiver and its intent filters
         DownloadReceiver downloadReceiver = new DownloadReceiver();
         LocalBroadcastManager.getInstance(activity).registerReceiver(downloadReceiver, queueIntentFilter);
         LocalBroadcastManager.getInstance(activity).registerReceiver(downloadReceiver, workingIntentFilter);
         LocalBroadcastManager.getInstance(activity).registerReceiver(downloadReceiver, doneIntentFilter);
+        LocalBroadcastManager.getInstance(activity).registerReceiver(downloadReceiver, readingIntentFilter);
     }
 
     @Override
@@ -87,7 +88,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             public void onClick(View v) {
                 int pos;
                 pos = isDescendingOrder ? chaptersList.size() - chapterHolder.getAdapterPosition() - 1 : chapterHolder.getAdapterPosition();
-                MangaViewerActivity.start(activity, mangaId, pos);
+                MangaViewerActivity.start(activity, manga.id, pos);
             }
         });
         return chapterHolder;
@@ -104,17 +105,37 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         DateFormat sdf = SimpleDateFormat.getDateInstance();
         sdf.setTimeZone(TimeZone.getDefault());
         chapterHolder.dateView.setText(sdf.format(chapterDate));
+
+        // ghetto draw read progress indicator
+        if (chapterItem.mostRecentPage > 0) {
+            int recentPage = sharedPref.getBoolean(activity.getString(R.string.PREF_KEY_READ_DIRECTION), true) ? chapterItem.mostRecentPage : chapterItem.getNumPages() - chapterItem.mostRecentPage - 1;
+            Log.d("Read Progress", chapterItem.number + ", " + recentPage + "/" + chapterItem.getNumPages());
+            int arcSize = (int) (((double) recentPage + 1) / chapterItem.getNumPages() * 360);
+            Log.d("READ PROGRESS", "recentPage: " + recentPage + " | numPages: " + chapterItem.getNumPages() + " | arcSize: " + arcSize);
+            ShapeDrawable readProgressShape = new ShapeDrawable(new ArcShape(-90, arcSize));
+            float scale = activity.getResources().getDisplayMetrics().density;
+            int dim = (int) (scale * 24);
+            readProgressShape.setIntrinsicHeight(dim);
+            readProgressShape.setIntrinsicWidth(dim);
+            readProgressShape.getPaint().setColor(activity.getResources().getColor(R.color.grey));
+            readProgressShape.setAlpha(100);
+            chapterHolder.readProgress.setImageDrawable(readProgressShape);
+        } else {
+            chapterHolder.readProgress.setImageDrawable(null);
+        }
+
         if (chapterItem.read) {
             chapterHolder.numberView.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimaryDark));
         } else {
             chapterHolder.numberView.setTextColor(ContextCompat.getColor(activity, R.color.black));
         }
 
+        Log.d("DownloadStatus", String.format("%s, position %d", String.valueOf(chapterItem.getDlStatus()), position));
         if (chapterItem.getDlStatus() != 2) {
             chapterHolder.downloadButton.setVisibility(View.VISIBLE);
             chapterHolder.downloadProgress.setVisibility(View.INVISIBLE);
         }
-        Log.d("DownloadStatus", String.format("%s, position %d", String.valueOf(chapterItem.getDlStatus()), position));
+
         switch (chapterItem.getDlStatus()) {
             case 1: // queued
                 chapterHolder.downloadButton.setImageResource(R.drawable.queue_grey);
@@ -142,19 +163,20 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // TODO update icon when finished downloading
         // download on click, let DownloadService handle checks and errors
         chapterHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
-            Intent dlIntent = new Intent(activity, DownloadService.class);
+//            Intent dlIntent = new Intent(activity, DownloadService.class);
 
             @Override
             public void onClick(View v) {
                 // download manga
                 if (chapterItem.getDlStatus() == 0) {
                     // download status is in queue
-                    dlIntent.putExtra("mangaId", mangaId);
+                    Intent dlIntent = new Intent(activity, DownloadService.class);
+                    dlIntent.setAction(DownloadService.Constants.QUEUED_ACTION);
+                    dlIntent.putExtra("mangaId", manga.id);
                     dlIntent.putExtra("chapterId", chapterItem.id);
                     dlIntent.putExtra("chaptersListIndex", holder.getAdapterPosition());
                     activity.startService(dlIntent);
-                    LocalBroadcastManager.getInstance(activity).sendBroadcast(new Intent(DownloadService.Constants.QUEUED_ACTION).putExtra("chapterId", chapterItem.id));
-
+                    LocalBroadcastManager.getInstance(activity).sendBroadcast(dlIntent);
                     Snackbar.make(activity.findViewById(R.id.manga_item_layout), "Downloading \"" + manga.title + "\" chapter " + chapterItem.number + "...", Snackbar.LENGTH_LONG).show();
                 } else {
                     // confirmation dialog
@@ -226,7 +248,16 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    private void updateLocalManga() {
+        manga = Paper.book(UserLibraryHelper.USER_LIBRARY_DB).read(manga.id);
+        chaptersList = manga.chaptersList;
+        if (isDescendingOrder) {
+            Collections.reverse(chaptersList);
+        }
+    }
+
     // Broadcast receiver for receiving status updates from the IntentService
+    // Warning: DownloadService runs asynchronously in bg while onReceive runs on main thread.
     public class DownloadReceiver extends BroadcastReceiver {
         // Prevents instantiation
         public DownloadReceiver() {
@@ -236,6 +267,10 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @Override
         public void onReceive(Context context, Intent intent) {
             int chapterIndex = 0;
+            if (intent.getAction() == MangaViewerActivity.EXIT_READING) {
+                updateLocalManga();
+                notifyDataSetChanged();
+            }
             // prevents mixing download status across multiple adapter instances
             if (!Objects.equals(intent.getStringExtra("mangaId"), manga.id)) {
                 return;
@@ -250,28 +285,28 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             Chapter chapter = chaptersList.get(chapterIndex);
             switch (intent.getAction()) {
                 case DownloadService.Constants.QUEUED_ACTION:
-                    Log.d("Broadcast", "Queued");
+                    Log.d("Broadcast", chapter.number + ": Queued");
                     chapter.setDlStatus(1);
                     break;
                 case DownloadService.Constants.WORKING_ACTION:
-                    Log.d("Broadcast", "Downloading...");
+                    Log.d("Broadcast", chapter.number + ": Downloading...");
                     chapter.setDlStatus(2);
                     chapter.setDlProgress(intent.getIntExtra("progress", 0));
-                    chapter.setNumPages(intent.getIntExtra("progressMax", 1));
+                    chapter.setNumPages(intent.getIntExtra("progressMax", 0));
                     break;
                 case DownloadService.Constants.DONE_ACTION:
-                    Log.d("Broadcast", "Download finished.");
+                    Log.d("Broadcast", chapter.number + ": Download finished.");
                     chapter.setDlStatus(3);
-                    chaptersList.set(chapterIndex, chapter);
-//                    writeChapterListToDB(manga.chaptersList);
+                    chapter.setDlProgress(intent.getIntExtra("progress", 0));
+                    chapter.setNumPages(intent.getIntExtra("progressMax", 0));
                     Log.d("Download", "Offline location saved.");
                     break;
                 default:
                     break;
             }
             chaptersList.set(chapterIndex, chapter);
-            writeChapterListToDB();
             notifyItemChanged(chapterIndex);
+            writeChapterListToDB();
         }
     }
 
@@ -280,6 +315,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public TextView dateView;
         public DonutProgress downloadProgress;
         public ImageButton downloadButton;
+        public ImageView readProgress;
 
         public ChapterViewHolder(View chapterView) {
             super(chapterView);
@@ -287,6 +323,7 @@ public class MangaItemRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dateView = (TextView) chapterView.findViewById(R.id.chapter_date);
             downloadProgress = (DonutProgress) chapterView.findViewById(R.id.chapter_download_progress);
             downloadButton = (ImageButton) chapterView.findViewById(R.id.chapter_download_button);
+            readProgress = (ImageView) chapterView.findViewById(R.id.chapter_read_progress);
         }
     }
 }

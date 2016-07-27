@@ -4,15 +4,44 @@
     style="@style/ChapterRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground">
+    android:background="?attr/selectableItemBackground"
+    android:clipToPadding="false">
+
+    <RelativeLayout
+        android:id="@+id/chapter_download_layout"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="24dp">
+
+        <ImageButton
+            android:id="@+id/chapter_download_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/download_grey" />
+
+        <com.github.lzyzsd.circleprogress.DonutProgress
+            android:id="@+id/chapter_download_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:padding="4dp"
+            custom:donut_finished_color="@color/colorPrimaryDark"
+            custom:donut_finished_stroke_width="4dp"
+            custom:donut_text_color="@color/grey"
+            custom:donut_text_size="12sp"
+            custom:donut_unfinished_stroke_width="4dp" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/chapter_row_title_and_date"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/chapter_download_layout"
+        android:layout_toEndOf="@+id/chapter_download_layout"
         android:orientation="vertical">
 
         <TextView
@@ -28,38 +57,11 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/chapter_download_layout"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+    <ImageView
+        android:id="@+id/chapter_read_progress"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:orientation="vertical">
-
-        <ImageButton
-            android:id="@+id/chapter_download_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/download_grey" />
-
-        <com.github.lzyzsd.circleprogress.DonutProgress
-            android:id="@+id/chapter_download_progress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:padding="4dp"
-            custom:donut_finished_color="@color/colorPrimaryDark"
-            custom:donut_finished_stroke_width="4dp"
-            custom:donut_text_color="@color/grey"
-            custom:donut_text_size="12sp"
-            custom:donut_unfinished_stroke_width="4dp"
-
-            />
-
-    </RelativeLayout>
-
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>
